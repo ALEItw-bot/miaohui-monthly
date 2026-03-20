@@ -149,14 +149,15 @@ export default function HomePage() {
       <div className="news-list">
         <h2 className="news-list-title">最新消息</h2>
         {announcements.length > 0 ? announcements.map((item) => (
-          <div key={item.id} className="news-item">
-            <span className="news-date">{item.date.replace(/-/g, '.')}</span>
-            <span className={`news-tag ${
-              item.category === '系統更新' ? 'tag-system' :
-              item.category === '活動資訊' ? 'tag-event' : ''
-            }`}>{item.category}</span>
-            <span className="news-title">{item.title}</span>
-          </div>
+      <a key={item.id} href="/announcements" className="news-item">
+    <span className="news-date">{item.date.replace(/-/g, '.')}</span>
+    <span className={`news-tag ${
+      item.category === '系統更新' ? 'tag-system' :
+      item.category === '活動資訊' ? 'tag-event' : ''
+    }`}>{item.category}</span>
+    <span className="news-title">{item.title}</span>
+  </a>
+
         )) : events.map((event) => (
           <a
             key={event.id}
