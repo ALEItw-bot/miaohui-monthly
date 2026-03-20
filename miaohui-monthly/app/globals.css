@@ -82,12 +82,12 @@ img {
   background: var(--red);
   height: 56px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 .header-inner {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   width: 100%;
 }
@@ -98,6 +98,8 @@ img {
   font-weight: 900;
   color: var(--white);
   letter-spacing: 2px;
+  display: flex;
+  align-items: center;
 }
 
 .header-logo:hover {
