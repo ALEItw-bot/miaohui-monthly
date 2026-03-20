@@ -83,7 +83,7 @@ export default function RootLayout({
         <header className="header">
           <div className="container header-inner">
             <a href="/" className="logo no-decoration">
-              \uD83C\uDFEE 廟會月報
+              廟會月報
             </a>
             <nav className="nav">
               <a href="/#events" className="nav-link">
