@@ -59,7 +59,7 @@ export default function RootLayout({
               <nav className="header-nav">
                 <a href="/#events" className="header-nav-link">最新消息</a>
                 <a href="/brand-story" className="header-nav-link">品牌故事</a>
-                <a href="/#news" className="header-nav-link">熱鬧資訊</a>
+                <a href="/news" className="header-nav-link">熱鬧資訊</a>
               
               </nav>
             </div>
