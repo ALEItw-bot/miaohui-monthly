@@ -31,7 +31,7 @@ export default function RootLayout({
         <footer className="footer">
           <div className="container footer-inner">
             <div className="footer-brand">
-              <div className="logo" style= color: 'white' >🏮 廟會月報</div>
+              <div className="logo text-white">🏮 廟會月報</div>
               <p>全台鬧熱，報你知！</p>
             </div>
             <div className="footer-links">

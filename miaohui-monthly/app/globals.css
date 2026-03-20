@@ -195,3 +195,14 @@ img { max-width: 100%; height: auto; }
   .event-hero-detail h1 { font-size: 1.8rem; }
   .event-hero-detail { padding: 120px 0 60px; }
 }
+
+/* Utility classes */
+.text-white { color: var(--white) !important; }
+.text-white-muted { color: var(--white); opacity: 0.9; }
+.no-decoration { text-decoration: none !important; }
+.event-summary-text { font-size: 0.9rem; color: #666; margin-top: 8px; }
+.btn-cta-invert { background: var(--white) !important; color: var(--red) !important; }
+.event-h2-red { color: var(--red) !important; border-color: var(--red) !important; }
+.event-h2-blue { color: var(--blue) !important; border-color: var(--blue) !important; }
+.event-link-red { color: var(--red); font-weight: 700; }
+.event-link-blue { color: var(--blue); font-weight: 700; }

@@ -18,7 +18,7 @@ export default function BaishatunEvent() {
 
       <section className="event-body">
         <div className="event-content">
-          <h2 style= color: 'var(--blue)', borderColor: 'var(--blue)' >📋 活動快速資訊</h2>
+          <h2 className="event-h2-blue">📋 活動快速資訊</h2>
           <div className="info-grid">
             <div className="info-card">
               <div className="icon">📅</div>
@@ -42,7 +42,7 @@ export default function BaishatunEvent() {
             </div>
           </div>
 
-          <h2 style= color: 'var(--blue)', borderColor: 'var(--blue)' >✨ 白沙屯繞境的獨特之處</h2>
+          <h2 className="event-h2-blue">✨ 白沙屯繞境的獨特之處</h2>
           <div className="highlight-box">
             <p>🎲 白沙屯媽祖繞境最大特色：<strong>路線完全不固定！</strong> 每年路線全由媽祖神轎指引，轎班人員跟著走，沒有事先規劃，這也是為什麼它被稱為「最有個性的媽祖繞境」。</p>
           </div>
@@ -69,7 +69,7 @@ export default function BaishatunEvent() {
             </div>
           </div>
 
-          <h2 style= color: 'var(--blue)', borderColor: 'var(--blue)' >🗺️ 路線概覽</h2>
+          <h2 className="event-h2-blue">🗺️ 路線概覽</h2>
           <p>白沙屯媽祖從苗栗通霄白沙屯拱天宮出發，徒步前往雲林北港朝天宮進香，全程約 400 公里。</p>
           <p>由於路線不固定，建議你：</p>
           <ul className="tips-list">
@@ -78,7 +78,7 @@ export default function BaishatunEvent() {
             <li>🗺️ 大方向：白沙屯 → 通霄 → 苑裡 → 大甲 → 彰化 → 雲林北港</li>
           </ul>
 
-          <h2 style= color: 'var(--blue)', borderColor: 'var(--blue)' >💡 行前注意事項</h2>
+          <h2 className="event-h2-blue">💡 行前注意事項</h2>
           <ul className="tips-list">
             <li>🦶 <strong>鞋子超級重要</strong> — 每天可能走 30~50 公里，穿磨合好的運動鞋</li>
             <li>🏃 <strong>體力準備</strong> — 「粉紅超跑」名不虛傳，建議提前鍛鍊體能</li>
@@ -88,15 +88,15 @@ export default function BaishatunEvent() {
             <li>🙏 <strong>跟著走就對了</strong> — 不用想太多，媽祖帶路就是最好的修行</li>
           </ul>
 
-          <h2 style= color: 'var(--blue)', borderColor: 'var(--blue)' >🔗 相關連結</h2>
-          <p>📌 <a href="https://www.baishatun.com.tw/" target="_blank" style= color: 'var(--blue)', fontWeight: 700 >白沙屯拱天宮官方網站</a></p>
+          <h2 className="event-h2-blue">🔗 相關連結</h2>
+          <p>📌 <a href="https://www.baishatun.com.tw/" target="_blank" className="event-link-blue">白沙屯拱天宮官方網站</a></p>
         </div>
       </section>
 
       <section className="event-cta-section blue-bg">
         <div className="container">
           <h2>💬 跟著粉紅超跑一起走！</h2>
-          <p style= color: 'white', opacity: 0.9 >加入 LINE 好友，繞境期間即時推播媽祖 GPS 位置</p>
+          <p className="text-white-muted">加入 LINE 好友，繞境期間即時推播媽祖 GPS 位置</p>
           <a href="#" className="btn btn-line-big btn-lg">＋加入 LINE 好友</a>
         </div>
       </section>

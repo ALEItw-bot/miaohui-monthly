@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "2026 大甲媽祖遶境進香｜廟會月報",
@@ -19,7 +18,7 @@ export default function DajiaEvent() {
 
       <section className="event-body">
         <div className="event-content">
-          <h2 style= color: 'var(--red)', borderColor: 'var(--red)' >📋 活動快速資訊</h2>
+          <h2 className="event-h2-red">📋 活動快速資訊</h2>
           <div className="info-grid">
             <div className="info-card">
               <div className="icon">📅</div>
@@ -43,7 +42,7 @@ export default function DajiaEvent() {
             </div>
           </div>
 
-          <h2 style= color: 'var(--red)', borderColor: 'var(--red)' >🗺️ 繞境路線</h2>
+          <h2 className="event-h2-red">🗺️ 繞境路線</h2>
           <p>全程約 340 公里，途經台中、彰化、雲林、嘉義四縣市。</p>
           <ul className="route-list">
             <li><span className="day-badge">Day 1</span> 大甲鎮瀾宮 → 彰化天后宮（起駕）</li>
@@ -58,7 +57,7 @@ export default function DajiaEvent() {
           </ul>
           <p><em>⚠️ 實際路線以鎮瀾宮官方公告為準，此為歷年參考路線。</em></p>
 
-          <h2 style= color: 'var(--red)', borderColor: 'var(--red)' >💡 行前注意事項</h2>
+          <h2 className="event-h2-red">💡 行前注意事項</h2>
           <ul className="tips-list">
             <li>🦶 <strong>穿好走的鞋</strong> — 每天走 20~40 公里，別穿新鞋上路</li>
             <li>☀️ <strong>防曬 ＋ 雨具</strong> — 四月天氣多變，兩樣都要帶</li>
@@ -69,15 +68,15 @@ export default function DajiaEvent() {
             <li>🏥 <strong>身體不適就休息</strong> — 沿途有醫療站，不要硬撐</li>
           </ul>
 
-          <h2 style= color: 'var(--red)', borderColor: 'var(--red)' >🔗 相關連結</h2>
-          <p>📌 <a href="https://www.dajiamazu.org.tw/" target="_blank" style= color: 'var(--red)', fontWeight: 700 >大甲鎮瀾宮官方網站</a></p>
+          <h2 className="event-h2-red">🔗 相關連結</h2>
+          <p>📌 <a href="https://www.dajiamazu.org.tw/" target="_blank" className="event-link-red">大甲鎮瀾宮官方網站</a></p>
         </div>
       </section>
 
       <section className="event-cta-section blue-bg">
         <div className="container">
           <h2>💬 想收到繞境即時通知？</h2>
-          <p style= color: 'white', opacity: 0.9 >加入 LINE 好友，繞境期間每日推播最新動態！</p>
+          <p className="text-white-muted">加入 LINE 好友，繞境期間每日推播最新動態！</p>
           <a href="#" className="btn btn-line-big btn-lg">＋加入 LINE 好友</a>
         </div>
       </section>
