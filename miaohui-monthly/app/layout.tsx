@@ -83,7 +83,7 @@ export default function RootLayout({
         <header className="header">
           <div className="container header-inner">
             <a href="/" className="logo no-decoration">
-               廟會月報
+              \uD83C\uDFEE 廟會月報
             </a>
             <nav className="nav">
               <a href="/#events" className="nav-link">
@@ -93,7 +93,7 @@ export default function RootLayout({
                 品牌故事
               </a>
               <a href="#" className="btn btn-line">
-                LINE 好友
+                \uD83D\uDCAC LINE 好友
               </a>
             </nav>
           </div>
@@ -105,7 +105,7 @@ export default function RootLayout({
         <footer className="footer">
           <div className="container footer-inner">
             <div className="footer-brand">
-              <div className="logo text-white">廟會月報</div>
+              <div className="logo text-white">\uD83C\uDFEE 廟會月報</div>
               <p>與你攜手感受台灣廟會之美</p>
             </div>
             <div className="footer-links">
@@ -119,7 +119,7 @@ export default function RootLayout({
             </div>
           </div>
           <div className="footer-bottom">
-            <p>2026 廟會月報｜MiaoHui Monthly. All rights reserved.</p>
+            <p>\u00A9 2026 廟會月報｜MiaoHui Monthly. All rights reserved.</p>
           </div>
         </footer>
       </body>
