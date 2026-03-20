@@ -15,6 +15,14 @@ interface EventItem {
   coverUrl: string;
 }
 
+interface Announcement {
+  id: string;
+  title: string;
+  date: string;
+  category: string;
+  summary: string;
+}
+
 const MOCK_EVENTS: EventItem[] = [
   {
     id: '1',
@@ -83,7 +91,7 @@ function flat(v: unknown): string {
 
 export default function HomePage() {
   const [events, setEvents] = useState<EventItem[]>(MOCK_EVENTS);
-
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   useEffect(() => {
     fetch('/api/events')
       .then((res) => res.json())
@@ -112,50 +120,61 @@ export default function HomePage() {
       })
       .catch(() => {});
   }, []);
-
+  useEffect(() => {
+  fetch('/api/announcements')
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success && data.announcements) {
+        setAnnouncements(data.announcements);
+      }
+    })
+    .catch(() => {});
+}, []);
   return (
     <>
       {/* 輪播 */}
       <Carousel />
 
       {/* 最新消息區塊 */}
-      <section className="news-section" id="events">
-        <div className="container">
-          <div className="news-layout">
-            {/* 左側：大圖 */}
-            <div className="news-image">
-              <div className="news-image-placeholder">
-                <span className="news-image-text">廟會月報</span>
-              </div>
-            </div>
-            {/* 右側：消息列表 */}
-            <div className="news-list">
-              <h2 className="news-list-title">最新消息</h2>
-              {events.map((event) => (
-                <a
-                  key={event.id}
-                  href={event.eventType === '繞境' ? '/events/dajia' : '/events/baishatun'}
-                  className="news-item"
-                >
-                  <span className="news-date">
-                    {formatDate(event.date.start)}
-                  </span>
-                  <span className={`news-tag ${
-  getEventStatus(event.date.start, event.date.end) === '進行中' ? 'tag-active' :
-  getEventStatus(event.date.start, event.date.end) === '已結束' ? 'tag-ended' : ''
-}`}>
-  {getEventStatus(event.date.start, event.date.end)}
-</span>
-                  <span className="news-title">{event.title}</span>
-                </a>
-              ))}
-              <div className="news-more">
-                <a href="/#events">更多 &rsaquo;</a>
-              </div>
-            </div>
-          </div>
+<section className="news-section" id="events">
+  <div className="container">
+    <div className="news-layout">
+      {/* 左側：大圖 */}
+      <div className="news-image">
+        <div className="news-image-placeholder">
+          <span className="news-image-text">廟會月報</span>
         </div>
-      </section>
+      </div>
+      {/* 右側：消息列表 */}
+      <div className="news-list">
+        <h2 className="news-list-title">最新消息</h2>
+        {announcements.length > 0 ? announcements.map((item) => (
+          <div key={item.id} className="news-item">
+            <span className="news-date">{item.date.replace(/-/g, '.')}</span>
+            <span className={`news-tag ${
+              item.category === '系統更新' ? 'tag-system' :
+              item.category === '活動資訊' ? 'tag-event' : ''
+            }`}>{item.category}</span>
+            <span className="news-title">{item.title}</span>
+          </div>
+        )) : events.map((event) => (
+          <a
+            key={event.id}
+            href={event.eventType === '繞境' ? '/events/dajia' : '/events/baishatun'}
+            className="news-item"
+          >
+            <span className="news-date">{formatDate(event.date.start)}</span>
+            <span className="news-tag">活動資訊</span>
+            <span className="news-title">{event.title}</span>
+          </a>
+        ))}
+        <div className="news-more">
+          <a href="/announcements">...更多</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* 品牌故事簡介 */}
       <section className="brand-preview">
