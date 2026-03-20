@@ -93,7 +93,7 @@ export default function RootLayout({
                 品牌故事
               </a>
               <a href="#" className="btn btn-line">
-                \uD83D\uDCAC LINE 好友
+                LINE 好友
               </a>
             </nav>
           </div>
@@ -119,7 +119,7 @@ export default function RootLayout({
             </div>
           </div>
           <div className="footer-bottom">
-            <p>\u00A9 2026 廟會月報｜MiaoHui Monthly. All rights reserved.</p>
+            <p>2026 廟會月報｜MiaoHui Monthly. All rights reserved.</p>
           </div>
         </footer>
       </body>
