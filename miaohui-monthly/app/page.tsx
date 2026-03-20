@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { getEvents } from "./lib/api";
 
+// 跳過 build 時的靜態預渲染，改成每次請求時才抓資料
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Server Component — 在伺服器端取得資料
   const events = await getEvents();

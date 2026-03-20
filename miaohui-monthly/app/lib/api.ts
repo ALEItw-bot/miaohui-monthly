@@ -39,22 +39,29 @@ const MOCK_EVENTS: EventItem[] = [
   },
 ];
 
-// 把任何值安全轉成字串（避免物件直接丟進 React）
-function safeString(val: unknown): string {
-  if (val === null || val === undefined) return '';
+// 暴力把任何值壓成純字串（GAS 可能回傳物件、陣列、數字等）
+function flat(val: unknown): string {
+  if (val == null) return '';
   if (typeof val === 'string') return val;
-  // Notion 日期格式: { start: '2026-04-17', end: '2026-04-26' }
-  if (typeof val === 'object' && val !== null) {
-    const obj = val as Record<string, string>;
-    if (obj.start && obj.end) return obj.start + ' ~ ' + obj.end;
-    if (obj.start) return obj.start;
+  if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+  if (Array.isArray(val)) return val.map(flat).join(', ');
+  if (typeof val === 'object') {
+    const o = val as Record<string, unknown>;
+    // Notion 日期: { start, end }
+    if ('start' in o) {
+      if (o.end) return flat(o.start) + ' ~ ' + flat(o.end);
+      return flat(o.start);
+    }
+    // Notion select: { name, color }
+    if ('name' in o) return flat(o.name);
+    // Notion rich_text: { plain_text }
+    if ('plain_text' in o) return flat(o.plain_text);
     return JSON.stringify(val);
   }
   return String(val);
 }
 
 export async function getEvents(): Promise<EventItem[]> {
-  // 如果環境變數沒設定，直接用假資料
   if (!GAS_URL || !API_KEY) {
     console.log('[api] 未設定環境變數，使用假資料');
     return MOCK_EVENTS;
@@ -62,32 +69,35 @@ export async function getEvents(): Promise<EventItem[]> {
 
   try {
     const url = GAS_URL + '?action=getEvents&key=' + API_KEY;
-    const res = await fetch(url, {
-      next: { revalidate: 300 }, // 快取 5 分鐘
-    });
+    const res = await fetch(url, { cache: 'no-store' });
 
     if (!res.ok) {
       console.log('[api] GAS 回應錯誤 ' + res.status);
       return MOCK_EVENTS;
     }
 
-    const data = await res.json();
+    const text = await res.text();
+    let data: Record<string, unknown>;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.log('[api] JSON 解析失敗，使用假資料');
+      return MOCK_EVENTS;
+    }
 
-    // 如果 GAS 回傳成功且有 events 陣列
     if (data.success && Array.isArray(data.events)) {
       return data.events.map((e: Record<string, unknown>) => ({
-        id: safeString(e.id),
-        title: safeString(e.title),
-        date: safeString(e.date),
-        location: safeString(e.location),
-        summary: safeString(e.summary),
-        link: safeString(e.link) || '/events/' + safeString(e.slug || e.id),
-        emoji: safeString(e.emoji) || '🏮',
-        tag: safeString(e.tag),
+        id: flat(e.id),
+        title: flat(e.title),
+        date: flat(e.date),
+        location: flat(e.location),
+        summary: flat(e.summary),
+        link: flat(e.link) || '/events/' + flat(e.slug || e.id),
+        emoji: flat(e.emoji) || '🏮',
+        tag: flat(e.tag),
       }));
     }
 
-    // 格式不對，用假資料
     console.log('[api] GAS 回傳格式不符預期，使用假資料');
     return MOCK_EVENTS;
   } catch (err) {
