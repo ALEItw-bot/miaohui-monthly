@@ -35,7 +35,7 @@ img { max-width: 100%; height: auto; }
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   background: var(--blue); color: var(--white);
-  padding: 12px 0; border-bottom: 3px solid var(--gold);
+  padding: 12px 0; border-bottom: 10px solid var(--white);
 }
 .header-inner { display: flex; justify-content: space-between; align-items: center; }
 .logo { font-family: var(--font-title); font-size: 1.5rem; font-weight: 900; color: var(--white); }
