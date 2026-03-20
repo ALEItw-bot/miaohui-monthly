@@ -316,19 +316,26 @@ img { max-width: 100%; height: auto; }
 /* ========== 品牌故事頁 ========== */
 .story-hero {
   position: relative;
-  min-height: 70vh;
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: linear-gradient(135deg, #0000A5 0%, #C80000 100%);
+  background-image: url('/brand-hero.png');
+  background-size: cover;
+  background-position: center top;
   overflow: hidden;
 }
 
 .story-hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 165, 0.6) 50%,
+    rgba(200, 0, 0, 0.7) 100%
+  );
 }
 
 .story-hero-content {
@@ -354,112 +361,82 @@ img { max-width: 100%; height: auto; }
   font-size: 3rem;
   font-weight: 900;
   color: #fff;
-  line-height: 1.3;
+  line-height: 1.4;
   margin-bottom: 1.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .story-hero-subtitle {
   font-family: 'Noto Sans TC', sans-serif;
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
   line-height: 1.8;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-.story-intro {
-  max-width: 600px;
-  margin: 0 auto 3rem;
-  font-size: 1.1rem;
-  line-height: 2;
-  color: #444;
+/* 內文容器 */
+.story-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
-/* 使命卡片 */
-.mission-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.mission-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
+/* 章節標題 */
+.story-chapter-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #C80000;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease;
+  margin-bottom: 2rem;
 }
 
-.mission-card:hover {
-  transform: translateY(-4px);
+.story-chapter-title.text-gold {
+  color: #D4A017;
 }
 
-.mission-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+/* 深色底文字 (section-dark 內) */
+.story-text {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 2.2;
+  margin-bottom: 1.25rem;
 }
 
-.mission-title {
+/* 淺色底文字 */
+.story-text-dark {
+  font-size: 1.05rem;
+  color: #333;
+  line-height: 2.2;
+  margin-bottom: 1.25rem;
+}
+
+/* 交替背景 */
+.section-alt {
+  background: #f8f5f0;
+}
+
+/* 結語 */
+.story-closing {
   font-family: 'Noto Serif TC', serif;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #C80000;
-  margin-bottom: 0.75rem;
+  color: #0000A5;
+  line-height: 2.2;
+  margin-bottom: 2rem;
 }
 
-.mission-desc {
-  font-size: 0.95rem;
-  color: #555;
+.story-welcome {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #C80000;
   line-height: 1.8;
 }
 
-/* 品牌故事內文 */
-.story-content {
-  max-width: 700px;
-  margin: 2rem auto 0;
-}
-
-.story-block {
-  margin-bottom: 2.5rem;
-}
-
-.story-block-title {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #D4A017;
-  margin-bottom: 1rem;
-}
-
-.story-text {
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 2;
-  margin-bottom: 1rem;
-}
-
-/* 數字亮點 */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.stat-card {
-  text-align: center;
-  padding: 2rem;
-}
-
-.stat-number {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 3rem;
-  font-weight: 900;
-  color: #C80000;
-  margin-bottom: 0.5rem;
-}
-
-.stat-label {
-  font-size: 1rem;
-  color: #666;
+/* CTA 文字 */
+.cta-text {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
 }

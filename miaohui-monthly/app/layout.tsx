@@ -105,7 +105,7 @@ export default function RootLayout({
         <footer className="footer">
           <div className="container footer-inner">
             <div className="footer-brand">
-              <div className="logo text-white">\uD83C\uDFEE 廟會月報</div>
+              <div className="logo text-white">廟會月報</div>
               <p>與你攜手感受台灣廟會之美</p>
             </div>
             <div className="footer-links">
@@ -119,7 +119,7 @@ export default function RootLayout({
             </div>
           </div>
           <div className="footer-bottom">
-            <p>\u00A9 2026 廟會月報｜MiaoHui Monthly. All rights reserved.</p>
+            <p>2026 廟會月報｜MiaoHui Monthly. All rights reserved.</p>
           </div>
         </footer>
       </body>

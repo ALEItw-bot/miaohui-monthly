@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: '品牌故事',
   description:
-    '廟會月報的使命：讓每一場廟會都被看見，讓每一份虔誠都被記錄。認識台灣最有溫度的廟會資訊平台。',
+    '從2012年的一個念頭，到台灣最完整的廟會資訊平台。認識廟會月報的品牌故事。',
 };
 
 export default function BrandStory() {
@@ -13,115 +13,111 @@ export default function BrandStory() {
       <section className="story-hero">
         <div className="story-hero-overlay"></div>
         <div className="story-hero-content">
-          <p className="story-hero-tag">ABOUT US</p>
+          <p className="story-hero-tag">OUR STORY</p>
           <h1 className="story-hero-title">
-            讓每一場廟會<br />都被看見
+            信仰的溫度<br />科技的傳承
           </h1>
           <p className="story-hero-subtitle">
-            我們相信，廟會不只是信仰，更是台灣最美的文化風景。
+            從一個簡單的想法，到台灣最完整的廟會資訊平台
           </p>
         </div>
       </section>
 
-      {/* 使命願景 */}
+      {/* 第一章：起源 */}
       <section className="section">
-        <div className="container">
-          <h2 className="section-title">\uD83C\uDFEE 我們的使命</h2>
-          <p className="section-subtitle story-intro">
-            「廟會月報」誕生於一個簡單的念頭——<br />
-            台灣每年有上萬場廟會，卻沒有一個地方能讓你一次看完。
+        <div className="story-content">
+          <h2 className="story-chapter-title">起源</h2>
+          <p className="story-text-dark">
+            「如果台灣熱鬧的廟會，也能像捷運上的報紙一樣，每天陪伴在大家身邊，那該有多好？」
           </p>
-          <div className="mission-grid">
-            <div className="mission-card">
-              <div className="mission-icon">\uD83D\uDCF0</div>
-              <h3 className="mission-title">整合資訊</h3>
-              <p className="mission-desc">
-                把散落在各地宮廟、社群、口耳相傳的活動資訊，整理成一目了然的平台。不再錯過任何一場重要的繞境進香。
-              </p>
-            </div>
-            <div className="mission-card">
-              <div className="mission-icon">\uD83D\uDCF1</div>
-              <h3 className="mission-title">即時推播</h3>
-              <p className="mission-desc">
-                透過 LINE 官方帳號，在活動前提醒你、活動中即時更新動態。讓你就算不在現場，也能感受鬧熱氣氛。
-              </p>
-            </div>
-            <div className="mission-card">
-              <div className="mission-icon">\u2764\uFE0F</div>
-              <h3 className="mission-title">傳承文化</h3>
-              <p className="mission-desc">
-                用年輕人看得懂的方式，記錄台灣廟會的故事。讓更多人認識這份屬於台灣的獨特文化底蘊。
-              </p>
-            </div>
-          </div>
+          <p className="story-text-dark">
+            2012 年的秋天，這個看似天馬行空的念頭，在創辦人阿雷的腦海中萌芽。
+          </p>
+          <p className="story-text-dark">
+            當時，受限於實體印刷的龐大經費，《廟會月報》轉個大彎，以純粹的熱情在臉書上化身為「數位電子報」。沒想到，這個揉合傳統信仰與數位媒介的全新嘗試，在當時引起了巨大的轟動，甚至有許多熱情的粉絲四處詢問：「哪裡才能索取這份實體報紙？」
+          </p>
         </div>
       </section>
 
-      {/* 品牌故事 */}
+      {/* 第二章：成長 */}
+      <section className="section section-alt">
+        <div className="story-content">
+          <h2 className="story-chapter-title">從一個人的視角，到一群人的朝聖</h2>
+          <p className="story-text-dark">
+            隨著時間推移，《廟會月報》不再只是阿雷一個人的工作室產物。
+          </p>
+          <p className="story-text-dark">
+            我們迎來了北中南各地熱血粉絲與小編的加入，大家無私地提供精彩的活動花絮。我們將喧囂的鑼鼓聲、絢麗的陣頭，以及信眾們虔誠的臉龐，化作雲端上的圖文，傳遞給每一個無法親臨現場的同好。
+          </p>
+          <p className="story-text-dark">
+            這份「服務社會」的用心，不僅凝聚了龐大的社群，更獲得了許多工商團體的支持，讓傳承的火種得以延續。
+          </p>
+        </div>
+      </section>
+
+      {/* 第三章：沉澱 */}
+      <section className="section">
+        <div className="story-content">
+          <h2 className="story-chapter-title">勇敢按下暫停鍵</h2>
+          <p className="story-text-dark">
+            然而，現實的重量有時會讓人不得不暫緩腳步。
+          </p>
+          <p className="story-text-dark">
+            隨著創辦人本業日益繁忙，在無暇兼顧與心力交瘁之下，2023 年的同一天，《廟會月報》艱難地按下了暫停鍵，無預警地向大家告別。
+          </p>
+          <p className="story-text-dark">
+            那是一個充滿不捨的決定，但我們知道，對廟會文化的熱愛，從未在心中真正熄滅。
+          </p>
+        </div>
+      </section>
+
+      {/* 第四章：重生 */}
       <section className="section section-dark">
-        <div className="container">
-          <h2 className="section-title text-white">\uD83D\uDCD6 品牌故事</h2>
-          <div className="story-content">
-            <div className="story-block">
-              <h3 className="story-block-title text-white">從一場繞境開始</h3>
-              <p className="story-text">
-                2024 年，我們第一次跟著大甲媽祖走了一段路。九天八夜的旅程中，看見了沿途居民準備的免費餐食、素未謀面卻互相照顧的香客、以及那份最純粹的信仰力量。
-              </p>
-              <p className="story-text">
-                我們被這份「鬧熱」深深感動——但也發現，要找到完整的繞境資訊，得翻遍好幾個網站和社群。
-              </p>
-            </div>
-            <div className="story-block">
-              <h3 className="story-block-title text-white">所以我們做了這件事</h3>
-              <p className="story-text">
-                「如果有一個地方，能把全台灣的廟會資訊整理在一起就好了。」
-              </p>
-              <p className="story-text">
-                抱著這個想法，「廟會月報」誕生了。我們用 Notion 管理後台資料、用 LINE 推播即時資訊、用網站呈現完整活動內容。一切從零開始，但每一步都充滿熱情。
-              </p>
-            </div>
-            <div className="story-block">
-              <h3 className="story-block-title text-white">未來的路</h3>
-              <p className="story-text">
-                我們的目標不只是一個資訊平台。我們希望成為台灣廟會文化的數位傳承者——讓年輕一代重新認識這份文化，讓每一場廟會都不被遺忘。
-              </p>
-            </div>
-          </div>
+        <div className="story-content">
+          <h2 className="story-chapter-title text-gold">AI 時代的全新篇章</h2>
+          <p className="story-text">
+            沉澱，帶來了更清晰的視野。
+          </p>
+          <p className="story-text">
+            隨著科技的高速推進與 AI 技術的爆發，我們看見了傳統文化與未來科技接軌的全新可能。如今，智慧型手機讓影像紀錄變得輕而易舉，便捷的交通網更讓全台廟會成為了一日生活圈。
+          </p>
+          <p className="story-text">
+            於是，《廟會月報》決定再次甦醒。
+          </p>
+          <p className="story-text">
+            這一次，我們帶著<strong>「心存善良、傳承文化、創新突破、服務社會」</strong>的不變初衷強勢回歸。我們導入 AI 智能技術，將繁瑣的營運流程自動化、高效化，以更具現代科技感的俐落面貌，重新詮釋台灣傳統信仰。
+          </p>
+          <p className="story-text">
+            我們期望透過創新的載體，讓廟會不再只是老一輩的專屬記憶，而是能與新世代產生強烈共鳴的文化潮流。
+          </p>
         </div>
       </section>
 
-      {/* 數字亮點 */}
+      {/* 結語 */}
       <section className="section">
-        <div className="container">
-          <h2 className="section-title">\uD83D\uDCCA 我們正在做的事</h2>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-number">2</div>
-              <div className="stat-label">大型繞境追蹤中</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-number">100+</div>
-              <div className="stat-label">活動資訊持續收錄</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-number">24/7</div>
-              <div className="stat-label">LINE 即時推播服務</div>
-            </div>
-          </div>
+        <div className="story-content text-center">
+          <p className="story-closing">
+            從過去的像素到現在的 AI 運算，<br />
+            從傳統廟埕到雲端數據，<br />
+            《廟會月報》將繼續為您遞送<br />
+            這份跨越時空、充滿溫度的信仰報表。
+          </p>
+          <p className="story-welcome">
+            歡迎回來，與我們一起見證<br />科技與傳統交織的全新篇章。
+          </p>
         </div>
       </section>
 
       {/* CTA */}
       <section className="section section-cta">
         <div className="container text-center">
-          <h2 className="section-title text-white">\uD83D\uDE4F 一起來鬧熱！</h2>
+          <h2 className="section-title text-white">一起來鬧熱！</h2>
           <p className="cta-text">
-            不管你是虔誠的信眾、好奇的旅人、還是熱血的報馬仔，<br />
-            廟會月報都歡迎你加入。
+            加入我們的 LINE，成為廟會月報的一份子
           </p>
           <div className="hero-cta">
-            <a href="/#events" className="btn btn-primary btn-cta-invert">\uD83D\uDD25 看近期活動</a>
-            <a href="#" className="btn btn-line-big">\uD83D\uDCAC 加入 LINE 好友</a>
+            <a href="/#events" className="btn btn-primary btn-cta-invert">看近期活動</a>
+            <a href="#" className="btn btn-line-big">加入 LINE 好友</a>
           </div>
         </div>
       </section>
