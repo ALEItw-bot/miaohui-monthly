@@ -106,8 +106,9 @@ img {
 
 .header-nav {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 2rem;
+  height: 100%;
 }
 
 .header-nav-link {
@@ -116,16 +117,15 @@ img {
   font-weight: 500;
   color: var(--white);
   transition: opacity 0.2s;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  padding-bottom: 8px;
 }
+
 
 .header-nav-link:hover {
   opacity: 0.8;
-}
-
-.header-nav-dots {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1.1rem;
-  letter-spacing: 2px;
 }
 
 /* ===== Carousel ===== */
