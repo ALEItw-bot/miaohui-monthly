@@ -74,18 +74,18 @@ img {
 }
 
 .header-blue {
-  height: 8px;
+  height: 15px;
   background: var(--blue);
 }
 
 .header-white {
-  height: 4px;
+  height: 5px;
   background: var(--white);
 }
 
 .header-red {
   background: var(--red);
-  height: 56px;
+  height: 85px;
   display: flex;
   align-items: stretch;
 }
