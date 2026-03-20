@@ -206,3 +206,106 @@ img { max-width: 100%; height: auto; }
 .event-h2-blue { color: var(--blue) !important; border-color: var(--blue) !important; }
 .event-link-red { color: var(--red); font-weight: 700; }
 .event-link-blue { color: var(--blue); font-weight: 700; }
+
+/* ========== RWD 響應式 ========== */
+
+/* 平板 (768px 以下) */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .brand-intro {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .header-inner {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .nav {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* 品牌故事頁 RWD */
+  .story-hero-title {
+    font-size: 2rem;
+  }
+
+  .story-hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-item {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* 手機 (480px 以下) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .event-card-title {
+    font-size: 1.1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.875rem;
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+  }
+}
