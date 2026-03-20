@@ -1,30 +1,10 @@
 import Link from "next/link";
+import { getEvents } from "./lib/api";
 
-// Mock 假資料（之後換成 GAS API）
-const mockEvents = [
-  {
-    id: "1",
-    title: "2026 大甲媽祖遶境進香",
-    date: "2026/04/17（五）",
-    location: "臺中市 大甲區",
-    tag: "中部",
-    emoji: "🏮",
-    link: "/events/dajia",
-    summary: "九天八夜，跨越中南部四縣市，百萬信眾隨行的年度宗教盛事。",
-  },
-  {
-    id: "2",
-    title: "2026 白沙屯媽祖徒步進香",
-    date: "2026/04/12（日）",
-    location: "苗栗縣 通霄鎮",
-    tag: "中部",
-    emoji: "⛩️",
-    link: "/events/baishatun",
-    summary: "路線不固定、全憑媽祖旨意，被封「粉紅超跑」的最有個性媽祖繞境。",
-  },
-];
+export default async function Home() {
+  // Server Component — 在伺服器端取得資料
+  const events = await getEvents();
 
-export default function Home() {
   return (
     <>
       {/* Hero */}
@@ -49,7 +29,7 @@ export default function Home() {
           <h2 className="section-title">🔥 近期熱門活動</h2>
           <p className="section-subtitle">即將到來的廟會盛事，千萬別錯過！</p>
           <div className="events-grid">
-            {mockEvents.map((event) => (
+            {events.map((event) => (
               <Link href={event.link} key={event.id} className="no-decoration">
                 <article className="event-card">
                   <div className="event-card-img">{event.emoji}</div>
