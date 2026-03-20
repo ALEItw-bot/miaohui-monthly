@@ -129,8 +129,7 @@ img {
 /* ===== Carousel ===== */
 .carousel {
   position: relative;
-  height: 60vh;
-  min-height: 400px;
+  height: calc(100vh - 68px);
   overflow: hidden;
 }
 
@@ -702,10 +701,6 @@ img {
     display: none;
   }
 
-  .carousel {
-    height: 45vh;
-    min-height: 300px;
-  }
 
   .carousel-title {
     font-size: 2rem;
@@ -756,10 +751,6 @@ img {
     font-size: 0.8rem;
   }
 
-  .carousel {
-    height: 35vh;
-    min-height: 250px;
-  }
 
   .carousel-title {
     font-size: 1.5rem;
