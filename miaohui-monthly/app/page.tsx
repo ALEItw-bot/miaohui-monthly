@@ -49,6 +49,22 @@ function formatDate(dateStr: string): string {
   return y + '.' + m + '.' + day;
 }
 
+
+function getEventStatus(startDate: string, endDate: string): string {
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  
+  if (now < start) {
+    const diff = Math.ceil((start.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    if (diff <= 7) return '即將開始';
+    return '報名中';
+  }
+  if (now >= start && now <= end) return '進行中';
+  return '已結束';
+}
+
+
 function flat(v: unknown): string {
   if (v === null || v === undefined) return '';
   if (typeof v === 'string') return v;
@@ -124,7 +140,12 @@ export default function HomePage() {
                   <span className="news-date">
                     {formatDate(event.date.start)}
                   </span>
-                  <span className="news-tag">活動資訊</span>
+                  <span className={`news-tag ${
+  getEventStatus(event.date.start, event.date.end) === '進行中' ? 'tag-active' :
+  getEventStatus(event.date.start, event.date.end) === '已結束' ? 'tag-ended' : ''
+}`}>
+  {getEventStatus(event.date.start, event.date.end)}
+</span>
                   <span className="news-title">{event.title}</span>
                 </a>
               ))}

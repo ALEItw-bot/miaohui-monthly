@@ -314,6 +314,14 @@ img {
   white-space: nowrap;
 }
 
+.tag-active {
+  background: #06C755;
+}
+
+.tag-ended {
+  background: var(--text-light);
+}
+
 .news-title {
   font-size: 1rem;
   font-weight: 500;
