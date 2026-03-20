@@ -39,6 +39,20 @@ const MOCK_EVENTS: EventItem[] = [
   },
 ];
 
+// 把任何值安全轉成字串（避免物件直接丟進 React）
+function safeString(val: unknown): string {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') return val;
+  // Notion 日期格式: { start: '2026-04-17', end: '2026-04-26' }
+  if (typeof val === 'object' && val !== null) {
+    const obj = val as Record<string, string>;
+    if (obj.start && obj.end) return obj.start + ' ~ ' + obj.end;
+    if (obj.start) return obj.start;
+    return JSON.stringify(val);
+  }
+  return String(val);
+}
+
 export async function getEvents(): Promise<EventItem[]> {
   // 如果環境變數沒設定，直接用假資料
   if (!GAS_URL || !API_KEY) {
@@ -61,15 +75,15 @@ export async function getEvents(): Promise<EventItem[]> {
 
     // 如果 GAS 回傳成功且有 events 陣列
     if (data.success && Array.isArray(data.events)) {
-      return data.events.map((e: Record<string, string>) => ({
-        id: e.id || '',
-        title: e.title || '',
-        date: e.date || '',
-        location: e.location || '',
-        summary: e.summary || '',
-        link: e.link || '/events/' + (e.slug || e.id || ''),
-        emoji: e.emoji || '🏮',
-        tag: e.tag || '',
+      return data.events.map((e: Record<string, unknown>) => ({
+        id: safeString(e.id),
+        title: safeString(e.title),
+        date: safeString(e.date),
+        location: safeString(e.location),
+        summary: safeString(e.summary),
+        link: safeString(e.link) || '/events/' + safeString(e.slug || e.id),
+        emoji: safeString(e.emoji) || '🏮',
+        tag: safeString(e.tag),
       }));
     }
 
