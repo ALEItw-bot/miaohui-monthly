@@ -1,0 +1,354 @@
+/* ========================================
+   廟會月報 — 全站樣式
+   色系：廟紅 #C80000 / 深藍 #0000A5 / 白 #FFFFFF / 金黃 #D4A017
+   ======================================== */
+
+/* ---------- CSS Variables ---------- */
+:root {
+  --red: #C80000;
+  --red-dark: #9B0000;
+  --blue: #0000A5;
+  --blue-dark: #000080;
+  --cream: #FFFFFF;
+  --gold: #D4A017;
+  --white: #FFFFFF;
+  --gray: #666666;
+  --light-gray: #F5F5F5;
+  --text: #333333;
+  --font-title: 'Noto Serif TC', serif;
+  --font-body: 'Noto Sans TC', sans-serif;
+}
+
+/* ---------- Reset & Base ---------- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--cream);
+  line-height: 1.7;
+}
+
+a { color: inherit; text-decoration: none; }
+
+img { max-width: 100%; height: auto; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.text-center { text-align: center; }
+
+/* ---------- Header ---------- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--blue);
+  color: var(--white);
+  padding: 12px 0;
+  box-shadow: none;
+  border-bottom: 7px solid var(--white);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--white);
+}
+
+.nav { display: flex; align-items: center; gap: 24px; }
+.nav a { font-size: 0.95rem; transition: opacity 0.2s; }
+.nav a:hover { opacity: 0.8; }
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--blue-dark);
+}
+
+.mobile-menu.active { display: flex; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: var(--white);
+}
+.btn-primary:hover { background: var(--red-dark); }
+
+.btn-line {
+  background: #06C755;
+  color: var(--white);
+  font-size: 0.85rem;
+  padding: 8px 16px;
+}
+.btn-line:hover { background: #05a848; }
+
+.btn-line-big {
+  background: #06C755;
+  color: var(--white);
+}
+.btn-line-big:hover { background: #05a848; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--white);
+}
+.btn-outline:hover { background: var(--white); color: var(--blue); }
+
+.btn-lg { padding: 14px 36px; font-size: 1.1rem; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  height: 90vh;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+  /* 替換成你自己的廟會背景照片 */
+  background: url('../images/hero-bg.jpg') center/cover no-repeat;
+  margin-top: 56px;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(200, 0, 0, 0.85);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+}
+
+.hero-title {
+  font-family: var(--font-title);
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 16px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 32px;
+  opacity: 0.95;
+  line-height: 1.8;
+}
+
+.hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* ---------- Sections ---------- */
+.section { padding: 80px 0; }
+
+.section-dark {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.section-cta {
+  background: var(--red);
+  color: var(--white);
+}
+
+.section-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--gray);
+  margin-bottom: 40px;
+}
+
+/* ---------- Events Grid ---------- */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.event-card {
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.event-card-img {
+  height: 180px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 3rem;
+}
+
+.event-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-card-body { padding: 20px; }
+
+.event-card-title {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.event-card-meta {
+  font-size: 0.9rem;
+  color: var(--gray);
+  margin-bottom: 4px;
+}
+
+.event-card-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(196, 30, 58, 0.1);
+  color: var(--red);
+  margin-top: 8px;
+}
+
+.event-card-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: var(--gray);
+}
+
+/* ---------- Brand Intro ---------- */
+.brand-intro {
+  font-size: 1.2rem;
+  line-height: 2;
+  margin-bottom: 32px;
+  opacity: 0.9;
+}
+
+.cta-text {
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  opacity: 0.9;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: var(--blue-dark);
+  color: var(--white);
+  padding: 48px 0 0;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+
+.footer-brand p { opacity: 0.7; margin-top: 8px; }
+
+.footer-links a,
+.footer-social a {
+  display: block;
+  margin-top: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.footer-links a:hover,
+.footer-social a:hover { opacity: 1; }
+
+.footer-links h4,
+.footer-social h4 { margin-bottom: 4px; }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 16px 0;
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* ---------- RWD 響應式 ---------- */
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .mobile-menu-btn { display: block; }
+  
+  .hero { height: 80vh; margin-top: 52px; }
+  .hero-title { font-size: 2.2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  
+  .events-grid { grid-template-columns: 1fr; }
+  
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .section { padding: 60px 0; }
+  .section-title { font-size: 1.5rem; }
+}

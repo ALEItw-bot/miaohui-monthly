@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>廟會月報｜全台鬧熱，報你知！</title>
+  <meta name="description" content="廟會月報是台灣最完整的廟會活動資訊平台，收錄全台繞境、進香、廟會活動情報。">
+  
+  <!-- OG Meta Tags（社群分享用） -->
+  <meta property="og:title" content="廟會月報｜全台鬧熱，報你知！">
+  <meta property="og:description" content="台灣最完整的廟會活動資訊平台，大甲媽祖、白沙屯媽祖繞境情報都在這！">
+  <meta property="og:image" content="images/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://miaohui.tw">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ========== Header / 導覽列 ========== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">🏮 廟會月報</a>
+      <nav class="nav">
+        <a href="pages/brand-story.html">品牌故事</a>
+        <a href="#events">近期活動</a>
+        <a href="https://lin.ee/你的LINE連結" class="btn btn-line" target="_blank">
+          ＋加入 LINE
+        </a>
+      </nav>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <!-- 手機版選單 -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="pages/brand-story.html">品牌故事</a>
+      <a href="#events">近期活動</a>
+      <a href="https://lin.ee/你的LINE連結" class="btn btn-line">＋加入 LINE</a>
+    </div>
+  </header>
+
+  <!-- ========== Hero 區塊 ========== -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">全台鬧熱，報你知！</h1>
+      <p class="hero-subtitle">台灣最完整的廟會活動資訊平台<br>繞境・進香・廟會，第一手情報都在這</p>
+      <div class="hero-cta">
+        <a href="#events" class="btn btn-primary">🔥 看近期活動</a>
+        <a href="https://lin.ee/你的LINE連結" class="btn btn-line-big" target="_blank">💬 加入 LINE 好友</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 近期熱門活動 ========== -->
+  <section class="section" id="events">
+    <div class="container">
+      <h2 class="section-title">🔥 近期熱門活動</h2>
+      <p class="section-subtitle">即將到來的廟會盛事，千萬別錯過！</p>
+      <div class="events-grid" id="eventsGrid">
+        <!-- JS 動態載入活動卡片 -->
+        <div class="loading">載入中...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 品牌簡介 ========== -->
+  <section class="section section-dark">
+    <div class="container text-center">
+      <h2 class="section-title" style="color: var(--white);">🏮 廟會月報是什麼？</h2>
+      <p class="brand-intro">
+        我們是一群熱愛台灣廟會文化的人，<br>
+        致力於把全台灣最鬧熱的廟會資訊，<br>
+        用最好懂的方式分享給每一個人。
+      </p>
+      <a href="pages/brand-story.html" class="btn btn-outline">📖 閱讀完整故事</a>
+    </div>
+  </section>
+
+  <!-- ========== 報馬仔投稿 CTA ========== -->
+  <section class="section section-cta">
+    <div class="container text-center">
+      <h2 class="section-title">📥 你也有廟會消息？</h2>
+      <p class="cta-text">來當報馬仔！把你知道的廟會情報分享給大家</p>
+      <a href="https://lin.ee/你的LINE連結" class="btn btn-primary btn-lg" target="_blank">
+        💬 到 LINE 投稿
+      </a>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="logo">🏮 廟會月報</div>
+        <p>全台鬧熱，報你知！</p>
+      </div>
+      <div class="footer-links">
+        <h4>快速連結</h4>
+        <a href="pages/brand-story.html">品牌故事</a>
+        <a href="#events">近期活動</a>
+      </div>
+      <div class="footer-social">
+        <h4>追蹤我們</h4>
+        <a href="https://lin.ee/你的LINE連結" target="_blank">LINE 官方帳號</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 廟會月報 MiaoHui Monthly. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
