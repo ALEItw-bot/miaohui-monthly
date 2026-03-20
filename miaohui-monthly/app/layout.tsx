@@ -93,7 +93,7 @@ export default function RootLayout({
                 品牌故事
               </a>
               <a href="#" className="btn btn-line">
-                💬 LINE 好友
+                LINE 好友
               </a>
             </nav>
           </div>
