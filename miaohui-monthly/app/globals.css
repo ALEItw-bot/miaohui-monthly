@@ -233,15 +233,17 @@ img {
 
 .news-layout {
   display: grid;
-  grid-template-columns: 40% 1fr;
+  grid-template-columns: 952px 1fr;
   gap: 3rem;
   align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .news-image {
-  width: 952px;
-  max-width: 100%;
+  width: 100%;
   height: 442px;
+  aspect-ratio: 952 / 442;
   overflow: hidden;
   position: relative;
   border-radius: 12px;
