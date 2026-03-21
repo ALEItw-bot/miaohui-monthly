@@ -1,17 +1,16 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-export default function Carousel() {
+export default function NewsImageCarousel() {
   const [images, setImages] = useState<string[]>([]);
   const [current, setCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    fetch('/api/images?folder=carousel')
+    fetch('/api/images?folder=news')
       .then(res => res.json())
       .then(data => {
         if (data.images && data.images.length > 0) {
@@ -21,37 +20,37 @@ export default function Carousel() {
       .catch(() => {});
   }, []);
 
-  const totalSlides = images.length;
+  const total = images.length;
 
   const goTo = useCallback((index: number) => {
-    if (totalSlides === 0) return;
-    setCurrent(((index % totalSlides) + totalSlides) % totalSlides);
+    if (total === 0) return;
+    setCurrent(((index % total) + total) % total);
     setTranslateX(0);
-  }, [totalSlides]);
+  }, [total]);
 
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
 
   useEffect(() => {
-    if (totalSlides <= 1) return;
-    autoPlayRef.current = setInterval(next, 5000);
+    if (total <= 1) return;
+    autoPlayRef.current = setInterval(next, 4000);
     return () => {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     };
-  }, [next, totalSlides]);
+  }, [next, total]);
 
-  const pauseAutoPlay = () => {
+  const pauseAuto = () => {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
   };
-  const resumeAutoPlay = () => {
-    if (totalSlides <= 1) return;
-    autoPlayRef.current = setInterval(next, 5000);
+  const resumeAuto = () => {
+    if (total <= 1) return;
+    autoPlayRef.current = setInterval(next, 4000);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartX(e.clientX);
-    pauseAutoPlay();
+    pauseAuto();
   };
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
@@ -60,16 +59,16 @@ export default function Carousel() {
   const handleMouseUp = () => {
     if (!isDragging) return;
     setIsDragging(false);
-    if (translateX > 80) prev();
-    else if (translateX < -80) next();
+    if (translateX > 60) prev();
+    else if (translateX < -60) next();
     else setTranslateX(0);
-    resumeAutoPlay();
+    resumeAuto();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
     setIsDragging(true);
-    pauseAutoPlay();
+    pauseAuto();
   };
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
@@ -78,37 +77,32 @@ export default function Carousel() {
   const handleTouchEnd = () => {
     if (!isDragging) return;
     setIsDragging(false);
-    if (translateX > 80) prev();
-    else if (translateX < -80) next();
+    if (translateX > 60) prev();
+    else if (translateX < -60) next();
     else setTranslateX(0);
-    resumeAutoPlay();
+    resumeAuto();
   };
 
-  const loadingBg = { background: 'linear-gradient(135deg, #C80000, #8B0000)' };
-  const loadingText = { color: '#fff', fontSize: '24px', textAlign: 'center' as const, paddingTop: '40vh' };
-  const cursorStyle = { cursor: isDragging ? 'grabbing' : 'grab' };
-
-  if (totalSlides === 0) {
+  if (total === 0) {
     return (
-      <div className="carousel">
-        <div className="carousel-slide" style={loadingBg}>
-          <div style={loadingText}>Loading...</div>
-        </div>
+      <div className="news-image-placeholder">
+        <span className="news-image-text">廟會月報</span>
       </div>
     );
   }
 
+  const cursorStyle = { cursor: isDragging ? 'grabbing' : 'grab' };
   const trackStyle = {
     display: 'flex',
-    width: totalSlides * 100 + '%',
-    transform: 'translateX(calc(-' + (current * (100 / totalSlides)) + '% + ' + translateX + 'px))',
-    transition: isDragging ? 'none' : 'transform 0.5s ease',
+    width: total * 100 + '%',
+    height: '100%',
+    transform: 'translateX(calc(-' + (current * (100 / total)) + '% + ' + translateX + 'px))',
+    transition: isDragging ? 'none' : 'transform 0.4s ease',
   };
 
   return (
     <div
-      className="carousel"
-      ref={containerRef}
+      className="news-image-carousel"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -118,27 +112,29 @@ export default function Carousel() {
       onTouchEnd={handleTouchEnd}
       style={cursorStyle}
     >
-      <div className="carousel-track" style={trackStyle}>
+      <div className="news-image-track" style={trackStyle}>
         {images.map((src, i) => {
-          const slideStyle = {
-            width: (100 / totalSlides) + '%',
+          const imgStyle = {
+            width: (100 / total) + '%',
             flexShrink: 0,
             backgroundImage: 'url(' + src + ')',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           };
-          return <div key={i} className="carousel-slide" style={slideStyle} />;
+          return <div key={i} style={imgStyle} />;
         })}
       </div>
-      <div className="carousel-dots">
-        {images.map((_, i) => (
-          <span
-            key={i}
-            className={'carousel-dot' + (i === current ? ' active' : '')}
-            onClick={() => goTo(i)}
-          />
-        ))}
-      </div>
+      {total > 1 && (
+        <div className="news-carousel-dots">
+          {images.map((_, i) => (
+            <span
+              key={i}
+              className={'news-carousel-dot' + (i === current ? ' active' : '')}
+              onClick={() => goTo(i)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

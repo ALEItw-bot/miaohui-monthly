@@ -1,5 +1,6 @@
 'use client';
 
+import NewsImageCarousel from './components/NewsImageCarousel';
 import PopupModal from './components/PopupModal';
 import { useState, useEffect } from 'react';
 import Carousel from './components/Carousel';
@@ -141,12 +142,10 @@ export default function HomePage() {
 <section className="news-section" id="events">
   <div className="container">
     <div className="news-layout">
-      {/* 左側：大圖 */}
-      <div className="news-image">
-        <div className="news-image-placeholder">
-          <span className="news-image-text">廟會月報</span>
-        </div>
-      </div>
+      {/* 左側：輪播圖 */}
+<div className="news-image">
+  <NewsImageCarousel />
+</div>
       {/* 右側：消息列表 */}
       <div className="news-list">
         <h2 className="news-list-title">最新消息</h2>

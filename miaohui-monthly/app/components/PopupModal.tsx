@@ -2,23 +2,28 @@
 
 import { useState, useEffect } from 'react';
 
-const popupImages = [
-  '/popup/popup-1.jpg',
-  '/popup/popup-2.jpg',
-  '/popup/popup-3.jpg',
-];
+
 
 export default function PopupModal() {
   const [visible, setVisible] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
+  const [popupImages, setPopupImages] = useState<string[]>([]);
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * popupImages.length);
-    setImageSrc(popupImages[randomIndex]);
-    setVisible(true);
-  }, []);
+  fetch('/api/images?folder=popup')
+    .then(res => res.json())
+    .then(data => {
+      if (data.images && data.images.length > 0) {
+        setPopupImages(data.images);
+        const randomIndex = Math.floor(Math.random() * data.images.length);
+        setImageSrc(data.images[randomIndex]);
+        setVisible(true);
+      }
+    })
+    .catch(() => {});
+}, []);
 
-  if (!visible) return null;
+  if (!visible || popupImages.length === 0) return null;
 
   return (
     <div className="popup-overlay" onClick={() => setVisible(false)}>
