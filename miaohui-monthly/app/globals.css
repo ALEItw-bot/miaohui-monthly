@@ -133,7 +133,8 @@ img {
 /* ===== Carousel ===== */
 .carousel {
   position: relative;
-  height: calc(100vh - 68px);
+  height: 56.25vw;
+  max-height: calc(100vh - 105px);
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -233,14 +234,15 @@ img {
 
 .news-layout {
   display: grid;
-  grid-template-columns: 50% 1fr;
+  grid-template-columns: 45% 1fr;
   gap: 2rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .news-image {
   width: 100%;
-  aspect-ratio: 952 / 442;
+  height: 100%;
+  min-height: 300px;
   overflow: hidden;
   position: relative;
   border-radius: 12px;
