@@ -133,7 +133,7 @@ img {
 /* ===== Carousel ===== */
 .carousel {
   position: relative;
-  height: 56.25vw;
+  height: 49.22vw;             
   max-height: calc(100vh - 105px);
   overflow: hidden;
   user-select: none;
