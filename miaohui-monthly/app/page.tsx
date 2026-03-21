@@ -1,5 +1,6 @@
 'use client';
 
+import PopupModal from './components/PopupModal';
 import { useState, useEffect } from 'react';
 import Carousel from './components/Carousel';
 
@@ -132,6 +133,7 @@ export default function HomePage() {
 }, []);
   return (
     <>
+    <PopupModal />
       {/* 輪播 */}
       <Carousel />
 
