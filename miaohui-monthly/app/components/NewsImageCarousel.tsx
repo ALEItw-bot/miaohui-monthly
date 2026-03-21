@@ -83,13 +83,6 @@ export default function NewsImageCarousel() {
     resumeAuto();
   };
 
-  if (total === 0) {
-    return (
-      <div className="news-image-placeholder">
-        <span className="news-image-text">廟會月報</span>
-      </div>
-    );
-  }
 
   const cursorStyle = { cursor: isDragging ? 'grabbing' : 'grab' };
   const trackStyle = {
