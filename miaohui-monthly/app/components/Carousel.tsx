@@ -1,94 +1,62 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Carousel() {
   const [images, setImages] = useState<string[]>([]);
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [translateX, setTranslateX] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [dragX, setDragX] = useState(0);
+  const [animate, setAnimate] = useState(true);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
+  useEffect(function () {
     fetch('/api/images?folder=carousel')
-      .then(res => res.json())
-      .then(data => {
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
         if (data.images && data.images.length > 0) {
           setImages(data.images);
         }
       })
-      .catch(() => {});
+      .catch(function () {});
   }, []);
 
-  const totalSlides = images.length;
+  const total = images.length;
 
-  const goTo = useCallback((index: number) => {
-    if (totalSlides === 0) return;
-    setCurrent(((index % totalSlides) + totalSlides) % totalSlides);
-    setTranslateX(0);
-  }, [totalSlides]);
-
-  const next = useCallback(() => goTo(current + 1), [current, goTo]);
-  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
-
-  useEffect(() => {
-    if (totalSlides <= 1) return;
-    autoPlayRef.current = setInterval(next, 5000);
-    return () => {
-      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-    };
-  }, [next, totalSlides]);
-
-  const pauseAutoPlay = () => {
+  const clearAuto = function () {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
   };
-  const resumeAutoPlay = () => {
-    if (totalSlides <= 1) return;
-    autoPlayRef.current = setInterval(next, 5000);
+
+  const startAuto = function () {
+    if (total <= 1) return;
+    clearAuto();
+    autoPlayRef.current = setInterval(function () {
+      setAnimate(true);
+      setCurrent(function (prev) { return prev + 1; });
+      setDragX(0);
+    }, 5000);
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.clientX);
-    pauseAutoPlay();
-  };
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    setTranslateX(e.clientX - startX);
-  };
-  const handleMouseUp = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    if (translateX > 80) prev();
-    else if (translateX < -80) next();
-    else setTranslateX(0);
-    resumeAutoPlay();
-  };
+  useEffect(function () {
+    if (total <= 1) return;
+    autoPlayRef.current = setInterval(function () {
+      setAnimate(true);
+      setCurrent(function (prev) { return prev + 1; });
+      setDragX(0);
+    }, 5000);
+    return function () { clearAuto(); };
+  }, [total]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setStartX(e.touches[0].clientX);
-    setIsDragging(true);
-    pauseAutoPlay();
-  };
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    setTranslateX(e.touches[0].clientX - startX);
-  };
-  const handleTouchEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    if (translateX > 80) prev();
-    else if (translateX < -80) next();
-    else setTranslateX(0);
-    resumeAutoPlay();
-  };
-
-  const loadingBg = { background: 'linear-gradient(135deg, #C80000, #8B0000)' };
-  const loadingText = { color: '#fff', fontSize: '24px', textAlign: 'center' as const, paddingTop: '40vh' };
-  const cursorStyle = { cursor: isDragging ? 'grabbing' : 'grab' };
-
-  if (totalSlides === 0) {
+  if (total === 0) {
+    const loadingBg = Object.assign({}, {
+      background: 'linear-gradient(135deg, #C80000, #8B0000)'
+    });
+    const loadingText = Object.assign({}, {
+      color: '#fff',
+      fontSize: '24px',
+      textAlign: 'center' as const,
+      paddingTop: '40vh'
+    });
     return (
       <div className="carousel">
         <div className="carousel-slide" style={loadingBg}>
@@ -98,17 +66,90 @@ export default function Carousel() {
     );
   }
 
-  const trackStyle = {
-    display: 'flex',
-    width: totalSlides * 100 + '%',
-    transform: 'translateX(calc(-' + (current * (100 / totalSlides)) + '% + ' + translateX + 'px))',
-    transition: isDragging ? 'none' : 'transform 0.5s ease',
+  const slides = [images[total - 1]].concat(images).concat([images[0]]);
+  const slideCount = slides.length;
+
+  const goTo = function (index: number) {
+    setAnimate(true);
+    setCurrent(index);
+    setDragX(0);
   };
+
+  const next = function () { goTo(current + 1); };
+  const prev = function () { goTo(current - 1); };
+
+  const handleTransitionEnd = function () {
+    if (current === 0) {
+      setAnimate(false);
+      setCurrent(total);
+    } else if (current === total + 1) {
+      setAnimate(false);
+      setCurrent(1);
+    }
+  };
+
+  const handleMouseDown = function (e: React.MouseEvent) {
+    setIsDragging(true);
+    setStartX(e.clientX);
+    clearAuto();
+  };
+
+  const handleMouseMove = function (e: React.MouseEvent) {
+    if (!isDragging) return;
+    setDragX(e.clientX - startX);
+  };
+
+  const handleMouseUp = function () {
+    if (!isDragging) return;
+    setIsDragging(false);
+    if (dragX > 80) { prev(); }
+    else if (dragX < -80) { next(); }
+    else { setDragX(0); }
+    startAuto();
+  };
+
+  const handleTouchStart = function (e: React.TouchEvent) {
+    setStartX(e.touches[0].clientX);
+    setIsDragging(true);
+    clearAuto();
+  };
+
+  const handleTouchMove = function (e: React.TouchEvent) {
+    if (!isDragging) return;
+    setDragX(e.touches[0].clientX - startX);
+  };
+
+  const handleTouchEnd = function () {
+    if (!isDragging) return;
+    setIsDragging(false);
+    if (dragX > 80) { prev(); }
+    else if (dragX < -80) { next(); }
+    else { setDragX(0); }
+    startAuto();
+  };
+
+  let realIndex = current - 1;
+  if (current === 0) { realIndex = total - 1; }
+  else if (current === total + 1) { realIndex = 0; }
+
+  const offsetPercent = current * (100 / slideCount);
+  const transformValue = 'translateX(calc(-' + offsetPercent + '% + ' + dragX + 'px))';
+  const transitionValue = (!animate || isDragging) ? 'none' : 'transform 0.5s ease';
+
+  const trackStyle = Object.assign({}, {
+    display: 'flex',
+    width: slideCount * 100 + '%',
+    transform: transformValue,
+    transition: transitionValue
+  });
+
+  const cursorStyle = Object.assign({}, {
+    cursor: isDragging ? 'grabbing' : 'grab'
+  });
 
   return (
     <div
       className="carousel"
-      ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -118,27 +159,33 @@ export default function Carousel() {
       onTouchEnd={handleTouchEnd}
       style={cursorStyle}
     >
-      <div className="carousel-track" style={trackStyle}>
-        {images.map((src, i) => {
-          const slideStyle = {
-            width: (100 / totalSlides) + '%',
+      <div
+        className="carousel-track"
+        style={trackStyle}
+        onTransitionEnd={handleTransitionEnd}
+      >
+        {slides.map(function (src, i) {
+          const slideStyle = Object.assign({}, {
+            width: (100 / slideCount) + '%',
             flexShrink: 0,
             backgroundImage: 'url(' + src + ')',
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            };
+            backgroundPosition: 'center'
+          });
           return <div key={i} className="carousel-slide" style={slideStyle} />;
         })}
       </div>
       <div className="carousel-dots">
-        {images.map((_, i) => (
-          <span
-            key={i}
-            className={'carousel-dot' + (i === current ? ' active' : '')}
-            onClick={() => goTo(i)}
-          />
-        ))}
+        {images.map(function (_, i) {
+          const dotClass = 'carousel-dot' + (i === realIndex ? ' active' : '');
+          return (
+            <span
+              key={i}
+              className={dotClass}
+              onClick={function () { goTo(i + 1); }}
+            />
+          );
+        })}
       </div>
     </div>
   );
