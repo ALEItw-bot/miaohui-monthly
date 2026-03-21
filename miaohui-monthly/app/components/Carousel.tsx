@@ -124,7 +124,7 @@ export default function Carousel() {
             width: (100 / totalSlides) + '%',
             flexShrink: 0,
             backgroundImage: 'url(' + src + ')',
-            backgroundSize: 'cover',
+            backgroundSize: 'contain',
             backgroundPosition: 'center',
           };
           return <div key={i} className="carousel-slide" style={slideStyle} />;

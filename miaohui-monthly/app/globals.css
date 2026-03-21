@@ -239,8 +239,9 @@ img {
 }
 
 .news-image {
-  width: 100%;
-  height: 350px;
+  width: 952px;
+  max-width: 100%;
+  height: 442px;
   overflow: hidden;
   position: relative;
   border-radius: 12px;
