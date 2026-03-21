@@ -88,6 +88,23 @@ export default function Carousel() {
     }
   };
 
+  const snapIfNeeded = function () {
+    if (current === 0) {
+      setAnimate(false);
+      setCurrent(total);
+    } else if (current === total + 1) {
+      setAnimate(false);
+      setCurrent(1);
+    }
+  };
+
+  const clampDrag = function (diff: number) {
+    const maxDrag = window.innerWidth;
+    if (diff > maxDrag) { return maxDrag; }
+    if (diff < -maxDrag) { return -maxDrag; }
+    return diff;
+  };
+
   const handleMouseDown = function (e: React.MouseEvent) {
     setIsDragging(true);
     setStartX(e.clientX);
@@ -96,12 +113,13 @@ export default function Carousel() {
 
   const handleMouseMove = function (e: React.MouseEvent) {
     if (!isDragging) return;
-    setDragX(e.clientX - startX);
+    setDragX(clampDrag(e.clientX - startX));
   };
 
   const handleMouseUp = function () {
     if (!isDragging) return;
     setIsDragging(false);
+    snapIfNeeded();
     if (dragX > 80) { prev(); }
     else if (dragX < -80) { next(); }
     else { setDragX(0); }
@@ -116,12 +134,13 @@ export default function Carousel() {
 
   const handleTouchMove = function (e: React.TouchEvent) {
     if (!isDragging) return;
-    setDragX(e.touches[0].clientX - startX);
+    setDragX(clampDrag(e.touches[0].clientX - startX));
   };
 
   const handleTouchEnd = function () {
     if (!isDragging) return;
     setIsDragging(false);
+    snapIfNeeded();
     if (dragX > 80) { prev(); }
     else if (dragX < -80) { next(); }
     else { setDragX(0); }
