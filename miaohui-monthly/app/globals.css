@@ -731,8 +731,11 @@ img {
   }
 
   .news-image {
-    order: -1;
-  }
+  width: 40%;
+  min-height: 300px;
+  overflow: hidden;
+  position: relative;
+}
 
   .footer-grid {
     grid-template-columns: 1fr;
