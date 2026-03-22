@@ -905,7 +905,7 @@ img {
 /* ===== 工商服務 + 精彩花絮 ===== */
 .sponsor-gallery-section {
   padding: 80px 0;
-  background: rgba(242, 232, 218, 0.85);
+  background: rgba(242, 232, 218, 0.0); /* 調整區塊底部透明度 */
 }
 
 .sg-container {
@@ -1154,7 +1154,7 @@ img {
 
 .announce-content {
   padding: 48px 0 80px;
-  background: rgba(255, 248, 240, 0.85);
+  background: rgba(255, 248, 240, 0.0); /* 調整區塊底部透明度 */
 }
 
 .announce-filter {
