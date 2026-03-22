@@ -33,7 +33,7 @@ body {
   font-family: var(--font-body);
   color: var(--text);
   background-color: #FFF8F0;
-  background-image: url('/bg.jpg'); /* ===== 更換背景底圖 ===== */
+  background-image: url('/background.png'); /* ===== 更換背景底圖 ===== */
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
