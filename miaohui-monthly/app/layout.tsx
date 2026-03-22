@@ -80,7 +80,7 @@ export default function RootLayout({
               </div>
               <div className="footer-links">
                 <h4 className="footer-title">快速連結</h4>
-                <a href="/#events">最新消息</a>
+                <a href="/announcements" className="header-nav-link">最新消息</a>
                 <a href="/brand-story">品牌故事</a>
               </div>
               <div className="footer-social">

@@ -884,6 +884,217 @@ img {
   background: #fff;
 }
 
+/* ===== 工商服務 + 精彩花絮 ===== */
+.sponsor-gallery-section {
+  padding: 80px 0;
+  background: #f2e8da;
+}
+
+.sg-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1400px;
+}
+
+.sg-heading {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+}
+
+.sg-desc {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.sponsor-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sponsor-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sponsor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.sponsor-logo-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.sg-cta {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.gallery-mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 160px;
+  gap: 0.75rem;
+}
+
+.mosaic-item {
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+.mosaic-item:hover {
+  transform: scale(1.02);
+}
+
+.mosaic-lg {
+  grid-column: 1 / -1;
+  min-height: 200px;
+}
+
+.mosaic-label {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== 最新消息完整頁 /announcements ===== */
+.announce-hero {
+  background: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+  padding: 100px 0 60px;
+  color: var(--white);
+}
+
+.announce-hero-title {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 0.75rem;
+}
+
+.announce-hero-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.announce-content {
+  padding: 48px 0 80px;
+  background: var(--warm-white);
+}
+
+.announce-filter {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.announce-tag-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 24px;
+  border: 2px solid var(--red);
+  background: transparent;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.announce-tag-btn.active,
+.announce-tag-btn:hover {
+  background: var(--red);
+  color: var(--white);
+}
+
+.announce-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.announce-card {
+  display: block;
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.announce-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.announce-card-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.announce-date {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  white-space: nowrap;
+  min-width: 90px;
+}
+
+.announce-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.announce-summary {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.announce-empty {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+
+
 /* ===== RWD ===== */
 @media (max-width: 768px) {
   .header-inner {
@@ -957,6 +1168,25 @@ img {
   .popup-bar-blue {
     height: 12px;
   }
+
+/* 工商 + 花絮 RWD */
+.sg-container {
+  grid-template-columns: 1fr;
+}
+
+/* /announcements RWD */
+.announce-hero {
+  padding: 80px 0 40px;
+}
+
+.announce-hero-title {
+  font-size: 2rem;
+}
+
+.announce-card-top {
+  flex-wrap: wrap;
+}
+
 }
 
 @media (max-width: 480px) {
@@ -998,3 +1228,18 @@ img {
     grid-template-columns: 1fr;
   }
 }
+
+
+
+
+/* 第 1 格（大張，橫跨兩欄）→ 顯示 g1.jpg */
+.mosaic-item:nth-child(1) { background-image: url('/gallery/g1.jpg'); }
+
+/* 第 2 格（左下）→ 顯示 g2.jpg */
+.mosaic-item:nth-child(2) { background-image: url('/gallery/g2.jpg'); }
+
+/* 第 3 格（右下左）→ 顯示 g3.jpg */
+.mosaic-item:nth-child(3) { background-image: url('/gallery/g3.jpg'); }
+
+/* 第 4 格（右下右）→ 顯示 g4.jpg */
+.mosaic-item:nth-child(4) { background-image: url('/gallery/g4.jpg'); }

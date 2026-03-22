@@ -171,7 +171,59 @@ export default function HomePage() {
           </a>
         ))}
         <div className="news-more">
-          <a href="/announcements">...更多</a>
+  <a href="/announcements">更多消息 →</a>
+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ===== 工商服務 + 精彩花絮 ===== */}
+<section className="sponsor-gallery-section">
+  <div className="container sg-container">
+    {/* 左欄：工商服務 */}
+    <div className="sg-block">
+      <h2 className="sg-heading">🏮 工商服務</h2>
+      <p className="sg-desc">感謝以下夥伴熱情贊助，讓廟會文化持續發光</p>
+      <div className="sponsor-cards">
+        {/* TODO: 之後改從 Notion 工商合作夥伴 DB 動態讀取 */}
+        <a href="#" className="sponsor-card">
+          <div className="sponsor-logo-circle">Logo</div>
+          <span>合作夥伴 A</span>
+        </a>
+        <a href="#" className="sponsor-card">
+          <div className="sponsor-logo-circle">Logo</div>
+          <span>合作夥伴 B</span>
+        </a>
+        <a href="#" className="sponsor-card">
+          <div className="sponsor-logo-circle">Logo</div>
+          <span>合作夥伴 C</span>
+        </a>
+        <a href="#" className="sponsor-card">
+          <div className="sponsor-logo-circle">Logo</div>
+          <span>合作夥伴 D</span>
+        </a>
+      </div>
+      <div className="sg-cta">
+        <a href="#" className="btn btn-primary">成為合作夥伴</a>
+      </div>
+    </div>
+    {/* 右欄：精彩花絮 */}
+    <div className="sg-block">
+      <h2 className="sg-heading">📸 精彩花絮</h2>
+      <p className="sg-desc">現場直擊，用鏡頭感受廟會的鬧熱與感動</p>
+      <div className="gallery-mosaic">
+        <div className="mosaic-item mosaic-lg">
+          <span className="mosaic-label">大甲媽遶境</span>
+        </div>
+        <div className="mosaic-item">
+          <span className="mosaic-label">白沙屯進香</span>
+        </div>
+        <div className="mosaic-item">
+          <span className="mosaic-label">鎮瀾宮夜景</span>
+        </div>
+        <div className="mosaic-item">
+          <span className="mosaic-label">信眾隨行</span>
         </div>
       </div>
     </div>
