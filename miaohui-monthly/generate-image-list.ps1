@@ -1,5 +1,5 @@
 # generate-image-list.ps1
-$folders = @("carousel", "news", "popup")
+$folders = @('carousel', 'news', 'popup', 'sponsor', 'gallery')
 foreach ($folder in $folders) {
     $dir = "public/$folder"
     $jsonPath = "$dir/images.json"

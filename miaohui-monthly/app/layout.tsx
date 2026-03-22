@@ -58,7 +58,7 @@ export default function RootLayout({
                 廟會月報
               </a>
               <nav className="header-nav">
-                <a href="/#events" className="header-nav-link">最新消息</a>
+                <a href="/announcements" className="header-nav-link">最新消息</a>
                 <a href="/brand-story" className="header-nav-link">品牌故事</a>
                 <a href="/#news" className="header-nav-link">熱鬧資訊</a>
               </nav>

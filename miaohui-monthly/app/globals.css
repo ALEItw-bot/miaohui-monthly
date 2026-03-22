@@ -955,6 +955,69 @@ img {
   margin-top: 0.5rem;
 }
 
+/* ===== 工商服務輪播圖 ===== */
+.sponsor-carousel-wrapper {
+  width: 100%;
+  height: 360px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.sponsor-carousel {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sponsor-carousel-track {
+  height: 100%;
+}
+
+.sponsor-carousel-slide {
+  height: 100%;
+}
+
+.sponsor-carousel-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--white);
+}
+
+.sponsor-carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.sponsor-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sponsor-carousel-dot.active {
+  background: #fff;
+}
+
 .gallery-mosaic {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -988,6 +1051,68 @@ img {
   font-weight: 700;
   font-size: 0.95rem;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== 精彩花絮輪播圖 ===== */
+.gallery-carousel-wrapper {
+  width: 100%;
+  height: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.gallery-carousel {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.gallery-carousel-track {
+  height: 100%;
+}
+
+.gallery-carousel-slide {
+  height: 100%;
+}
+
+.gallery-carousel-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--white);
+}
+
+.gallery-carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.gallery-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.gallery-carousel-dot.active {
+  background: #fff;
 }
 
 /* ===== 最新消息完整頁 /announcements ===== */
@@ -1169,6 +1294,15 @@ img {
     height: 12px;
   }
 
+  .gallery-carousel-wrapper {
+  height: 280px;
+  }
+
+  .sponsor-carousel-wrapper {
+  height: 260px;
+  }
+}
+
 /* 工商 + 花絮 RWD */
 .sg-container {
   grid-template-columns: 1fr;
@@ -1228,18 +1362,3 @@ img {
     grid-template-columns: 1fr;
   }
 }
-
-
-
-
-/* 第 1 格（大張，橫跨兩欄）→ 顯示 g1.jpg */
-.mosaic-item:nth-child(1) { background-image: url('/gallery/g1.jpg'); }
-
-/* 第 2 格（左下）→ 顯示 g2.jpg */
-.mosaic-item:nth-child(2) { background-image: url('/gallery/g2.jpg'); }
-
-/* 第 3 格（右下左）→ 顯示 g3.jpg */
-.mosaic-item:nth-child(3) { background-image: url('/gallery/g3.jpg'); }
-
-/* 第 4 格（右下右）→ 顯示 g4.jpg */
-.mosaic-item:nth-child(4) { background-image: url('/gallery/g4.jpg'); }
