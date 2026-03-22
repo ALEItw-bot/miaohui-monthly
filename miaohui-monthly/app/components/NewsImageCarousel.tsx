@@ -1,131 +1,84 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export default function NewsImageCarousel() {
   const [images, setImages] = useState<string[]>([]);
-  const [current, setCurrent] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [translateX, setTranslateX] = useState(0);
-  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     fetch('/news/images.json')
-      .then(res => res.json())
-      .then(data => {
-        if (data.images && data.images.length > 0) {
-          setImages(data.images);
-        }
+      .then((res) => res.json())
+      .then((data: string[]) => {
+        if (data.length > 0) setImages(data);
       })
-      .catch(() => {});
+      .catch((err) => console.error('Failed to load news images:', err));
   }, []);
 
-  const total = images.length;
-
-  const goTo = useCallback((index: number) => {
-    if (total === 0) return;
-    setCurrent(((index % total) + total) % total);
-    setTranslateX(0);
-  }, [total]);
-
-  const next = useCallback(() => goTo(current + 1), [current, goTo]);
-  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
+  const next = useCallback(() => {
+    setIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
 
   useEffect(() => {
-    if (total <= 1) return;
-    autoPlayRef.current = setInterval(next, 4000);
-    return () => {
-      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-    };
-  }, [next, total]);
+    if (images.length <= 1) return;
+    const timer = setInterval(next, 4000);
+    return () => clearInterval(timer);
+  }, [next, images.length]);
 
-  const pauseAuto = () => {
-    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-  };
-  const resumeAuto = () => {
-    if (total <= 1) return;
-    autoPlayRef.current = setInterval(next, 4000);
-  };
+  if (images.length === 0) return null;
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.clientX);
-    pauseAuto();
-  };
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    setTranslateX(e.clientX - startX);
-  };
-  const handleMouseUp = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    if (translateX > 60) prev();
-    else if (translateX < -60) next();
-    else setTranslateX(0);
-    resumeAuto();
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setStartX(e.touches[0].clientX);
-    setIsDragging(true);
-    pauseAuto();
-  };
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    setTranslateX(e.touches[0].clientX - startX);
-  };
-  const handleTouchEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    if (translateX > 60) prev();
-    else if (translateX < -60) next();
-    else setTranslateX(0);
-    resumeAuto();
-  };
-
-
-  const cursorStyle = { cursor: isDragging ? 'grabbing' : 'grab' };
-  const trackStyle = {
-    display: 'flex',
-    width: total * 100 + '%',
+  const containerStyle = Object.assign({}, {
+    position: 'relative' as const,
+    width: '100%',
     height: '100%',
-    transform: 'translateX(calc(-' + (current * (100 / total)) + '% + ' + translateX + 'px))',
-    transition: isDragging ? 'none' : 'transform 0.4s ease',
-  };
+    overflow: 'hidden',
+    borderRadius: '8px',
+  });
 
   return (
-    <div
-      className="news-image-carousel"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      style={cursorStyle}
-    >
-      <div className="news-image-track" style={trackStyle}>
-        {images.map((src, i) => {
-          const imgStyle = {
-            width: (100 / total) + '%',
-            flexShrink: 0,
-            backgroundImage: 'url(' + src + ')',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          };
-          return <div key={i} style={imgStyle} />;
-        })}
-      </div>
-      {total > 1 && (
-        <div className="news-carousel-dots">
-          {images.map((_, i) => (
-            <span
-              key={i}
-              className={'news-carousel-dot' + (i === current ? ' active' : '')}
-              onClick={() => goTo(i)}
-            />
-          ))}
+    <div style={containerStyle}>
+      {images.map((src, i) => {
+        const imgStyle = Object.assign({}, {
+          position: 'absolute' as const,
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover' as const,
+          opacity: i === index ? 1 : 0,
+          transition: 'opacity 0.8s ease',
+        });
+        return <img key={i} src={src} alt={'News ' + (i + 1)} style={imgStyle} />;
+      })}
+
+      {images.length > 1 && (
+        <div style={Object.assign({}, {
+          position: 'absolute' as const,
+          bottom: '8px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: '6px',
+        })}>
+          {images.map((_, i) => {
+            const dotStyle = Object.assign({}, {
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              background: i === index ? '#fff' : 'rgba(255,255,255,0.5)',
+              transition: 'background 0.3s',
+            });
+            return (
+              <button
+                key={i}
+                style={dotStyle}
+                onClick={() => setIndex(i)}
+                aria-label={'News image ' + (i + 1)}
+              />
+            );
+          })}
         </div>
       )}
     </div>

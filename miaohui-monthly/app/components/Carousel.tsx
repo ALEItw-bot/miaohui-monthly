@@ -1,211 +1,161 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 export default function Carousel() {
   const [images, setImages] = useState<string[]>([]);
-  const [current, setCurrent] = useState(1);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [dragX, setDragX] = useState(0);
-  const [animate, setAnimate] = useState(true);
+  const [index, setIndex] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const startX = useRef(0);
+  const isDragging = useRef(false);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(function () {
+  useEffect(() => {
     fetch('/carousel/images.json')
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
-        if (data.images && data.images.length > 0) {
-          setImages(data.images);
-        }
+      .then((res) => res.json())
+      .then((data: string[]) => {
+        if (data.length > 0) setImages(data);
       })
-      .catch(function () {});
+      .catch((err) => console.error('Failed to load carousel images:', err));
   }, []);
 
-  const total = images.length;
+  const slides = images.length > 0
+    ? [images[images.length - 1], ...images, images[0]]
+    : [];
 
-  const clearAuto = function () {
+  const goTo = useCallback(
+    (newIndex: number) => {
+      if (isTransitioning || slides.length === 0) return;
+      setIsTransitioning(true);
+      setIndex(newIndex);
+    },
+    [isTransitioning, slides.length]
+  );
+
+  const next = useCallback(() => goTo(index + 1), [goTo, index]);
+  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    autoPlayRef.current = setInterval(next, 5000);
+    return () => {
+      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    };
+  }, [next, images.length]);
+
+  const handleTransitionEnd = () => {
+    setIsTransitioning(false);
+    if (index === 0) {
+      setIndex(images.length);
+    } else if (index === images.length + 1) {
+      setIndex(1);
+    }
+  };
+
+  const clampDrag = (offset: number) => {
+    const w = containerRef.current?.offsetWidth || 1;
+    const max = w * 0.8;
+    if (offset > max) return max;
+    if (offset < -max) return -max;
+    return offset;
+  };
+
+  const snapIfNeeded = () => {
+    const w = containerRef.current?.offsetWidth || 1;
+    const threshold = w * 0.15;
+    if (Math.abs(dragOffset) > threshold) {
+      if (dragOffset < 0) next();
+      else prev();
+    }
+    setDragOffset(0);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    isDragging.current = true;
+    startX.current = e.clientX;
+    setDragOffset(0);
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
   };
 
-  const startAuto = function () {
-    if (total <= 1) return;
-    clearAuto();
-    autoPlayRef.current = setInterval(function () {
-      setAnimate(true);
-      setCurrent(function (prev) { return prev + 1; });
-      setDragX(0);
-    }, 5000);
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging.current) return;
+    const diff = e.clientX - startX.current;
+    setDragOffset(clampDrag(diff));
   };
 
-  useEffect(function () {
-    if (total <= 1) return;
-    autoPlayRef.current = setInterval(function () {
-      setAnimate(true);
-      setCurrent(function (prev) { return prev + 1; });
-      setDragX(0);
-    }, 5000);
-    return function () { clearAuto(); };
-  }, [total]);
-
-  if (total === 0) {
-    const loadingBg = Object.assign({}, {
-      background: 'linear-gradient(135deg, #C80000, #8B0000)'
-    });
-    const loadingText = Object.assign({}, {
-      color: '#fff',
-      fontSize: '24px',
-      textAlign: 'center' as const,
-      paddingTop: '40vh'
-    });
-    return (
-      <div className="carousel">
-        <div className="carousel-slide" style={loadingBg}>
-          <div style={loadingText}>Loading...</div>
-        </div>
-      </div>
-    );
-  }
-
-  const slides = [images[total - 1]].concat(images).concat([images[0]]);
-  const slideCount = slides.length;
-
-  const goTo = function (index: number) {
-    setAnimate(true);
-    setCurrent(index);
-    setDragX(0);
-  };
-
-  const next = function () { goTo(current + 1); };
-  const prev = function () { goTo(current - 1); };
-
-  const handleTransitionEnd = function () {
-    if (current === 0) {
-      setAnimate(false);
-      setCurrent(total);
-    } else if (current === total + 1) {
-      setAnimate(false);
-      setCurrent(1);
+  const handlePointerUp = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    snapIfNeeded();
+    if (images.length > 1) {
+      autoPlayRef.current = setInterval(next, 5000);
     }
   };
 
-  const snapIfNeeded = function () {
-    if (current === 0) {
-      setAnimate(false);
-      setCurrent(total);
-    } else if (current === total + 1) {
-      setAnimate(false);
-      setCurrent(1);
-    }
-  };
+  if (images.length === 0) return null;
 
-  const clampDrag = function (diff: number) {
-    const maxDrag = window.innerWidth;
-    if (diff > maxDrag) { return maxDrag; }
-    if (diff < -maxDrag) { return -maxDrag; }
-    return diff;
-  };
-
-  const handleMouseDown = function (e: React.MouseEvent) {
-    setIsDragging(true);
-    setStartX(e.clientX);
-    clearAuto();
-  };
-
-  const handleMouseMove = function (e: React.MouseEvent) {
-    if (!isDragging) return;
-    setDragX(clampDrag(e.clientX - startX));
-  };
-
-  const handleMouseUp = function () {
-    if (!isDragging) return;
-    setIsDragging(false);
-    snapIfNeeded();
-    if (dragX > 80) { prev(); }
-    else if (dragX < -80) { next(); }
-    else { setDragX(0); }
-    startAuto();
-  };
-
-  const handleTouchStart = function (e: React.TouchEvent) {
-    setStartX(e.touches[0].clientX);
-    setIsDragging(true);
-    clearAuto();
-  };
-
-  const handleTouchMove = function (e: React.TouchEvent) {
-    if (!isDragging) return;
-    setDragX(clampDrag(e.touches[0].clientX - startX));
-  };
-
-  const handleTouchEnd = function () {
-    if (!isDragging) return;
-    setIsDragging(false);
-    snapIfNeeded();
-    if (dragX > 80) { prev(); }
-    else if (dragX < -80) { next(); }
-    else { setDragX(0); }
-    startAuto();
-  };
-
-  let realIndex = current - 1;
-  if (current === 0) { realIndex = total - 1; }
-  else if (current === total + 1) { realIndex = 0; }
-
-  const offsetPercent = current * (100 / slideCount);
-  const transformValue = 'translateX(calc(-' + offsetPercent + '% + ' + dragX + 'px))';
-  const transitionValue = (!animate || isDragging) ? 'none' : 'transform 0.5s ease';
-
-  const trackStyle = Object.assign({}, {
+  const wrapperStyle = Object.assign({}, {
     display: 'flex',
-    width: slideCount * 100 + '%',
-    transform: transformValue,
-    transition: transitionValue
-  });
-
-  const cursorStyle = Object.assign({}, {
-    cursor: isDragging ? 'grabbing' : 'grab'
+    transform: 'translateX(calc(' + (-index * 100) + '% + ' + dragOffset + 'px))',
+    transition: isTransitioning && dragOffset === 0 ? 'transform 0.5s ease' : 'none',
+    width: (slides.length * 100) + '%',
   });
 
   return (
-    <div
-      className="carousel"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      style={cursorStyle}
-    >
+    <div className="carousel" ref={containerRef}>
       <div
-        className="carousel-track"
-        style={trackStyle}
+        style={wrapperStyle}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
         onTransitionEnd={handleTransitionEnd}
       >
-        {slides.map(function (src, i) {
+        {slides.map((src, i) => {
           const slideStyle = Object.assign({}, {
-            width: (100 / slideCount) + '%',
-            flexShrink: 0,
+            width: (100 / slides.length) + '%',
+            height: '100%',
             backgroundImage: 'url(' + src + ')',
             backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            flexShrink: 0,
+            cursor: 'grab',
+            userSelect: 'none' as const,
           });
-          return <div key={i} className="carousel-slide" style={slideStyle} />;
+          return <div key={i} className="carousel-slide" style={slideStyle} draggable={false} />;
         })}
       </div>
-      <div className="carousel-dots">
-        {images.map(function (_, i) {
-          const dotClass = 'carousel-dot' + (i === realIndex ? ' active' : '');
-          return (
-            <span
-              key={i}
-              className={dotClass}
-              onClick={function () { goTo(i + 1); }}
-            />
-          );
-        })}
-      </div>
+
+      {images.length > 1 && (
+        <div className="carousel-dots">
+          {images.map((_, i) => {
+            const isActive = (index === 0 && i === images.length - 1)
+              || (index === images.length + 1 && i === 0)
+              || i === index - 1;
+            const dotStyle = Object.assign({}, {
+              width: '12px',
+              height: '12px',
+              borderRadius: '50%',
+              margin: '0 4px',
+              cursor: 'pointer',
+              background: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
+              border: 'none',
+              padding: 0,
+              transition: 'background 0.3s',
+            });
+            return (
+              <button
+                key={i}
+                style={dotStyle}
+                onClick={() => goTo(i + 1)}
+                aria-label={'Go to slide ' + (i + 1)}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
