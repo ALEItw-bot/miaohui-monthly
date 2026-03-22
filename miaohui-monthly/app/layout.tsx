@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import HeaderWrapper from './components/HeaderWrapper';
 
 export const metadata: Metadata = {
   title: {
@@ -7,9 +8,9 @@ export const metadata: Metadata = {
     template: '%s｜廟會月報',
   },
   description:
-    '台灣最完整的廟會活動資訊平台。大甲媽祖遶境、白沙屯媽祖進香、全台廟會活動時間、路線、注意事項一次看！',
+    '台灣最完整的廟會活動資訊平台。大甲媽祖遣境、白沙屯媽祖進香、全台廟會活動時間、路線、注意事項一次看！',
   keywords: [
-    '廟會月報', '大甲媽祖遶境', '白沙屯媽祖',
+    '廟會月報', '大甲媽祖遣境', '白沙屯媽祖',
     '繞境', '進香', '廟會', '媽祖', '台灣廟會',
   ],
   authors: [{ name: '廟會月報團隊' }],
@@ -47,8 +48,8 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {/* ===== Header: 藍白紅三層 ===== */}
-        <header className="header-wrap">
+        {/* ===== Header: 藍白紅三層 + Auto-Hide ===== */}
+        <HeaderWrapper>
           <div className="header-blue" />
           <div className="header-white" />
           <div className="header-red">
@@ -59,12 +60,12 @@ export default function RootLayout({
               <nav className="header-nav">
                 <a href="/#events" className="header-nav-link">最新消息</a>
                 <a href="/brand-story" className="header-nav-link">品牌故事</a>
-                <a href="/news" className="header-nav-link">熱鬧資訊</a>
-              
+                <a href="/#news" className="header-nav-link">熱鬧資訊</a>
+                <span className="header-nav-dots">..........</span>
               </nav>
             </div>
           </div>
-        </header>
+        </HeaderWrapper>
 
         {/* ===== Main ===== */}
         <main>{children}</main>
@@ -82,8 +83,6 @@ export default function RootLayout({
                 <h4 className="footer-title">快速連結</h4>
                 <a href="/#events">最新消息</a>
                 <a href="/brand-story">品牌故事</a>
-                <a href="/events/dajia">大甲媽祖遶境</a>
-                <a href="/events/baishatun">白沙屯媽祖進香</a>
               </div>
               <div className="footer-social">
                 <h4 className="footer-title">關注我們</h4>
