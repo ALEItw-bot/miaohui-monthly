@@ -47,6 +47,28 @@ export default function Carousel() {
     return function () { clearAuto(); };
   }, [total]);
 
+  // ★ 修正：分頁閒置後 setInterval 失控導致輪播消失
+  useEffect(function () {
+    var handleVisibility = function () {
+      if (document.hidden) {
+        clearAuto();
+      } else {
+        setCurrent(function (prev) {
+          if (prev <= 0) return 1;
+          if (prev > total) return 1;
+          return prev;
+        });
+        setAnimate(false);
+        setDragX(0);
+        startAuto();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return function () {
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [total]);
+
   if (total === 0) {
     const loadingBg = Object.assign({}, {
       background: 'linear-gradient(135deg, #C80000, #8B0000)'
@@ -110,12 +132,10 @@ export default function Carousel() {
     setStartX(e.clientX);
     clearAuto();
   };
-
   const handleMouseMove = function (e: React.MouseEvent) {
     if (!isDragging) return;
     setDragX(clampDrag(e.clientX - startX));
   };
-
   const handleMouseUp = function () {
     if (!isDragging) return;
     setIsDragging(false);
@@ -131,12 +151,10 @@ export default function Carousel() {
     setIsDragging(true);
     clearAuto();
   };
-
   const handleTouchMove = function (e: React.TouchEvent) {
     if (!isDragging) return;
     setDragX(clampDrag(e.touches[0].clientX - startX));
   };
-
   const handleTouchEnd = function () {
     if (!isDragging) return;
     setIsDragging(false);
@@ -194,7 +212,6 @@ export default function Carousel() {
           return <div key={i} className="carousel-slide" style={slideStyle} />;
         })}
       </div>
-
       <div className="carousel-dots">
         {images.map(function (_, i) {
           const dotClass = 'carousel-dot' + (i === realIndex ? ' active' : '');
