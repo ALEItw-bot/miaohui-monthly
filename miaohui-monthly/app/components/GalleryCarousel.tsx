@@ -86,7 +86,7 @@ export default function GalleryCarousel() {
   if (total === 0) {
     return (
       <div className="gallery-carousel-placeholder">
-        <span>\ud83d\udcf8 \u7cbe\u5f69\u82b1\u7d6e</span>
+        <span>\📸 精彩花絮</span>
       </div>
     );
   }
