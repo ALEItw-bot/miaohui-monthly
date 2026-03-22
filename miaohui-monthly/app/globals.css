@@ -231,7 +231,7 @@ img {
   background: var(--warm-white);
 }
 
-/* 最新消息區塊用更寬的容器
+/* 最新消息區塊用更寬的容器*/
 .news-section .container {
   max-width: 1600px;
 }
