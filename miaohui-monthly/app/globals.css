@@ -133,7 +133,7 @@ img {
 /* ===== Carousel ===== */
 .carousel {
   position: relative;
-  height: 49.22vw;             
+  height: 49.22vw;
   max-height: calc(100vh - 105px);
   overflow: hidden;
   user-select: none;
@@ -231,7 +231,7 @@ img {
   background: var(--warm-white);
 }
 
-/* 最新消息區塊用更寬的容器*/
+/* 最新消息區塊用更寬的容器 */
 .news-section .container {
   max-width: 1600px;
 }
@@ -251,6 +251,24 @@ img {
   border-radius: 12px;
 }
 
+.news-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.news-image-text {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--white);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
 
 .news-list {
   display: flex;
@@ -262,18 +280,18 @@ img {
   font-size: 2.2rem;
   font-weight: 900;
   color: var(--red);
-  margin-bottom: 0rem;  /* 這個控制金色底線到第一條的距離 */
+  margin-bottom: 0rem;
+  /* 這個控制金色底線到第一條的距離 */
   padding-bottom: 0.75rem;
   border-bottom: 3px solid var(--gold);
 }
-
-
 
 .news-item {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.6rem 0;  /* 每條消息之間的行距 上下各約 10px */
+  padding: 0.6rem 0;
+  /* 每條消息之間的行距 上下各約 10px */
   border-bottom: 1px solid #e0d8d0;
   transition: background 0.2s;
 }
@@ -1218,8 +1236,6 @@ img {
   font-size: 1.1rem;
 }
 
-
-
 /* ===== RWD ===== */
 @media (max-width: 768px) {
   .header-inner {
@@ -1255,10 +1271,10 @@ img {
     gap: 2rem;
   }
 
- .news-image {
-  width: 100%;
-  height: 300px;
-}
+  .news-image {
+    width: 100%;
+    height: 300px;
+  }
 
   .footer-grid {
     grid-template-columns: 1fr;
@@ -1295,32 +1311,30 @@ img {
   }
 
   .gallery-carousel-wrapper {
-  height: 280px;
+    height: 280px;
   }
 
   .sponsor-carousel-wrapper {
-  height: 260px;
+    height: 260px;
   }
-}
 
-/* 工商 + 花絮 RWD */
-.sg-container {
-  grid-template-columns: 1fr;
-}
+  /* 工商 + 花絮 RWD */
+  .sg-container {
+    grid-template-columns: 1fr;
+  }
 
-/* /announcements RWD */
-.announce-hero {
-  padding: 80px 0 40px;
-}
+  /* /announcements RWD */
+  .announce-hero {
+    padding: 80px 0 40px;
+  }
 
-.announce-hero-title {
-  font-size: 2rem;
-}
+  .announce-hero-title {
+    font-size: 2rem;
+  }
 
-.announce-card-top {
-  flex-wrap: wrap;
-}
-
+  .announce-card-top {
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 480px) {

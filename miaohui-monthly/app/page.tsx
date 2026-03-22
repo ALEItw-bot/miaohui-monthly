@@ -1,5 +1,4 @@
 'use client';
-
 import GalleryCarousel from './components/GalleryCarousel';
 import SponsorCarousel from './components/SponsorCarousel';
 import NewsImageCarousel from './components/NewsImageCarousel';
@@ -61,12 +60,11 @@ function formatDate(dateStr: string): string {
   return y + '.' + m + '.' + day;
 }
 
-
 function getEventStatus(startDate: string, endDate: string): string {
   const now = new Date();
   const start = new Date(startDate);
   const end = new Date(endDate);
-  
+
   if (now < start) {
     const diff = Math.ceil((start.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     if (diff <= 7) return '即將開始';
@@ -75,7 +73,6 @@ function getEventStatus(startDate: string, endDate: string): string {
   if (now >= start && now <= end) return '進行中';
   return '已結束';
 }
-
 
 function flat(v: unknown): string {
   if (v === null || v === undefined) return '';
@@ -96,6 +93,7 @@ function flat(v: unknown): string {
 export default function HomePage() {
   const [events, setEvents] = useState<EventItem[]>(MOCK_EVENTS);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+
   useEffect(() => {
     fetch('/api/events')
       .then((res) => res.json())
@@ -124,85 +122,94 @@ export default function HomePage() {
       })
       .catch(() => {});
   }, []);
+
   useEffect(() => {
-  fetch('/api/announcements')
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.success && data.announcements) {
-        setAnnouncements(data.announcements);
-      }
-    })
-    .catch(() => {});
-}, []);
+    fetch('/api/announcements')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.announcements) {
+          setAnnouncements(data.announcements);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <>
-    <PopupModal />
+      <PopupModal />
+
       {/* 輪播 */}
       <Carousel />
 
       {/* 最新消息區塊 */}
-<section className="news-section" id="events">
-  <div className="container">
-    <div className="news-layout">
-      {/* 左側：輪播圖 */}
-<div className="news-image">
-  <NewsImageCarousel />
-</div>
-      {/* 右側：消息列表 */}
-      <div className="news-list">
-        <h2 className="news-list-title">最新消息</h2>
-        {announcements.length > 0 ? announcements.map((item) => (
-      <a key={item.id} href="/announcements" className="news-item">
-    <span className="news-date">{item.date.replace(/-/g, '.')}</span>
-    <span className={`news-tag ${
-      item.category === '系統更新' ? 'tag-system' :
-      item.category === '活動資訊' ? 'tag-event' : ''
-    }`}>{item.category}</span>
-    <span className="news-title">{item.title}</span>
-  </a>
+      <section className="news-section" id="events">
+        <div className="container">
+          <div className="news-layout">
 
-        )) : events.map((event) => (
-          <a
-            key={event.id}
-            href={event.eventType === '繞境' ? '/events/dajia' : '/events/baishatun'}
-            className="news-item"
-          >
-            <span className="news-date">{formatDate(event.date.start)}</span>
-            <span className="news-tag">活動資訊</span>
-            <span className="news-title">{event.title}</span>
-          </a>
-        ))}
-        <div className="news-more">
-  <a href="/announcements">更多消息 →</a>
-</div>
-      </div>
-    </div>
-  </div>
-</section>
+            {/* 左側：輪播圖 */}
+            <div className="news-image">
+              <NewsImageCarousel />
+            </div>
 
-{/* ===== 工商服務 + 精彩花絮 ===== */}
-<section className="sponsor-gallery-section">
-  <div className="container sg-container">
-    {/* 左欄：工商服務輪播圖 */}
-<div className="sg-block">
-  <h2 className="sg-heading">🏮 工商服務</h2>
-  <p className="sg-desc">感謝以下夥伴熱情贊助，讓廟會文化持續發光</p>
-  <div className="sponsor-carousel-wrapper">
-    <SponsorCarousel />
-  </div>
-  <div className="sg-cta">
-    <a href="#" className="btn btn-primary">成為合作夥伴</a>
-  </div>
-</div>
-    {/* 右欄：精彩花絮輪播圖 */}
-<div className="sg-block">
-  <h2 className="sg-heading">📸 精彩花絮</h2>
-  <p className="sg-desc">現場直擊，用鏡頭感受廟會的鬧熱與感動</p>
-  <div className="gallery-carousel-wrapper">
-    <GalleryCarousel />
-  </div>
-</div>
-</section>
+            {/* 右側：消息列表 */}
+            <div className="news-list">
+              <h2 className="news-list-title">最新消息</h2>
+              {announcements.length > 0 ? announcements.map((item) => (
+                <a key={item.id} href="/announcements" className="news-item">
+                  <span className="news-date">{item.date.replace(/-/g, '.')}</span>
+                  <span className={`news-tag ${
+                    item.category === '系統更新' ? 'tag-system' :
+                    item.category === '活動資訊' ? 'tag-event' : ''
+                  }`}>{item.category}</span>
+                  <span className="news-title">{item.title}</span>
+                </a>
+              )) : events.map((event) => (
+                <a
+                  key={event.id}
+                  href={event.eventType === '繞境' ? '/events/dajia' : '/events/baishatun'}
+                  className="news-item"
+                >
+                  <span className="news-date">{formatDate(event.date.start)}</span>
+                  <span className="news-tag">活動資訊</span>
+                  <span className="news-title">{event.title}</span>
+                </a>
+              ))}
+              <div className="news-more">
+                <a href="/announcements">更多消息 →</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ===== 工商服務 + 精彩花絮 ===== */}
+      <section className="sponsor-gallery-section">
+        <div className="container sg-container">
+
+          {/* 左欄：工商服務輪播圖 */}
+          <div className="sg-block">
+            <h2 className="sg-heading">🏮 工商服務</h2>
+            <p className="sg-desc">感謝以下夥伴熱情贊助，讓廟會文化持續發光</p>
+            <div className="sponsor-carousel-wrapper">
+              <SponsorCarousel />
+            </div>
+            <div className="sg-cta">
+              <a href="#" className="btn btn-primary">成為合作夥伴</a>
+            </div>
+          </div>
+
+          {/* 右欄：精彩花絮輪播圖 */}
+          <div className="sg-block">
+            <h2 className="sg-heading">📸 精彩花絮</h2>
+            <p className="sg-desc">現場直擊，用鏡頭感受廟會的鬧熱與感動</p>
+            <div className="gallery-carousel-wrapper">
+              <GalleryCarousel />
+            </div>
+          </div>
+
+        </div>
+      </section>
 
       {/* 品牌故事簡介 */}
       <section className="brand-preview">
