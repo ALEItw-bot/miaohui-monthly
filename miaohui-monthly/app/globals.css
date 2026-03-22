@@ -228,7 +228,7 @@ img {
 /* ===== 最新消息區塊 ===== */
 .news-section {
   padding: 80px 0 100px;
-  background: var(--warm-white);
+  background: rgba(255, 248, 240, 0.85); /* 調整區塊底部透明度 */
 }
 
 /* 最新消息區塊用更寬的容器 */
@@ -905,7 +905,7 @@ img {
 /* ===== 工商服務 + 精彩花絮 ===== */
 .sponsor-gallery-section {
   padding: 80px 0;
-  background: #f2e8da;
+  background: rgba(242, 232, 218, 0.85);
 }
 
 .sg-container {
@@ -1154,7 +1154,7 @@ img {
 
 .announce-content {
   padding: 48px 0 80px;
-  background: var(--warm-white);
+  background: rgba(255, 248, 240, 0.85);
 }
 
 .announce-filter {
