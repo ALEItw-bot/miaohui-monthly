@@ -10,7 +10,7 @@ export default function PopupModal() {
   const [popupImages, setPopupImages] = useState<string[]>([]);
 
   useEffect(() => {
-  fetch('/api/images?folder=popup')
+  fetch('/popup/images.json')
     .then(res => res.json())
     .then(data => {
       if (data.images && data.images.length > 0) {

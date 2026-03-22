@@ -10,7 +10,7 @@ export default function NewsImageCarousel() {
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    fetch('/api/images?folder=news')
+    fetch('/news/images.json')
       .then(res => res.json())
       .then(data => {
         if (data.images && data.images.length > 0) {

@@ -11,7 +11,7 @@ export default function Carousel() {
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(function () {
-    fetch('/api/images?folder=carousel')
+    fetch('/carousel/images.json')
       .then(function (res) { return res.json(); })
       .then(function (data) {
         if (data.images && data.images.length > 0) {
