@@ -1,6 +1,6 @@
 import BrandStoryClient from './BrandStoryClient';
 import type { PageContent } from '../components/notion/NotionRenderer';
-import '../../styles/notion-article.css';
+import '../styles/notion-article.css';
 
 const BRAND_STORY_PAGE_ID = '3274cb8807f28092b955c9eb108e2f20';
 
