@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const GAS_URL = process.env.GAS_URL || '';
+const GAS_URL = process.env.GAS_DEPLOY_URL || '';
 const GAS_KEY = process.env.GAS_API_KEY || '';
 
 // ISR: 10 分鐘重新驗證
