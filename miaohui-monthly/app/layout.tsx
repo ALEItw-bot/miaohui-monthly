@@ -1,3 +1,4 @@
+import './styles/notion-article.css';
 import type { Metadata } from 'next';
 import './globals.css';
 import HeaderWrapper from './components/HeaderWrapper';
