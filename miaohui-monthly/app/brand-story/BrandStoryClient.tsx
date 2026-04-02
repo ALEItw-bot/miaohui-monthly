@@ -1,6 +1,16 @@
 'use client';
-import { NotionRenderer } from '../components/notion/NotionRenderer';
-import type { PageContent, NotionBlock } from '../components/notion/NotionRenderer';
+import { NotionRenderer } from '@/components/NotionRenderer';
+import type { NotionBlock } from '@/types/notion';
+
+/** 移除開頭的標題 block（已由 story-page-header 顯示） */
+function stripLeadingTitle(blocks: NotionBlock[]): NotionBlock[] {
+  if (blocks.length === 0) return blocks;
+  const first = blocks[0];
+  if (first.type === 'heading_1' || first.type === 'heading_2' || first.type === 'heading_3') {
+    return blocks.slice(1);
+  }
+  return blocks;
+}
 
 /** 用 divider 將 blocks 切分成多個 section */
 function splitByDivider(blocks: NotionBlock[]): NotionBlock[][] {
@@ -30,7 +40,8 @@ export default function BrandStoryClient({ page }: Props) {
     return <div className="story-loading">載入失敗</div>;
   }
 
-  const sections = splitByDivider(page.blocks || []);
+  const cleaned = stripLeadingTitle(page.blocks || []);
+  const sections = splitByDivider(cleaned);
 
   return (
     <main>

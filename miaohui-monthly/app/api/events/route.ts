@@ -1,21 +1,21 @@
 import { NextResponse } from 'next/server';
+import { getEvents } from '@/lib/notion';
 
-const GAS_URL = process.env.GAS_DEPLOY_URL || '';
-const API_KEY = process.env.GAS_API_KEY || '';
+export const revalidate = 60; // ISR：每 60 秒重新驗證
 
-export async function GET() {
-  if (!GAS_URL || !API_KEY) {
-    return NextResponse.json({ success: false, error: 'env not set' });
-  }
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const region = searchParams.get('region') || undefined;
+  const limit = parseInt(searchParams.get('limit') || '10');
 
   try {
-    const url = GAS_URL + '?action=getEvents&key=' + API_KEY;
-    const res = await fetch(url, { cache: 'no-store' });
-    const text = await res.text();
-    const data = JSON.parse(text);
+    const data = await getEvents({ region, limit });
     return NextResponse.json(data);
   } catch (err) {
-    console.error('[route] GAS fetch failed:', err);
-    return NextResponse.json({ success: false, error: 'fetch failed' });
+    console.error('[/api/events] Error:', err);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch events' },
+      { status: 500 }
+    );
   }
 }

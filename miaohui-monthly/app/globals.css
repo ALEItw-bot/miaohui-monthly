@@ -1314,3 +1314,461 @@ img {
     grid-template-columns: 1fr;
   }
 }
+
+/* ========================================
+   熱鬧訊息 v2 — 台灣地圖 + 區域篩選
+   ======================================== */
+
+/* ===== Hero ===== */
+.ev2-hero {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 60%, var(--blue) 100%);
+  padding: 80px 0 60px;
+  text-align: center;
+}
+
+.ev2-hero-title {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: 6px;
+  margin: 0;
+}
+
+.ev2-hero-sub {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 0.75rem;
+  letter-spacing: 2px;
+}
+
+/* ===== Body ===== */
+.ev2-body {
+  padding: 48px 0 80px;
+  background: rgba(255, 248, 240, 0.0);
+}
+
+.ev2-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr; /* ← 🎯 左側地圖欄寬（建議比地圖 max-width 大約多 20px） */
+  gap: 3rem;
+  align-items: start;
+  max-width: 1400px;
+}
+
+/* ===== 左側地圖 ===== */
+.ev2-map-side {
+  position: sticky;
+  top: 130px;
+}
+
+.ev2-map-wrapper {
+  margin-bottom: 16px;
+}
+
+.taiwan-map-container {
+  text-align: center;
+}
+
+  .taiwan-map-svg {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+}
+
+.taiwan-map-svg .map-region:hover {
+  filter: brightness(1.15);
+  transform-origin: center;
+}
+
+/* ===== v3 圖片地圖 ===== */
+.taiwan-map-img-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: filter 0.2s;
+}
+
+.taiwan-map-img-wrapper:hover {
+  filter: brightness(1.05);
+}
+
+.taiwan-map-img {
+  width: 100%;
+  max-width: 400px; /* ← 🎯 調整地圖大小（px 值） */
+  height: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 選取區域時：地圖整體浮起 + 陰影（非選取區域由 overlay canvas 負責變暗）*/
+.taiwan-map-img-wrapper {
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.taiwan-map-img-wrapper.has-selection {
+  transform: scale(1.04);
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.30));
+}
+
+/* 右下角顯示目前選取區域名稱 */
+.taiwan-map-selection-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 20px;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  letter-spacing: 1px;
+  font-family: var(--font-title);
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.map-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.map-legend-item:hover,
+.map-legend-item.active {
+  background: rgba(200, 0, 0, 0.06);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.map-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* 區域按鈕 */
+.ev2-region-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.ev2-region-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--red);
+  background: transparent;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.ev2-region-btn:hover,
+.ev2-region-btn.active {
+  background: var(--red);
+  color: var(--white);
+}
+
+/* ===== 右側列表 ===== */
+.ev2-list-side {
+  min-width: 0;
+}
+
+.ev2-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--gold);
+}
+
+.ev2-list-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 0;
+}
+
+.ev2-list-count {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* Loading & Empty */
+.ev2-loading,
+.ev2-empty {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-light);
+  font-size: 1.05rem;
+}
+
+.ev2-empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* ===== 活動列表行 ===== */
+.ev2-event-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ev2-event-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-bottom: 1px solid #e0d8d0;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.2s, transform 0.15s;
+  border-radius: 0;
+}
+
+.ev2-event-row:first-child {
+  border-top: none;
+}
+
+.ev2-event-row:hover {
+  background: rgba(200, 0, 0, 0.03);
+  transform: translateX(4px);
+}
+
+/* 日期區塊 */
+.ev2-event-date-block {
+  width: 64px;
+  min-width: 64px;
+  height: 64px;
+  background: var(--red);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.ev2-date-month {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.ev2-date-day {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1;
+  font-family: var(--font-title);
+}
+
+.ev2-date-tbd {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* 活動資訊 */
+.ev2-event-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ev2-event-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.ev2-status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 4px;
+  color: var(--white);
+}
+
+.status-countdown {
+  background: var(--gold);
+  color: var(--text);
+}
+
+.status-upcoming {
+  background: var(--blue);
+}
+
+.status-active {
+  background: var(--red);
+  animation: pulse-bg 2s infinite;
+}
+
+.status-ended {
+  background: var(--text-light);
+}
+
+@keyframes pulse-bg {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+.ev2-event-type {
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+
+.ev2-event-region-tag {
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+
+.ev2-event-title {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--text);
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.ev2-event-emoji {
+  margin-right: 4px;
+}
+
+.ev2-event-date-range {
+  font-size: 0.88rem;
+  color: var(--red);
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.ev2-event-summary {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin: 0 0 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ev2-event-route {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+/* 右箭頭 */
+.ev2-event-arrow {
+  font-size: 1.8rem;
+  color: var(--red);
+  font-weight: 300;
+  flex-shrink: 0;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.ev2-event-row:hover .ev2-event-arrow {
+  opacity: 1;
+}
+
+/* ===== RWD ===== */
+@media (max-width: 900px) {
+  .ev2-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .ev2-map-side {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ev2-map-wrapper {
+    max-width: 260px;
+  }
+
+  .ev2-region-btns {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .ev2-hero {
+    padding: 60px 0 40px;
+  }
+
+  .ev2-hero-title {
+    font-size: 2rem;
+    letter-spacing: 4px;
+  }
+
+  .ev2-list-title {
+    font-size: 1.5rem;
+  }
+
+  .ev2-event-row {
+    padding: 1rem 0.5rem;
+    gap: 1rem;
+  }
+
+  .ev2-event-date-block {
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+  }
+
+  .ev2-date-day {
+    font-size: 1.3rem;
+  }
+
+  .ev2-event-title {
+    font-size: 1.05rem;
+  }
+
+  .ev2-event-arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .ev2-map-wrapper {
+    max-width: 200px;
+    padding: 12px;
+  }
+
+  .ev2-region-btn {
+    padding: 5px 12px;
+    font-size: 0.82rem;
+  }
+}

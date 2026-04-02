@@ -1,6 +1,6 @@
 import BrandStoryClient from './BrandStoryClient';
-import type { PageContent } from '../components/notion/NotionRenderer';
-import '../styles/notion-article.css';
+import { NotionRenderer } from '@/components/NotionRenderer';
+import type { NotionBlock } from '@/types/notion';
 
 const BRAND_STORY_PAGE_ID = '3274cb8807f28092b955c9eb108e2f20';
 
@@ -8,7 +8,7 @@ const BRAND_STORY_PAGE_ID = '3274cb8807f28092b955c9eb108e2f20';
 export const revalidate = 600;
 
 async function fetchBrandStory(): Promise<PageContent | null> {
-  const GAS_URL = process.env.GAS_DEPLOY_URL || '';
+  const GAS_URL = process.env.GAS_URL || '';
   const GAS_KEY = process.env.GAS_API_KEY || '';
 
   if (!GAS_URL) return null;
