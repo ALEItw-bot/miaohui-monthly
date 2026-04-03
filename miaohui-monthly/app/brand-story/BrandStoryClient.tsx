@@ -50,15 +50,14 @@ export default function BrandStoryClient({ page }: Props) {
   return (
     <main>
       {/* ===== Hero 照片 ===== */}
-      <section className="story-hero" />
+      <section className="story-hero">
+        <div className="container">
+         <h1 className="story-hero-title">品牌故事</h1>
+         <p className="story-hero-subtitle">廟會月報｜信仰的溫度，科技的傳承</p>
+       </div>
+</section>
 
       {/* ===== 內文區域（有背景底圖） ===== */}
-      <div className="story-body">
-        {/* 頁面標題（跳出白卡片） */}
-        <div className="story-page-header">
-          <h1 className="story-page-title">品牌故事</h1>
-          <p className="story-page-subtitle">信仰的溫度，科技的傳承</p>
-        </div>
         {sections.map((sectionBlocks, index) => (
           <section key={index} className="story-section">
             <div className="story-card">
@@ -66,7 +65,6 @@ export default function BrandStoryClient({ page }: Props) {
             </div>
           </section>
         ))}
-      </div>
 
       {/* ===== CTA ===== */}
       <section className="story-cta-section">

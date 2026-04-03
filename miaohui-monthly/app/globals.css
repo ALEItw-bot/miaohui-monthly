@@ -1728,13 +1728,12 @@ img {
 }
 
 @media (max-width: 768px) {
-  .ev2-hero {
+  .story-hero {
     padding: 60px 0 40px;
   }
 
-  .ev2-hero-title {
+  .story-hero-title {
     font-size: 2rem;
-    letter-spacing: 4px;
   }
 
   .ev2-list-title {
@@ -1779,15 +1778,30 @@ img {
 
 /* ===== 品牌故事頁（Notion 內容渲染）===== */
 .story-hero {
-  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/brand-hero.png');
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/brand-hero.png');
   background-size: cover;
   background-position: center;
-  height: 360px;
+  padding: 100px 0 60px;
+  text-align: center;
+  color: var(--white);
+}
+
+.story-hero-title {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.story-hero-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
 }
 
 .story-body {
   max-width: 800px;
-  margin: -60px auto 0;
+  margin: 2rem auto 0;
   padding: 0 24px 80px;
   position: relative;
   z-index: 1;
@@ -1978,7 +1992,7 @@ img {
   }
 
   .story-body {
-    margin-top: -40px;
+    margin-top: 1rem;
     padding: 0 16px 60px;
   }
 
