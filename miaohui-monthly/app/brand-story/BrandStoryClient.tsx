@@ -1,6 +1,10 @@
 'use client';
 import { NotionRenderer } from '@/components/NotionRenderer';
 import type { NotionBlock } from '@/types/notion';
+interface PageContent {
+  success: boolean;
+  blocks: NotionBlock[];
+}
 
 /** 移除開頭的標題 block（已由 story-page-header 顯示） */
 function stripLeadingTitle(blocks: NotionBlock[]): NotionBlock[] {
