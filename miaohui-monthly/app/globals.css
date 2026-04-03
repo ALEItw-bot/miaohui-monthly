@@ -1862,9 +1862,43 @@ img {
 
 .story-card p {
   font-size: 1.05rem;
-  line-height: 2;
+  line-height: 2.2;
   color: var(--text);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.3px;
+}
+
+.story-card p:first-of-type {
+  font-size: 1.15rem;
+  color: var(--text-light);
+  font-style: italic;
+  border-left: 3px solid var(--gold);
+  padding-left: 1rem;
+}
+
+/* 每張卡片交替加左邊色條 */
+.story-section:nth-child(odd) .story-card {
+  border-left: 4px solid var(--red);
+}
+
+.story-section:nth-child(even) .story-card {
+  border-left: 4px solid var(--blue);
+}
+
+/* 章節標題強化 */
+.story-card h2 {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+/* 粗體文字用金色強調 */
+.story-card strong {
+  color: var(--red);
 }
 
 .story-card ul,
