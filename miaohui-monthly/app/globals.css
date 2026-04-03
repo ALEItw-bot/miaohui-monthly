@@ -1772,3 +1772,185 @@ img {
     font-size: 0.82rem;
   }
 }
+
+/* ===== 品牌故事頁（Notion 內容渲染）===== */
+.story-hero {
+  background: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+  height: 280px;
+}
+
+.story-body {
+  max-width: 800px;
+  margin: -60px auto 0;
+  padding: 0 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.story-page-header {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.story-page-title {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 0 0 0.5rem;
+}
+
+.story-page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.story-section {
+  margin-bottom: 1.5rem;
+}
+
+.story-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 2rem 2rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.story-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Notion 內容在卡片內的排版 */
+.story-card h1 {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 0 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+.story-card h2 {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.story-card h3 {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 1.25rem 0 0.5rem;
+}
+
+.story-card p {
+  font-size: 1.05rem;
+  line-height: 2;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.story-card ul,
+.story-card ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.story-card li {
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--text);
+}
+
+.story-card blockquote {
+  border-left: 4px solid var(--gold);
+  padding: 0.75rem 1.25rem;
+  margin: 1rem 0;
+  background: var(--warm-white);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--text-light);
+}
+
+.story-card .callout {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.story-card img {
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.story-card hr {
+  border: none;
+  border-top: 1px solid #e0d8d0;
+  margin: 1.5rem 0;
+}
+
+/* CTA 區塊 */
+.story-cta-section {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  padding: 60px 0;
+  text-align: center;
+}
+
+.story-cta-text {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.story-cta-sub {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+.story-loading {
+  text-align: center;
+  padding: 120px 0;
+  font-size: 1.1rem;
+  color: var(--text-light);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+  .story-hero {
+    height: 200px;
+  }
+
+  .story-body {
+    margin-top: -40px;
+    padding: 0 16px 60px;
+  }
+
+  .story-page-title {
+    font-size: 2rem;
+  }
+
+  .story-card {
+    padding: 1.5rem;
+  }
+
+  .story-cta-text {
+    font-size: 1.2rem;
+  }
+}
