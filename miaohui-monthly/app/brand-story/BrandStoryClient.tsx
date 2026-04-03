@@ -58,13 +58,15 @@ export default function BrandStoryClient({ page }: Props) {
 </section>
 
       {/* ===== 內文區域（有背景底圖） ===== */}
-        {sections.map((sectionBlocks, index) => (
-          <section key={index} className="story-section">
-            <div className="story-card">
-              <NotionRenderer blocks={sectionBlocks} />
-            </div>
-          </section>
-        ))}
+        <div className="story-body">
+  {sections.map((sectionBlocks, index) => (
+    <section key={index} className="story-section">
+      <div className="story-card">
+        <NotionRenderer blocks={sectionBlocks} />
+      </div>
+    </section>
+  ))}
+      </div>
 
       {/* ===== CTA ===== */}
       <section className="story-cta-section">
