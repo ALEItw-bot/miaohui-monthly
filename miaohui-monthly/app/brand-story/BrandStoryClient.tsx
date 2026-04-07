@@ -67,29 +67,6 @@ export default function BrandStoryClient({ page }: Props) {
     </section>
   ))}
       </div>
-
-      {/* ===== CTA ===== */}
-      <section className="story-cta-section">
-        <div className="container">
-          <p className="story-cta-text">
-            歡迎回來，與我們一起見證科技與傳統交織的全新篇章
-          </p>
-          <p className="story-cta-sub">
-            從過去的像素到現在的 AI 運算，《廟會月報》繼續為您遞送這份充滿溫度的信仰報表。
-          </p>
-          <div className="hero-cta">
-            <a href="/" className="btn btn-cta-invert">回首頁</a>
-            <a
-              href="https://line.me/R/ti/p/@miaohui"
-              className="btn btn-line-big"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              加入 LINE 官方帳號
-            </a>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
