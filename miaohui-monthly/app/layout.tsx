@@ -79,7 +79,7 @@ export default function RootLayout({
               <a href="/events" onClick={() => setMobileMenuOpen(false)}>熱鬧資訊</a>
             </nav>
             <div className="mobile-menu-social">
-              <a href="https://line.me/R/ti/p/@miaohui" target="_blank" rel="noopener noreferrer">LINE 官方帳號</a>
+              <a href="https://line.me/R/ti/p/@583jmhcd" target="_blank" rel="noopener noreferrer">LINE 官方帳號</a>
               <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook 粉絲專頁</a>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function RootLayout({
               </div>
               <div className="footer-social">
                 <h4 className="footer-title">關注我們</h4>
-                <a href="https://line.me/R/ti/p/@miaohui" target="_blank" rel="noopener noreferrer">LINE 官方帳號</a>
+                <a href="https://line.me/R/ti/p/@583jmhcd" target="_blank" rel="noopener noreferrer">LINE 官方帳號</a>
                 <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook 粉專</a>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function RootLayout({
 
         {/* ===== LINE 浮動按鈕（全站右下角） ===== */}
         <a
-          href="https://line.me/R/ti/p/@miaohui"
+          href="https://line.me/R/ti/p/@583jmhcd"
           className="fab-line"
           target="_blank"
           rel="noopener noreferrer"
