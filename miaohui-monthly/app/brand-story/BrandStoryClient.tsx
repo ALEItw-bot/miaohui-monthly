@@ -1,12 +1,14 @@
 'use client';
+
 import { NotionRenderer } from '@/components/NotionRenderer';
 import type { NotionBlock } from '@/types/notion';
+
 interface PageContent {
   success: boolean;
   blocks: NotionBlock[];
 }
 
-/** 移除開頭的標題 block（已由 story-page-header 顯示） */
+/** 移除開頭的標題 block（已由 story-hero 顯示） */
 function stripLeadingTitle(blocks: NotionBlock[]): NotionBlock[] {
   if (blocks.length === 0) return blocks;
   const first = blocks[0];
@@ -52,20 +54,20 @@ export default function BrandStoryClient({ page }: Props) {
       {/* ===== Hero 照片 ===== */}
       <section className="story-hero">
         <div className="container">
-         <h1 className="story-hero-title">品牌故事</h1>
-         <p className="story-hero-subtitle">廟會月報｜信仰的溫度，科技的傳承</p>
-       </div>
-</section>
+          <h1 className="story-hero-title">品牌故事</h1>
+          <p className="story-hero-subtitle">廟會月報｜信仰的溫度，科技的傳承</p>
+        </div>
+      </section>
 
-      {/* ===== 內文區域（有背景底圖） ===== */}
-        <div className="story-body">
-  {sections.map((sectionBlocks, index) => (
-    <section key={index} className="story-section">
-      <div className="story-card">
-        <NotionRenderer blocks={sectionBlocks} />
-      </div>
-    </section>
-  ))}
+      {/* ===== 內文區域 ===== */}
+      <div className="story-body">
+        {sections.map((sectionBlocks, index) => (
+          <section key={index} className="story-section">
+            <div className="story-card">
+              <NotionRenderer blocks={sectionBlocks} />
+            </div>
+          </section>
+        ))}
       </div>
     </main>
   );
