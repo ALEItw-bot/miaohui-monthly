@@ -38,7 +38,7 @@ export default function RootLayout({
           <div className="header-red">
             <div className="container header-inner">
               <a href="/" className="header-logo">
-                廟會月報
+                <img src="/logo-white.png" alt="廟會月報" height={40} />
               </a>
 
               {/* 桌面版導覽（手機版隱藏） */}
@@ -72,7 +72,9 @@ export default function RootLayout({
             >
               ✕
             </button>
-            <div className="mobile-menu-logo">廟會月報</div>
+            <div className="mobile-menu-logo">
+              <img src="/logo-white.png" alt="廟會月報" height={36} />
+            </div>
             <nav className="mobile-menu-nav">
               <a href="/announcements" onClick={() => setMobileMenuOpen(false)}>最新消息</a>
               <a href="/brand-story" onClick={() => setMobileMenuOpen(false)}>品牌故事</a>
@@ -93,7 +95,9 @@ export default function RootLayout({
           <div className="footer-top">
             <div className="container footer-grid">
               <div className="footer-brand">
-                <div className="footer-logo">廟會月報</div>
+                <div className="footer-logo">
+                  <img src="/logo-white.png" alt="廟會月報" height={32} />
+                </div>
                 <p className="footer-desc">台灣最完整的廟會活動資訊平台</p>
                 <p className="footer-desc">與你攜手感受台灣廟會之美</p>
               </div>

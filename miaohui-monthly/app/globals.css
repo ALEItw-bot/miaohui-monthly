@@ -107,13 +107,27 @@ img {
   align-items: center;
 }
 
-.header-logo-img {
-  height: 50px;
-  width: auto;
-}
-
 .header-logo:hover {
   opacity: 0.9;
+}
+
+.header-logo img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.mobile-menu-logo img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-logo img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 0.75rem;
 }
 
 .header-nav {
@@ -1156,11 +1170,6 @@ img {
 @media (max-width: 480px) {
   .header-red { height: 48px; }
   .header-logo { font-size: 1.1rem; }
-  
-  .header-logo-img {
-    height: 32px;
-  }
-
   .header-nav-link { font-size: 0.8rem; }
   .carousel-title { font-size: 1.5rem; }
   .carousel-subtitle { font-size: 0.875rem; }
