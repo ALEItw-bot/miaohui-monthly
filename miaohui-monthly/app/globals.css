@@ -33,7 +33,7 @@ body {
   font-family: var(--font-body);
   color: var(--text);
   background-color: #FFF8F0;
-  background-image: url('/background.png'); /* ===== 更換背景底圖 ===== */
+  background-image: url('/background.png');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -156,7 +156,6 @@ img {
   background-position: center;
 }
 
-/* Placeholder 背景（之後換真圖） */
 .slide-dajia {
   background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 50%, #2D0000 100%);
 }
@@ -228,10 +227,9 @@ img {
 /* ===== 最新消息區塊 ===== */
 .news-section {
   padding: 80px 0 100px;
-  background: rgba(255, 248, 240, 0.0); /* 調整區塊底部透明度 */
+  background: rgba(255, 248, 240, 0.0);
 }
 
-/* 最新消息區塊用更寬的容器 */
 .news-section .container {
   max-width: 1600px;
 }
@@ -281,7 +279,6 @@ img {
   font-weight: 900;
   color: var(--red);
   margin-bottom: 0rem;
-  /* 這個控制金色底線到第一條的距離 */
   padding-bottom: 0.75rem;
   border-bottom: 3px solid var(--gold);
 }
@@ -291,7 +288,6 @@ img {
   align-items: center;
   gap: 1rem;
   padding: 0.6rem 0;
-  /* 每條消息之間的行距 上下各約 10px */
   border-bottom: 1px solid #e0d8d0;
   transition: background 0.2s;
 }
@@ -318,21 +314,10 @@ img {
   white-space: nowrap;
 }
 
-.tag-system {
-  background: var(--blue);
-}
-
-.tag-event {
-  background: var(--red);
-}
-
-.tag-active {
-  background: #06C755;
-}
-
-.tag-ended {
-  background: var(--text-light);
-}
+.tag-system { background: var(--blue); }
+.tag-event { background: var(--red); }
+.tag-active { background: #06C755; }
+.tag-ended { background: var(--text-light); }
 
 .news-title {
   font-size: 1rem;
@@ -456,9 +441,7 @@ img {
   opacity: 0.7;
 }
 
-/* ===== 品牌故事頁 ===== */
-/* Hero 樣式已移至 styles/notion-article.css，由該檔案統一控制 */
-
+/* ===== 品牌故事頁（舊版 section 樣式） ===== */
 .section {
   padding: 60px 0;
 }
@@ -788,24 +771,10 @@ img {
   object-fit: cover;
 }
 
-.popup-bottom-bar {
-  width: 100%;
-}
-
-.popup-bar-red {
-  height: 50px;
-  background: var(--red);
-}
-
-.popup-bar-white {
-  height: 5px;
-  background: var(--white);
-}
-
-.popup-bar-blue {
-  height: 20px;
-  background: var(--blue);
-}
+.popup-bottom-bar { width: 100%; }
+.popup-bar-red { height: 50px; background: var(--red); }
+.popup-bar-white { height: 5px; background: var(--white); }
+.popup-bar-blue { height: 20px; background: var(--blue); }
 
 /* ===== News Image Carousel ===== */
 .news-image-carousel {
@@ -817,9 +786,7 @@ img {
   -webkit-user-select: none;
 }
 
-.news-image-track {
-  height: 100%;
-}
+.news-image-track { height: 100%; }
 
 .news-carousel-dots {
   position: absolute;
@@ -840,14 +807,12 @@ img {
   transition: background 0.3s;
 }
 
-.news-carousel-dot.active {
-  background: #fff;
-}
+.news-carousel-dot.active { background: #fff; }
 
 /* ===== 工商服務 + 精彩花絮 ===== */
 .sponsor-gallery-section {
   padding: 80px 0;
-  background: rgba(242, 232, 218, 0.0); /* 調整區塊底部透明度 */
+  background: rgba(242, 232, 218, 0.0);
 }
 
 .sg-container {
@@ -910,10 +875,7 @@ img {
   font-weight: 700;
 }
 
-.sg-cta {
-  text-align: center;
-  margin-top: 0.5rem;
-}
+.sg-cta { text-align: center; margin-top: 0.5rem; }
 
 /* ===== 工商服務輪播圖 ===== */
 .sponsor-carousel-wrapper {
@@ -933,13 +895,8 @@ img {
   -webkit-user-select: none;
 }
 
-.sponsor-carousel-track {
-  height: 100%;
-}
-
-.sponsor-carousel-slide {
-  height: 100%;
-}
+.sponsor-carousel-track { height: 100%; }
+.sponsor-carousel-slide { height: 100%; }
 
 .sponsor-carousel-placeholder {
   width: 100%;
@@ -974,9 +931,7 @@ img {
   transition: background 0.3s;
 }
 
-.sponsor-carousel-dot.active {
-  background: #fff;
-}
+.sponsor-carousel-dot.active { background: #fff; }
 
 .gallery-mosaic {
   display: grid;
@@ -997,14 +952,8 @@ img {
   overflow: hidden;
 }
 
-.mosaic-item:hover {
-  transform: scale(1.02);
-}
-
-.mosaic-lg {
-  grid-column: 1 / -1;
-  min-height: 200px;
-}
+.mosaic-item:hover { transform: scale(1.02); }
+.mosaic-lg { grid-column: 1 / -1; min-height: 200px; }
 
 .mosaic-label {
   color: var(--white);
@@ -1030,13 +979,8 @@ img {
   -webkit-user-select: none;
 }
 
-.gallery-carousel-track {
-  height: 100%;
-}
-
-.gallery-carousel-slide {
-  height: 100%;
-}
+.gallery-carousel-track { height: 100%; }
+.gallery-carousel-slide { height: 100%; }
 
 .gallery-carousel-placeholder {
   width: 100%;
@@ -1071,9 +1015,7 @@ img {
   transition: background 0.3s;
 }
 
-.gallery-carousel-dot.active {
-  background: #fff;
-}
+.gallery-carousel-dot.active { background: #fff; }
 
 /* ===== 最新消息完整頁 /announcements ===== */
 .announce-hero {
@@ -1088,7 +1030,7 @@ img {
   font-family: var(--font-title);
   font-size: 2.5rem;
   font-weight: 900;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
 }
 
 .announce-hero-subtitle {
@@ -1098,7 +1040,7 @@ img {
 
 .announce-content {
   padding: 48px 0 80px;
-  background: rgba(255, 248, 240, 0.0); /* 調整區塊底部透明度 */
+  background: rgba(255, 248, 240, 0.0);
 }
 
 .announce-filter {
@@ -1180,141 +1122,42 @@ img {
   font-size: 1.1rem;
 }
 
-/* ===== RWD ===== */
+/* ===== 全站通用 RWD ===== */
 @media (max-width: 768px) {
-  .header-inner {
-    padding: 0 16px;
-  }
-
-  .header-logo {
-    font-size: 1.3rem;
-  }
-
-  .header-nav {
-    gap: 1rem;
-  }
-
-  .header-nav-link {
-    font-size: 0.9rem;
-  }
-
-  .header-nav-dots {
-    display: none;
-  }
-
-  .carousel-title {
-    font-size: 2rem;
-  }
-
-  .carousel-subtitle {
-    font-size: 1rem;
-  }
-
-  .news-layout {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .news-image {
-    width: 100%;
-    height: 300px;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 2rem;
-  }
-
-  .brand-preview-title {
-    font-size: 1.6rem;
-  }
-
-  .story-chapter-title {
-    font-size: 1.4rem;
-  }
-
-  .popup-image-area {
-    height: 50vh;
-  }
-
-  .popup-bar-red {
-    height: 30px;
-  }
-
-  .popup-bar-white {
-    height: 3px;
-  }
-
-  .popup-bar-blue {
-    height: 12px;
-  }
-
-  .gallery-carousel-wrapper {
-    height: 280px;
-  }
-
-  .sponsor-carousel-wrapper {
-    height: 260px;
-  }
-
-  /* 工商 + 花絮 RWD */
-  .sg-container {
-    grid-template-columns: 1fr;
-  }
-
-  /* /announcements RWD */
-  .announce-hero {
-    padding: 80px 0 40px;
-  }
-
-  .announce-hero-title {
-    font-size: 2rem;
-  }
-
-  .announce-card-top {
-    flex-wrap: wrap;
-  }
+  .header-inner { padding: 0 16px; }
+  .header-logo { font-size: 1.3rem; }
+  .header-nav { gap: 1rem; }
+  .header-nav-link { font-size: 0.9rem; }
+  .header-nav-dots { display: none; }
+  .carousel-title { font-size: 2rem; }
+  .carousel-subtitle { font-size: 1rem; }
+  .news-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .news-image { width: 100%; height: 300px; }
+  .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+  .brand-preview-title { font-size: 1.6rem; }
+  .story-chapter-title { font-size: 1.4rem; }
+  .popup-image-area { height: 50vh; }
+  .popup-bar-red { height: 30px; }
+  .popup-bar-white { height: 3px; }
+  .popup-bar-blue { height: 12px; }
+  .gallery-carousel-wrapper { height: 280px; }
+  .sponsor-carousel-wrapper { height: 260px; }
+  .sg-container { grid-template-columns: 1fr; }
+  .announce-hero { padding: 80px 0 40px; }
+  .announce-hero-title { font-size: 2rem; }
+  .announce-card-top { flex-wrap: wrap; }
 }
 
 @media (max-width: 480px) {
-  .header-red {
-    height: 48px;
-  }
-
-  .header-logo {
-    font-size: 1.1rem;
-  }
-
-  .header-nav-link {
-    font-size: 0.8rem;
-  }
-
-  .carousel-title {
-    font-size: 1.5rem;
-  }
-
-  .carousel-subtitle {
-    font-size: 0.875rem;
-  }
-
-  .news-item {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .news-title {
-    white-space: normal;
-  }
-
-  .hero-cta {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .event-card-grid {
-    grid-template-columns: 1fr;
-  }
+  .header-red { height: 48px; }
+  .header-logo { font-size: 1.1rem; }
+  .header-nav-link { font-size: 0.8rem; }
+  .carousel-title { font-size: 1.5rem; }
+  .carousel-subtitle { font-size: 0.875rem; }
+  .news-item { flex-wrap: wrap; gap: 0.5rem; }
+  .news-title { white-space: normal; }
+  .hero-cta { flex-direction: column; align-items: center; }
+  .event-card-grid { grid-template-columns: 1fr; }
 }
 
 /* ========================================
@@ -1354,7 +1197,7 @@ img {
 
 .ev2-layout {
   display: grid;
-  grid-template-columns: 380px 1fr; /* ← 🎯 左側地圖欄寬（建議比地圖 max-width 大約多 20px） */
+  grid-template-columns: 380px 1fr;
   gap: 3rem;
   align-items: start;
   max-width: 1400px;
@@ -1366,15 +1209,10 @@ img {
   top: 130px;
 }
 
-.ev2-map-wrapper {
-  margin-bottom: 16px;
-}
+.ev2-map-wrapper { margin-bottom: 16px; }
+.taiwan-map-container { text-align: center; }
 
-.taiwan-map-container {
-  text-align: center;
-}
-
-  .taiwan-map-svg {
+.taiwan-map-svg {
   width: 100%;
   max-width: 360px;
   height: auto;
@@ -1392,32 +1230,25 @@ img {
   cursor: pointer;
   border-radius: 8px;
   overflow: hidden;
-  transition: filter 0.2s;
+  transition: transform 0.35s ease, filter 0.35s ease;
 }
 
-.taiwan-map-img-wrapper:hover {
-  filter: brightness(1.05);
-}
+.taiwan-map-img-wrapper:hover { filter: brightness(1.05); }
 
 .taiwan-map-img {
   width: 100%;
-  max-width: 400px; /* ← 🎯 調整地圖大小（px 值） */
+  max-width: 400px;
   height: auto;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
 }
 
-/* 選取區域時：地圖整體浮起 + 陰影（非選取區域由 overlay canvas 負責變暗）*/
-.taiwan-map-img-wrapper {
-  transition: transform 0.35s ease, filter 0.35s ease;
-}
 .taiwan-map-img-wrapper.has-selection {
   transform: scale(1.04);
   filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.30));
 }
 
-/* 右下角顯示目前選取區域名稱 */
 .taiwan-map-selection-badge {
   position: absolute;
   bottom: 10px;
@@ -1495,9 +1326,7 @@ img {
 }
 
 /* ===== 右側列表 ===== */
-.ev2-list-side {
-  min-width: 0;
-}
+.ev2-list-side { min-width: 0; }
 
 .ev2-list-header {
   display: flex;
@@ -1521,7 +1350,6 @@ img {
   color: var(--text-light);
 }
 
-/* Loading & Empty */
 .ev2-loading,
 .ev2-empty {
   text-align: center;
@@ -1554,16 +1382,13 @@ img {
   border-radius: 0;
 }
 
-.ev2-event-row:first-child {
-  border-top: none;
-}
+.ev2-event-row:first-child { border-top: none; }
 
 .ev2-event-row:hover {
   background: rgba(200, 0, 0, 0.03);
   transform: translateX(4px);
 }
 
-/* 日期區塊 */
 .ev2-event-date-block {
   width: 64px;
   min-width: 64px;
@@ -1592,16 +1417,9 @@ img {
   font-family: var(--font-title);
 }
 
-.ev2-date-tbd {
-  font-size: 0.85rem;
-  font-weight: 700;
-}
+.ev2-date-tbd { font-size: 0.85rem; font-weight: 700; }
 
-/* 活動資訊 */
-.ev2-event-info {
-  flex: 1;
-  min-width: 0;
-}
+.ev2-event-info { flex: 1; min-width: 0; }
 
 .ev2-event-top-row {
   display: flex;
@@ -1619,38 +1437,18 @@ img {
   color: var(--white);
 }
 
-.status-countdown {
-  background: var(--gold);
-  color: var(--text);
-}
-
-.status-upcoming {
-  background: var(--blue);
-}
-
-.status-active {
-  background: var(--red);
-  animation: pulse-bg 2s infinite;
-}
-
-.status-ended {
-  background: var(--text-light);
-}
+.status-countdown { background: var(--gold); color: var(--text); }
+.status-upcoming { background: var(--blue); }
+.status-active { background: var(--red); animation: pulse-bg 2s infinite; }
+.status-ended { background: var(--text-light); }
 
 @keyframes pulse-bg {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.75; }
 }
 
-.ev2-event-type {
-  font-size: 0.78rem;
-  color: var(--text-light);
-}
-
-.ev2-event-region-tag {
-  font-size: 0.78rem;
-  color: var(--text-light);
-}
+.ev2-event-type { font-size: 0.78rem; color: var(--text-light); }
+.ev2-event-region-tag { font-size: 0.78rem; color: var(--text-light); }
 
 .ev2-event-title {
   font-family: var(--font-title);
@@ -1661,9 +1459,7 @@ img {
   line-height: 1.4;
 }
 
-.ev2-event-emoji {
-  margin-right: 4px;
-}
+.ev2-event-emoji { margin-right: 4px; }
 
 .ev2-event-date-range {
   font-size: 0.88rem;
@@ -1689,7 +1485,6 @@ img {
   margin: 0;
 }
 
-/* 右箭頭 */
 .ev2-event-arrow {
   font-size: 1.8rem;
   color: var(--red);
@@ -1699,81 +1494,35 @@ img {
   transition: opacity 0.2s;
 }
 
-.ev2-event-row:hover .ev2-event-arrow {
-  opacity: 1;
-}
+.ev2-event-row:hover .ev2-event-arrow { opacity: 1; }
 
-/* ===== RWD ===== */
+/* ===== 熱鬧訊息 v2 RWD ===== */
 @media (max-width: 900px) {
-  .ev2-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
+  .ev2-layout { grid-template-columns: 1fr; gap: 1.5rem; }
   .ev2-map-side {
     position: static;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-
-  .ev2-map-wrapper {
-    max-width: 260px;
-  }
-
-  .ev2-region-btns {
-    width: 100%;
-    justify-content: center;
-  }
+  .ev2-map-wrapper { max-width: 260px; }
+  .ev2-region-btns { width: 100%; justify-content: center; }
 }
 
 @media (max-width: 768px) {
-  .story-hero {
-    padding: 60px 0 40px;
-  }
-
-  .story-hero-title {
-    font-size: 2rem;
-  }
-
-  .ev2-list-title {
-    font-size: 1.5rem;
-  }
-
-  .ev2-event-row {
-    padding: 1rem 0.5rem;
-    gap: 1rem;
-  }
-
-  .ev2-event-date-block {
-    width: 52px;
-    min-width: 52px;
-    height: 52px;
-  }
-
-  .ev2-date-day {
-    font-size: 1.3rem;
-  }
-
-  .ev2-event-title {
-    font-size: 1.05rem;
-  }
-
-  .ev2-event-arrow {
-    display: none;
-  }
+  .ev2-hero { padding: 60px 0 40px; }
+  .ev2-hero-title { font-size: 2rem; letter-spacing: 4px; }
+  .ev2-list-title { font-size: 1.5rem; }
+  .ev2-event-row { padding: 1rem 0.5rem; gap: 1rem; }
+  .ev2-event-date-block { width: 52px; min-width: 52px; height: 52px; }
+  .ev2-date-day { font-size: 1.3rem; }
+  .ev2-event-title { font-size: 1.05rem; }
+  .ev2-event-arrow { display: none; }
 }
 
 @media (max-width: 480px) {
-  .ev2-map-wrapper {
-    max-width: 200px;
-    padding: 12px;
-  }
-
-  .ev2-region-btn {
-    padding: 5px 12px;
-    font-size: 0.82rem;
-  }
+  .ev2-map-wrapper { max-width: 200px; padding: 12px; }
+  .ev2-region-btn { padding: 5px 12px; font-size: 0.82rem; }
 }
 
 /* ===== 品牌故事頁（Notion 內容渲染）===== */
@@ -1790,7 +1539,7 @@ img {
   font-family: var(--font-title);
   font-size: 2.5rem;
   font-weight: 900;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -1807,29 +1556,6 @@ img {
   z-index: 1;
 }
 
-.story-page-header {
-  background: var(--white);
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  padding: 2.5rem 2rem;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.story-page-title {
-  font-family: var(--font-title);
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--red);
-  margin: 0 0 0.5rem;
-}
-
-.story-page-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-light);
-  margin: 0;
-}
-
 .story-section {
   margin-bottom: 1.5rem;
 }
@@ -1838,7 +1564,7 @@ img {
   background: var(--white);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 2rem 2rem;
+  padding: 2rem;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -1860,10 +1586,12 @@ img {
 
 .story-card h2 {
   font-family: var(--font-title);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 900;
   color: var(--red);
-  margin: 1.5rem 0 0.75rem;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--gold);
 }
 
 .story-card h3 {
@@ -1899,18 +1627,7 @@ img {
   border-left: 4px solid var(--blue);
 }
 
-/* 章節標題強化 */
-.story-card h2 {
-  font-family: var(--font-title);
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: var(--red);
-  margin: 0 0 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid var(--gold);
-}
-
-/* 粗體文字用金色強調 */
+/* 粗體文字用紅色強調 */
 .story-card strong {
   color: var(--red);
 }
@@ -1985,25 +1702,25 @@ img {
   color: var(--text-light);
 }
 
-/* RWD */
+/* ===== 品牌故事頁 RWD ===== */
 @media (max-width: 768px) {
   .story-hero {
-    height: 200px;
+    padding: 60px 0 40px;
   }
-
+  .story-hero-title {
+    font-size: 2rem;
+    margin-bottom: 0.15rem;
+  }
+  .story-hero-subtitle {
+    font-size: 0.95rem;
+  }
   .story-body {
     margin-top: 1rem;
     padding: 0 16px 60px;
   }
-
-  .story-page-title {
-    font-size: 2rem;
-  }
-
   .story-card {
     padding: 1.5rem;
   }
-
   .story-cta-text {
     font-size: 1.2rem;
   }
