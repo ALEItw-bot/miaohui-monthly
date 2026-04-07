@@ -1726,6 +1726,138 @@ img {
   }
 }
 
+/* ===== 手機版漢堡選單 ===== */
+
+/* 桌面版：顯示 nav，隱藏漢堡 */
+.hamburger-btn {
+  display: none;
+}
+
+/* 手機版：隱藏桌面 nav，顯示漢堡 */
+@media (max-width: 768px) {
+  .header-nav-desktop {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 10;
+  }
+
+  .hamburger-btn span {
+    display: block;
+    width: 26px;
+    height: 3px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+}
+
+/* 全螢幕選單 overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--red);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  animation: menuFadeIn 0.25s ease;
+}
+
+@keyframes menuFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 關閉按鈕 */
+.mobile-menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.mobile-menu-close:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: var(--white);
+}
+
+/* Logo */
+.mobile-menu-logo {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: 4px;
+  margin-bottom: 1rem;
+}
+
+/* 選單連結 */
+.mobile-menu-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile-menu-nav a {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--white);
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  letter-spacing: 2px;
+}
+
+.mobile-menu-nav a:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* 社群連結 */
+.mobile-menu-social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.mobile-menu-social a {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.8);
+  transition: color 0.2s;
+}
+
+.mobile-menu-social a:hover {
+  color: var(--white);
+}
+
 /* ===== LINE 浮動按鈕（全站右下角） ===== */
 .fab-line {
   position: fixed;
@@ -1753,7 +1885,6 @@ img {
   transform: scale(0.95);
 }
 
-/* 手機版稍微縮小 */
 @media (max-width: 480px) {
   .fab-line {
     width: 52px;
