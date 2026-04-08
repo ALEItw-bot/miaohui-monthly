@@ -82,7 +82,7 @@ export default function RootLayout({
             </nav>
             <div className="mobile-menu-social">
               <a href="https://line.me/R/ti/p/@583jmhcd" target="_blank" rel="noopener noreferrer">LINE 官方帳號</a>
-              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook 粉絲專頁</a>
+              <a href="https://www.facebook.com/MiaoHui.News" target="_blank" rel="noopener noreferrer">Facebook官方粉絲團</a>
             </div>
           </div>
         )}
@@ -110,7 +110,7 @@ export default function RootLayout({
               <div className="footer-social">
                 <h4 className="footer-title">關注我們</h4>
                 <a href="https://line.me/R/ti/p/@583jmhcd" target="_blank" rel="noopener noreferrer">LINE 官方帳號</a>
-                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook 粉專</a>
+                <a href="https://www.facebook.com/MiaoHui.News" target="_blank" rel="noopener noreferrer">Facebook官方粉絲團</a>
               </div>
             </div>
           </div>
