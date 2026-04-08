@@ -112,7 +112,7 @@ img {
 }
 
 .header-logo img {
-  height: 80px;
+  height: 70px;
   width: auto;
   object-fit: contain;
 }
@@ -1145,6 +1145,7 @@ img {
 @media (max-width: 768px) {
   .header-inner { padding: 0 16px; }
   .header-logo { font-size: 1.3rem; }
+  .header-logo img { height: 45px; }
   .header-nav { gap: 1rem; }
   .header-nav-link { font-size: 0.9rem; }
   .header-nav-dots { display: none; }
@@ -1170,6 +1171,7 @@ img {
 @media (max-width: 480px) {
   .header-red { height: 48px; }
   .header-logo { font-size: 1.1rem; }
+  .header-logo img { height: 36px; }
   .header-nav-link { font-size: 0.8rem; }
   .carousel-title { font-size: 1.5rem; }
   .carousel-subtitle { font-size: 0.875rem; }
