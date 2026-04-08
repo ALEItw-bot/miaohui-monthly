@@ -38,7 +38,7 @@ export default function RootLayout({
           <div className="header-red">
             <div className="container header-inner">
               <a href="/" className="header-logo">
-                <img src="/logo-white.png" alt="廟會月報" height={40} />
+                <img src="/logo.png" alt="廟會月報" height={40} />
               </a>
 
               {/* 桌面版導覽（手機版隱藏） */}
@@ -46,6 +46,8 @@ export default function RootLayout({
                 <a href="/announcements" className="header-nav-link">最新消息</a>
                 <a href="/brand-story" className="header-nav-link">品牌故事</a>
                 <a href="/events" className="header-nav-link">熱鬧資訊</a>
+                <a href="/gallery" className="header-nav-link">精彩花絮</a>
+                <a href="/sponsors" className="header-nav-link">工商服務</a>
               </nav>
 
               {/* 手機版漢堡按鈕 */}
@@ -73,16 +75,18 @@ export default function RootLayout({
               ✕
             </button>
             <div className="mobile-menu-logo">
-              <img src="/logo-white.png" alt="廟會月報" height={36} />
+              <img src="/logo.png" alt="廟會月報" height={36} />
             </div>
             <nav className="mobile-menu-nav">
               <a href="/announcements" onClick={() => setMobileMenuOpen(false)}>最新消息</a>
               <a href="/brand-story" onClick={() => setMobileMenuOpen(false)}>品牌故事</a>
               <a href="/events" onClick={() => setMobileMenuOpen(false)}>熱鬧資訊</a>
+              <a href="/gallery" onClick={() => setMobileMenuOpen(false)}>精彩花絮</a>
+              <a href="/sponsors" onClick={() => setMobileMenuOpen(false)}>工商服務</a>
             </nav>
             <div className="mobile-menu-social">
               <a href="https://line.me/R/ti/p/@583jmhcd" target="_blank" rel="noopener noreferrer">LINE 官方帳號</a>
-              <a href="https://www.facebook.com/MiaoHui.News" target="_blank" rel="noopener noreferrer">Facebook官方粉絲團</a>
+              <a href="https://www.facebook.com/MiaoHui.News" target="_blank" rel="noopener noreferrer">Facebook官方粉專</a>
             </div>
           </div>
         )}
@@ -96,7 +100,7 @@ export default function RootLayout({
             <div className="container footer-grid">
               <div className="footer-brand">
                 <div className="footer-logo">
-                  <img src="/logo-white.png" alt="廟會月報" height={32} />
+                  <img src="/logo.png" alt="廟會月報" height={32} />
                 </div>
                 <p className="footer-desc">台灣最完整的廟會活動資訊平台</p>
                 <p className="footer-desc">與你攜手感受台灣廟會之美</p>
@@ -106,6 +110,8 @@ export default function RootLayout({
                 <a href="/announcements">最新消息</a>
                 <a href="/brand-story">品牌故事</a>
                 <a href="/events">熱鬧資訊</a>
+                <a href="/gallery">精彩花絮</a>
+                <a href="/sponsors">工商服務</a>
               </div>
               <div className="footer-social">
                 <h4 className="footer-title">關注我們</h4>

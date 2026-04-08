@@ -1,0 +1,191 @@
+/* ===== Sponsors Hero ===== */
+.sponsors-hero {
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/carousel/popup-1.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 80px 0 60px;
+  text-align: center;
+}
+.sponsors-hero-title {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: 6px;
+  margin: 0;
+}
+.sponsors-hero-desc {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 0.75rem;
+  letter-spacing: 2px;
+}
+
+/* ===== Sponsors Body ===== */
+.sponsors-body {
+  padding: 48px 0 80px;
+}
+
+/* ===== Filter: 跟 ev2-region-btn 同樣式 ===== */
+.sponsors-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.sponsors-filter-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--red);
+  background: transparent;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+.sponsors-filter-btn:hover,
+.sponsors-filter-btn.active {
+  background: var(--red);
+  color: var(--white);
+}
+
+/* ===== Sponsors List Header ===== */
+.sponsors-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--gold);
+}
+.sponsors-list-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 0;
+}
+.sponsors-list-count {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* ===== Sponsors Grid ===== */
+.sponsors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+.sponsor-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.sponsor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+.sponsor-featured {
+  border: 2px solid var(--gold);
+}
+.sponsor-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--gold);
+  padding: 3px 12px;
+  border-radius: 20px;
+  align-self: flex-start;
+}
+.sponsor-card-name {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--text);
+  margin: 0;
+}
+.sponsor-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sponsor-card-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--red);
+  padding: 2px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.sponsor-card-tag.tag-blue { background: var(--blue); }
+.sponsor-card-tag.tag-gold { background: var(--gold); color: var(--text); }
+.sponsor-card-desc {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin: 0;
+}
+.sponsor-card-link {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--red);
+  text-decoration: none;
+}
+.sponsor-card-link:hover {
+  text-decoration: underline;
+}
+.sponsors-empty {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-light);
+  font-size: 1.05rem;
+}
+.sponsors-empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* ===== Sponsors CTA ===== */
+.sponsors-cta {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  padding: 60px 0;
+  text-align: center;
+}
+.sponsors-cta-title {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+.sponsors-cta-sub {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+/* ===== Sponsors RWD ===== */
+@media (max-width: 768px) {
+  .sponsors-hero { padding: 60px 0 40px; }
+  .sponsors-hero-title { font-size: 2rem; letter-spacing: 4px; }
+  .sponsors-list-title { font-size: 1.5rem; }
+  .sponsors-grid { grid-template-columns: 1fr; }
+  .sponsors-cta-title { font-size: 1.2rem; }
+}
+@media (max-width: 480px) {
+  .sponsors-filter-btn { padding: 5px 12px; font-size: 0.82rem; }
+}

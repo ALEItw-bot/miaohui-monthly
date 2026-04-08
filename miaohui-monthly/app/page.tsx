@@ -195,7 +195,7 @@ export default function HomePage() {
               <SponsorCarousel />
             </div>
             <div className="sg-cta">
-              <a href="#" className="btn btn-primary">成為合作夥伴</a>
+              <a href="/sponsors" className="btn btn-primary">成為合作夥伴</a>
             </div>
           </div>
 
