@@ -68,9 +68,10 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
           ) : (
             <div className="sponsors-grid">
               {filtered.map((partner) => (
-                <div
+                <a
                   key={partner.id}
-                  className={`sponsor-card ${partner.exposureLevel === '精選' ? 'sponsor-featured' : ''}`}
+                  href={`/sponsors/${partner.id}`}
+                  className={`sponsor-card sponsor-card-link-wrapper ${partner.exposureLevel === '精選' ? 'sponsor-featured' : ''}`}
                 >
                   {partner.exposureLevel === '精選' && (
                     <span className="sponsor-badge">⭐ 精選夥伴</span>
@@ -84,17 +85,8 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
                   {partner.description && (
                     <p className="sponsor-card-desc">{partner.description}</p>
                   )}
-                  {partner.website && (
-                    <a
-                      href={partner.website}
-                      className="sponsor-card-link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      前往官網 →
-                    </a>
-                  )}
-                </div>
+                  <span className="sponsor-card-detail">查看詳情 →</span>
+                </a>
               ))}
             </div>
           )}
@@ -105,7 +97,7 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
       <section className="sponsors-cta">
         <div className="container">
           <h2 className="sponsors-cta-title">想成為廟會月報的合作夥伴？</h2>
-          <p className="sponsors-cta-sub">不管你是個人工作室還是公司行號，想要為廟會文化盡一份心力，我們都歡迎！</p>
+          <p className="sponsors-cta-sub">不管你是個人工作室還是公司行號，只要與廟會文化相關，我們都歡迎！</p>
           <a
             href="https://line.me/R/ti/p/@583jmhcd"
             className="btn btn-cta-invert"
