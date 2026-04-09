@@ -21,8 +21,7 @@ const notion = new Client({
 const EVENTS_DB_ID = process.env.NOTION_EVENTS_DB_ID || '';
 const ANNOUNCEMENTS_DB_ID = process.env.NOTION_ANNOUNCEMENTS_DB_ID || '';
 const PARTNERS_DB_ID = process.env.NOTION_PARTNERS_DB_ID || '';
-const BRAND_STORY_PAGE_ID =
-  process.env.NOTION_BRAND_STORY_PAGE_ID || '3274cb8807f28092b955c9eb108e2f20';
+const BRAND_STORY_PAGE_ID = process.env.NOTION_BRAND_STORY_PAGE_ID || '3274cb8807f28092b955c9eb108e2f20';
 
 // ==========================================
 // 1. 取得活動列表（原有）
@@ -94,7 +93,10 @@ export async function getEventBySlug(slug: string): Promise<{
 // 3. 取得頁面所有 Blocks（遞迴 + 分頁）（原有）
 // ==========================================
 
-async function getPageBlocks(blockId: string, depth: number = 0): Promise<NotionBlock[]> {
+async function getPageBlocks(
+  blockId: string,
+  depth: number = 0,
+): Promise<NotionBlock[]> {
   if (depth > 3) return [];
 
   const blocks: NotionBlock[] = [];
@@ -117,7 +119,9 @@ async function getPageBlocks(blockId: string, depth: number = 0): Promise<Notion
       blocks.push(parsed);
     }
 
-    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+    cursor = response.has_more
+      ? (response.next_cursor ?? undefined)
+      : undefined;
   } while (cursor);
 
   return groupListItems(blocks);
@@ -230,8 +234,8 @@ export async function submitRating(
   await notion.pages.update({
     page_id: page.id,
     properties: {
-      評分總分: { number: newTotal },
-      評分人數: { number: newCount },
+      '評分總分': { number: newTotal },
+      '評分人數': { number: newCount },
     },
   });
 
@@ -271,7 +275,9 @@ export async function getGalleryPhotos(): Promise<{
         property: '發佈',
         checkbox: { equals: true },
       },
-      sorts: [{ property: '活動日期', direction: 'descending' }],
+      sorts: [
+        { property: '日期', direction: 'descending' },
+      ],
     });
 
     const photos: GalleryPhoto[] = [];
@@ -280,9 +286,12 @@ export async function getGalleryPhotos(): Promise<{
       const props = page.properties;
       const title = getTitle(props['活動名稱']);
       const coverFiles = props['活動封面圖']?.files || [];
-      const coverUrl = coverFiles[0]?.file?.url || coverFiles[0]?.external?.url || '';
+      const coverUrl =
+        coverFiles[0]?.file?.url ||
+        coverFiles[0]?.external?.url ||
+        '';
       const eventType = props['活動類型']?.select?.name || '';
-      const dateStart = props['活動日期']?.date?.start || '';
+      const dateStart = props['日期']?.date?.start || '';
 
       if (coverUrl) {
         photos.push({
@@ -317,7 +326,9 @@ export async function getPartners(): Promise<{
         property: '合約狀態',
         status: { equals: '合作中' },
       },
-      sorts: [{ property: '前台曝光等級', direction: 'ascending' }],
+      sorts: [
+        { property: '前台曝光等級', direction: 'ascending' },
+      ],
     });
 
     const partners: Partner[] = response.results.map((page: any) => {
@@ -325,11 +336,15 @@ export async function getPartners(): Promise<{
       return {
         id: page.id,
         name: getTitle(props['商家名稱']),
-        category: (props['類別']?.multi_select || []).map((s: any) => s.name),
-        description: getRichTextPlain(props['服務項目特色']) || '',
+        category: (props['類別']?.multi_select || []).map(
+          (s: any) => s.name,
+        ),
+        description:
+          getRichTextPlain(props['服務項目特色']) || '',
         website: props['商家網站']?.url || '',
         status: props['合約狀態']?.status?.name || '',
-        exposureLevel: props['前台曝光等級']?.select?.name || '基本',
+        exposureLevel:
+          props['前台曝光等級']?.select?.name || '基本',
       };
     });
 
@@ -344,9 +359,11 @@ export async function getPartners(): Promise<{
 // 🔴 11. 用 ID 取得單一商家詳情 + 頁面 Blocks（新增）
 // ==========================================
 
-export async function getPartnerById(id: string): Promise<PartnerDetail | null> {
+export async function getPartnerById(
+  id: string,
+): Promise<PartnerDetail | null> {
   try {
-    const page = (await notion.pages.retrieve({ page_id: id })) as any;
+    const page = await notion.pages.retrieve({ page_id: id }) as any;
     const props = page.properties;
 
     // 確認是合作中的商家
@@ -359,14 +376,19 @@ export async function getPartnerById(id: string): Promise<PartnerDetail | null> 
     return {
       id: page.id,
       name: getTitle(props['商家名稱']),
-      category: (props['類別']?.multi_select || []).map((s: any) => s.name),
-      description: getRichTextPlain(props['服務項目']) || '',
-      features: getRichTextPlain(props['服務項目特色']) || '',
+      category: (props['類別']?.multi_select || []).map(
+        (s: any) => s.name,
+      ),
+      description:
+        getRichTextPlain(props['服務項目']) || '',
+      features:
+        getRichTextPlain(props['服務項目特色']) || '',
       website: props['商家網站']?.url || '',
       phone: props['電話']?.phone_number || '',
       email: props['電子郵件']?.email || '',
       status,
-      exposureLevel: props['前台曝光等級']?.select?.name || '基本',
+      exposureLevel:
+        props['前台曝光等級']?.select?.name || '基本',
       blocks,
     };
   } catch (err) {
@@ -432,14 +454,20 @@ function getTitle(prop: any): string {
 }
 
 function getRichTextPlain(prop: any): string {
-  return prop?.rich_text?.map((t: any) => t.plain_text).join('') || '';
+  return (
+    prop?.rich_text?.map((t: any) => t.plain_text).join('') || ''
+  );
 }
 
 function getFiles(prop: any): string[] {
   if (!prop?.files?.length) return [];
   return prop.files
     .map((f: any) =>
-      f.type === 'file' ? f.file.url : f.type === 'external' ? f.external.url : '',
+      f.type === 'file'
+        ? f.file.url
+        : f.type === 'external'
+          ? f.external.url
+          : '',
     )
     .filter(Boolean);
 }
@@ -454,7 +482,8 @@ function parseRichText(rt: any): RichText {
     if (rt.annotations.underline) result.underline = true;
     if (rt.annotations.strikethrough) result.strikethrough = true;
     if (rt.annotations.code) result.code = true;
-    if (rt.annotations.color !== 'default') result.color = rt.annotations.color;
+    if (rt.annotations.color !== 'default')
+      result.color = rt.annotations.color;
   }
   if (rt.href) result.href = rt.href;
   return result;
@@ -480,14 +509,17 @@ function parseBlock(block: any): NotionBlock {
     case 'quote':
     case 'toggle':
       result.rich_text = parseRichTextArray(data.rich_text);
-      if (type.startsWith('heading_') && data.is_toggleable) result.is_toggleable = true;
+      if (type.startsWith('heading_') && data.is_toggleable)
+        result.is_toggleable = true;
       if (type === 'to_do') result.checked = !!data.checked;
-      if (data.color && data.color !== 'default') result.color = data.color;
+      if (data.color && data.color !== 'default')
+        result.color = data.color;
       break;
 
     case 'callout':
       result.rich_text = parseRichTextArray(data.rich_text);
-      if (data.color && data.color !== 'default') result.color = data.color;
+      if (data.color && data.color !== 'default')
+        result.color = data.color;
       if (data.icon?.type === 'emoji') result.icon = data.icon.emoji;
       break;
 
@@ -498,12 +530,17 @@ function parseBlock(block: any): NotionBlock {
       break;
 
     case 'table_row':
-      result.cells = (data.cells || []).map((cell: any[]) => parseRichTextArray(cell));
+      result.cells = (data.cells || []).map((cell: any[]) =>
+        parseRichTextArray(cell),
+      );
       break;
 
     case 'image':
     case 'video':
-      result.url = data.type === 'external' ? data.external?.url : data.file?.url || '';
+      result.url =
+        data.type === 'external'
+          ? data.external?.url
+          : data.file?.url || '';
       result.caption = parseRichTextArray(data.caption);
       break;
 
@@ -516,7 +553,8 @@ function parseBlock(block: any): NotionBlock {
       break;
 
     default:
-      if (data.rich_text) result.rich_text = parseRichTextArray(data.rich_text);
+      if (data.rich_text)
+        result.rich_text = parseRichTextArray(data.rich_text);
       break;
   }
 
@@ -529,11 +567,14 @@ function groupListItems(blocks: NotionBlock[]): NotionBlock[] {
 
   for (const block of blocks) {
     const isList =
-      block.type === 'bulleted_list_item' || block.type === 'numbered_list_item';
+      block.type === 'bulleted_list_item' ||
+      block.type === 'numbered_list_item';
 
     if (isList) {
       const listType =
-        block.type === 'bulleted_list_item' ? 'bulleted_list' : 'numbered_list';
+        block.type === 'bulleted_list_item'
+          ? 'bulleted_list'
+          : 'numbered_list';
       if (currentList && currentList.type === listType) {
         currentList.items!.push(block);
       } else {
