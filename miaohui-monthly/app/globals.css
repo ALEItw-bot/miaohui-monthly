@@ -1208,7 +1208,6 @@ img {
   .news-image { width: 100%; height: 300px; }
   .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
   .brand-preview-title { font-size: var(--text-2xl); }
-  .popup-image-area { max-height: 60vh; }
 
   .gallery-carousel-wrapper { height: 280px; }
   .sponsor-carousel-wrapper { height: 260px; }

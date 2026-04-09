@@ -25,8 +25,12 @@ export default function PopupModal() {
     // 讀取 images.json，隨機選一張
     fetch('/popup/images.json')
       .then((res) => res.json())
-      .then((images: string[]) => {
-        if (!images || images.length === 0) return;
+      .then((data: string[] | { images?: string[] }) => {
+        // 相容兩種 JSON 格式：["a.jpg"] 或 { images: ["a.jpg"] }
+        const list = Array.isArray(data) ? data : (data.images ?? []);
+        // 過濾手機版檔名（含 -m. 的），只保留桌機版
+        const images = list.filter((f) => !/-m\./i.test(f));
+        if (images.length === 0) return;
         const picked = images[Math.floor(Math.random() * images.length)];
         const desktop = picked.startsWith('/') ? picked : `/popup/${picked}`;
         const mobile = getMobileSrc(desktop);
