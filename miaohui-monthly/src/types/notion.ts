@@ -68,6 +68,7 @@ export interface PartnerDetail extends Partner {
   features: string;
   phone: string;
   email: string;
+  coverImage: string;
   blocks: NotionBlock[];
 }
 

@@ -373,6 +373,12 @@ export async function getPartnerById(
     // 取得頁面 Block 內容
     const blocks = await getPageBlocks(id);
 
+    // 取得封面圖（從頁面 cover 或商家封面屬性）
+    const coverImage =
+      page.cover?.file?.url ||
+      page.cover?.external?.url ||
+      '';
+
     return {
       id: page.id,
       name: getTitle(props['商家名稱']),
@@ -386,6 +392,7 @@ export async function getPartnerById(
       website: props['商家網站']?.url || '',
       phone: props['電話']?.phone_number || '',
       email: props['電子郵件']?.email || '',
+      coverImage,
       status,
       exposureLevel:
         props['前台曝光等級']?.select?.name || '基本',
