@@ -106,6 +106,11 @@ export default async function HomePage() {
             <div className="gallery-carousel-wrapper">
               <GalleryCarousel />
             </div>
+            <div className="sg-cta">
+              <Link href="/gallery" className="btn btn-primary">
+                分享精采瞬間
+              </Link>
+            </div>
           </div>
         </div>
       </section>
