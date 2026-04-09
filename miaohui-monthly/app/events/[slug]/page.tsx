@@ -1,5 +1,6 @@
 import { getEventBySlug, getAllEventSlugs, extractImagesFromBlocks } from '@/lib/notion';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import StarRating from '@/components/StarRating';
 import PhotoCarousel from '@/components/PhotoCarousel';
@@ -57,7 +58,7 @@ export default async function EventPage({
   const photos = allPhotos.length > 0 ? allPhotos : ['/images/default-hero.jpg'];
 
   return (
-    <main style={{ minHeight: '100vh' }}>
+    <main style={({ minHeight: '100vh' })}>
       {/* Hero 滿版 */}
       <section className="event-detail-hero">
         <div
@@ -68,7 +69,9 @@ export default async function EventPage({
         <div className="event-detail-hero-content">
           <span className="event-detail-hero-emoji">{event.emoji}</span>
           <h1 className="event-detail-hero-title">{event.title}</h1>
-          {event.tagline && <p className="event-detail-hero-tagline">{event.tagline}</p>}
+          {event.tagline && (
+            <p className="event-detail-hero-tagline">{event.tagline}</p>
+          )}
         </div>
         <div className="event-detail-hero-scroll">▼</div>
       </section>
@@ -81,7 +84,10 @@ export default async function EventPage({
             className="event-detail-card"
             style={{ borderTop: `5px solid ${themeColor}` }}
           >
-            <h2 className="event-detail-card-name" style={{ color: themeColor }}>
+            <h2
+              className="event-detail-card-name"
+              style={({ color: themeColor })}
+            >
               {event.title}
             </h2>
             <div className="event-detail-card-grid">
@@ -159,14 +165,20 @@ export default async function EventPage({
               </div>
             </div>
             {event.summary && (
-              <div className="event-detail-card-summary">{event.summary}</div>
+              <div className="event-detail-card-summary">
+                {event.summary}
+              </div>
             )}
           </div>
 
           {/* 評分區塊 */}
           <div className="interact-card">
-            <h3 className="interact-card-title">🎉 你有多期待這場活動？</h3>
-            <p className="interact-card-subtitle">點擊星星投下你的期待度！</p>
+            <h3 className="interact-card-title">
+              🎉 你有多期待這場活動？
+            </h3>
+            <p className="interact-card-subtitle">
+              點擊星星投下你的期待度！
+            </p>
             <StarRating eventSlug={event.slug} />
           </div>
         </div>
@@ -174,7 +186,9 @@ export default async function EventPage({
         {/* 右欄：歷年照片輪播 */}
         <div className="event-detail-right">
           <div className="carousel-card">
-            <div className="carousel-card-header">📸 歷年活動照片</div>
+            <div className="carousel-card-header">
+              📸 歷年活動照片
+            </div>
             <PhotoCarousel photos={photos} title={event.title} />
           </div>
         </div>
