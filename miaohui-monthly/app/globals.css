@@ -919,9 +919,7 @@ img {
 
 .popup-modal {
   position: relative;
-  width: 1600px;
   max-width: 95vw;
-  background: var(--white);
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
@@ -951,20 +949,18 @@ img {
 }
 
 .popup-image-area {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-muted);
 }
 
 .popup-img {
-  max-width: 100%;
+  display: block;
+  max-width: 95vw;
   max-height: 80vh;
   width: auto;
   height: auto;
-  object-fit: contain;
-  display: block;
+  border-radius: var(--radius-md);
 }
 
 
