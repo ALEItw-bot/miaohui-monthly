@@ -34,11 +34,6 @@ export default function PopupModal() {
             <img src={imageSrc} alt="廟會月報最新資訊" className="popup-img" />
           )}
         </div>
-        <div className="popup-bottom-bar">
-          <div className="popup-bar-red"></div>
-          <div className="popup-bar-white"></div>
-          <div className="popup-bar-blue"></div>
-        </div>
       </div>
     </div>
   );
