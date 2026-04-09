@@ -39,11 +39,19 @@ export default async function HomePage() {
               <h2 className="news-list-title">最新消息</h2>
               {announcements.length > 0
                 ? announcements.map((item) => (
-                    <Link key={item.id} href="/announcements" className="news-item">
-                      <span className="news-date">{item.date.replace(/-/g, '.')}</span>
+                    <Link
+                      key={item.id}
+                      href="/announcements"
+                      className="news-item"
+                    >
+                      <span className="news-date">
+                        {item.date.replace(/-/g, '.')}
+                      </span>
                       <span
                         className={`tag ${
-                          item.category === '系統更新' ? 'tag--blue' : 'tag--red'
+                          item.category === '系統更新'
+                            ? 'tag--blue'
+                            : 'tag--red'
                         }`}
                       >
                         {item.category}
@@ -57,7 +65,9 @@ export default async function HomePage() {
                       href={`/events/${event.slug}`}
                       className="news-item"
                     >
-                      <span className="news-date">{formatDate(event.date.start)}</span>
+                      <span className="news-date">
+                        {formatDate(event.date?.start)}
+                      </span>
                       <span className="tag tag--red">活動資訊</span>
                       <span className="news-title">{event.title}</span>
                     </Link>
@@ -75,7 +85,9 @@ export default async function HomePage() {
         <div className="container sg-container">
           <div className="sg-block">
             <h2 className="sg-heading">🏮 工商服務</h2>
-            <p className="sg-desc">感謝以下夥伴熱情贊助，讓廟會文化持續發光</p>
+            <p className="sg-desc">
+              感謝以下夥伴熱情贊助，讓廟會文化持續發光
+            </p>
             <div className="sponsor-carousel-wrapper">
               <SponsorCarousel />
             </div>
@@ -88,7 +100,9 @@ export default async function HomePage() {
 
           <div className="sg-block">
             <h2 className="sg-heading">📸 精彩花絮</h2>
-            <p className="sg-desc">現場直擊，用鏡頭感受廟會的鬧熱與感動</p>
+            <p className="sg-desc">
+              現場直擊，用鏡頭感受廟會的鬧熱與感動
+            </p>
             <div className="gallery-carousel-wrapper">
               <GalleryCarousel />
             </div>
@@ -99,7 +113,9 @@ export default async function HomePage() {
       {/* 品牌故事簡介 */}
       <section className="brand-preview">
         <div className="container brand-preview-inner">
-          <h2 className="brand-preview-title">信仰的溫度，科技的傳承</h2>
+          <h2 className="brand-preview-title">
+            信仰的溫度，科技的傳承
+          </h2>
           <p className="brand-preview-text">
             從 2012 年的一個念頭，到台灣最完整的廟會資訊平台。
             <br />
