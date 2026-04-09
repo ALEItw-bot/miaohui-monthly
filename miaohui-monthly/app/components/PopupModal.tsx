@@ -2,15 +2,51 @@
 
 import { useState, useEffect } from 'react';
 
+// ✅ 從 images.json 讀取圖片清單，隨機顯示一張
+// ✅ 手機版自動配對：popup-1.jpg → popup-1-m.jpg
+// ✅ 如果手機版不存在，自動退回桌機版
+
+function getMobileSrc(desktopSrc: string): string {
+  // popup-1.jpg → popup-1-m.jpg
+  const dotIndex = desktopSrc.lastIndexOf('.');
+  return desktopSrc.slice(0, dotIndex) + '-m' + desktopSrc.slice(dotIndex);
+}
+
 export default function PopupModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [desktopImg, setDesktopImg] = useState('');
+  const [mobileImg, setMobileImg] = useState('');
+  const [hasMobileImg, setHasMobileImg] = useState(false);
 
   useEffect(() => {
-    // 檢查是否已關閉過（sessionStorage，每次開新分頁會再顯示）
     const dismissed = sessionStorage.getItem('popup-dismissed');
-    if (!dismissed) {
-      setIsOpen(true);
-    }
+    if (dismissed) return;
+
+    // 讀取 images.json，隨機選一張
+    fetch('/popup/images.json')
+      .then((res) => res.json())
+      .then((images: string[]) => {
+        if (!images || images.length === 0) return;
+        const picked = images[Math.floor(Math.random() * images.length)];
+        const desktop = picked.startsWith('/') ? picked : `/popup/${picked}`;
+        const mobile = getMobileSrc(desktop);
+
+        setDesktopImg(desktop);
+        setMobileImg(mobile);
+        setIsOpen(true);
+
+        // 檢查手機版是否存在
+        const img = new Image();
+        img.onload = () => setHasMobileImg(true);
+        img.onerror = () => setHasMobileImg(false);
+        img.src = mobile;
+      })
+      .catch(() => {
+        // JSON 讀取失敗時用預設圖片
+        setDesktopImg('/popup/popup-1.jpg');
+        setMobileImg('/popup/popup-1-m.jpg');
+        setIsOpen(true);
+      });
   }, []);
 
   const handleClose = () => {
@@ -18,7 +54,7 @@ export default function PopupModal() {
     sessionStorage.setItem('popup-dismissed', 'true');
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !desktopImg) return null;
 
   return (
     <div className="popup-overlay" onClick={handleClose}>
@@ -30,17 +66,25 @@ export default function PopupModal() {
           ✕
         </button>
         <div className="popup-image-area">
-          <picture>
-            <source
-              media="(max-width: 768px)"
-              srcSet="/popup/popup-1-M.jpg"
-            />
+          {hasMobileImg ? (
+            <picture>
+              <source
+                media="(max-width: 768px)"
+                srcSet={mobileImg}
+              />
+              <img
+                className="popup-img"
+                src={desktopImg}
+                alt="活動公告"
+              />
+            </picture>
+          ) : (
             <img
               className="popup-img"
-              src="/popup/popup-1.jpg"
+              src={desktopImg}
               alt="活動公告"
             />
-          </picture>
+          )}
         </div>
       </div>
     </div>
