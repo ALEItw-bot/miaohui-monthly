@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import NotionRenderer from '@/components/NotionRenderer';
+import { NotionRenderer } from '@/components/NotionRenderer';
 import { getPartnerById, getPartnerSlugs } from '@/lib/notion';
 import { SOCIAL_LINKS } from '@/lib/constants';
 import './sponsor-detail.css';

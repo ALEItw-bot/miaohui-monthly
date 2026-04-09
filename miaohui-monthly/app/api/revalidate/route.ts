@@ -1,13 +1,16 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { safeErrorResponse } from '@/lib/api-guard';
 
-export async function POST(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const secret = searchParams.get('secret');
+export async function POST(request: NextRequest) {
+  // 從 Header 讀取密鑰（避免 URL 記錄洩漏）
+  const secret = request.headers.get('x-revalidate-secret');
 
-  // 驗證密鑰
   if (secret !== process.env.REVALIDATE_SECRET) {
-    return NextResponse.json({ error: 'Invalid secret' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Invalid secret' },
+      { status: 401 },
+    );
   }
 
   try {
@@ -17,13 +20,20 @@ export async function POST(request: Request) {
     if (path) {
       revalidatePath(path);
     } else {
-      // 預設刷新首頁和活動列表
+      // 預設刷新首頁和主要列表頁
       revalidatePath('/');
       revalidatePath('/events');
+      revalidatePath('/announcements');
+      revalidatePath('/gallery');
+      revalidatePath('/sponsors');
     }
 
-    return NextResponse.json({ revalidated: true, now: Date.now() });
+    return NextResponse.json({
+      success: true,
+      revalidated: true,
+      now: Date.now(),
+    });
   } catch (err) {
-    return NextResponse.json({ error: 'Revalidation failed' }, { status: 500 });
+    return safeErrorResponse(err);
   }
 }

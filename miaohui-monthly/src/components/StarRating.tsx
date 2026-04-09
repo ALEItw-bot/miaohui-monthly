@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import './star-rating.css';
 
 interface StarRatingProps {
   eventSlug: string;
@@ -50,38 +51,13 @@ export default function StarRating({ eventSlug }: StarRatingProps) {
 
   const labels = ['', '還好', '有點期待', '期待', '很期待', '超級期待！'];
 
-  const rowStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '8px',
-    marginBottom: '12px',
-  };
-  const btnBase = {
-    background: 'none',
-    border: 'none',
-    fontSize: '2.5rem',
-    cursor: 'pointer',
-    padding: '0',
-    lineHeight: '1',
-    transition: 'transform 0.15s',
-  };
-  const disabledBtn = { ...btnBase, cursor: 'default' };
-  const labelStyle = { fontSize: '1rem', color: '#666', minHeight: '1.5em' };
-  const thanksStyle = { marginTop: '8px', fontSize: '0.85rem', color: '#999' };
-  const statsStyle = {
-    marginTop: '12px',
-    fontSize: '0.85rem',
-    color: '#C80000',
-    fontWeight: 600,
-  };
-
   return (
     <>
-      <div style={rowStyle}>
+      <div className="star-rating-row">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
-            style={submitted ? disabledBtn : btnBase}
+            className={`star-rating-btn ${submitted ? 'disabled' : ''}`}
             onClick={() => handleClick(star)}
             onMouseEnter={() => !submitted && setHover(star)}
             onMouseLeave={() => !submitted && setHover(0)}
@@ -91,7 +67,7 @@ export default function StarRating({ eventSlug }: StarRatingProps) {
           </button>
         ))}
       </div>
-      <div style={labelStyle}>
+      <div className="star-rating-label">
         {loading
           ? '⏳ 提交中...'
           : submitted
@@ -100,9 +76,11 @@ export default function StarRating({ eventSlug }: StarRatingProps) {
               ? labels[hover]
               : '點擊星星來評分'}
       </div>
-      {submitted && <div style={thanksStyle}>感謝你的參與！🙏</div>}
+      {submitted && (
+        <div className="star-rating-thanks">感謝你的參與！🙏</div>
+      )}
       {submitted && average !== null && totalCount !== null && (
-        <div style={statsStyle}>
+        <div className="star-rating-stats">
           📊 目前平均 {average} 分（{totalCount} 人評分）
         </div>
       )}
