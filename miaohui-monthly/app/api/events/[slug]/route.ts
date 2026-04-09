@@ -5,7 +5,7 @@ export const revalidate = 60;
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
 
@@ -19,7 +19,7 @@ export async function GET(
     console.error('[/api/events/slug] Error:', err);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch event detail' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -16,9 +16,9 @@ export async function GET(request: Request) {
   try {
     const files = fs.readdirSync(dirPath);
     const images = files
-      .filter(file => /\.(jpg|jpeg|png|webp|gif)$/i.test(file))
+      .filter((file) => /\.(jpg|jpeg|png|webp|gif)$/i.test(file))
       .sort()
-      .map(file => '/' + folder + '/' + file);
+      .map((file) => '/' + folder + '/' + file);
 
     return NextResponse.json({ images });
   } catch {

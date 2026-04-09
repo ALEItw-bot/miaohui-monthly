@@ -11,8 +11,8 @@ export default function NewsImageCarousel() {
 
   useEffect(() => {
     fetch('/news/images.json')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setImages(data);
         }
@@ -22,11 +22,14 @@ export default function NewsImageCarousel() {
 
   const total = images.length;
 
-  const goTo = useCallback((index: number) => {
-    if (total === 0) return;
-    setCurrent(((index % total) + total) % total);
-    setTranslateX(0);
-  }, [total]);
+  const goTo = useCallback(
+    (index: number) => {
+      if (total === 0) return;
+      setCurrent(((index % total) + total) % total);
+      setTranslateX(0);
+    },
+    [total],
+  );
 
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
@@ -94,7 +97,8 @@ export default function NewsImageCarousel() {
     display: 'flex',
     width: total * 100 + '%',
     height: '100%',
-    transform: 'translateX(calc(-' + (current * (100 / total)) + '% + ' + translateX + 'px))',
+    transform:
+      'translateX(calc(-' + current * (100 / total) + '% + ' + translateX + 'px))',
     transition: isDragging ? 'none' : 'transform 0.4s ease',
   };
 
@@ -113,7 +117,7 @@ export default function NewsImageCarousel() {
       <div className="news-image-track" style={trackStyle}>
         {images.map((src, i) => {
           const imgStyle = {
-            width: (100 / total) + '%',
+            width: 100 / total + '%',
             flexShrink: 0,
             backgroundImage: 'url(' + src + ')',
             backgroundSize: 'cover',

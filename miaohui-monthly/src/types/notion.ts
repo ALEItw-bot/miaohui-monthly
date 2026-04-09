@@ -39,7 +39,61 @@ export interface EventListResponse {
 }
 
 // ==========================================
-// Notion Block 型別（渲染用）
+// 🔴 最新消息（新增）
+// ==========================================
+
+export interface Announcement {
+  id: string;
+  title: string;
+  date: string;
+  category: string;
+  summary: string;
+}
+
+// ==========================================
+// 🔴 工商服務（新增）
+// ==========================================
+
+export interface Partner {
+  id: string;
+  name: string;
+  category: string[];
+  description: string;
+  website: string;
+  status: string;
+  exposureLevel: string;
+}
+
+export interface PartnerDetail extends Partner {
+  features: string;
+  phone: string;
+  email: string;
+  blocks: NotionBlock[];
+}
+
+// ==========================================
+// 🔴 精彩花絮（新增）
+// ==========================================
+
+export interface GalleryPhoto {
+  id: string;
+  title: string;
+  coverUrl: string;
+  eventType: string;
+  date: string;
+}
+
+// ==========================================
+// 🔴 品牌故事（新增）
+// ==========================================
+
+export interface PageContent {
+  success: boolean;
+  blocks: NotionBlock[];
+}
+
+// ==========================================
+// Notion Block 型別（渲染用）— 原有
 // ==========================================
 
 export interface RichText {

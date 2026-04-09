@@ -3,14 +3,21 @@ import { RichTextRenderer } from '../RichTextRenderer';
 import { BlockRenderer } from '../NotionRenderer';
 import type { NotionBlock } from '../NotionRenderer';
 
-interface Props { block: NotionBlock; }
+interface Props {
+  block: NotionBlock;
+}
 
 const CALLOUT_BG: Record<string, string> = {
-  gray_background: '#f1f1ef', brown_background: '#f4eeee',
-  orange_background: '#fbecdd', yellow_background: '#fbf3db',
-  green_background: '#edf3ec', blue_background: '#e7f3f8',
-  purple_background: '#f6f3f9', pink_background: '#f9f0f5',
-  red_background: '#fdebec', default: '#f7f6f3',
+  gray_background: '#f1f1ef',
+  brown_background: '#f4eeee',
+  orange_background: '#fbecdd',
+  yellow_background: '#fbf3db',
+  green_background: '#edf3ec',
+  blue_background: '#e7f3f8',
+  purple_background: '#f6f3f9',
+  pink_background: '#f9f0f5',
+  red_background: '#fdebec',
+  default: '#f7f6f3',
 };
 
 export function Callout({ block }: Props) {

@@ -3,7 +3,10 @@ import { RichTextRenderer } from '../RichTextRenderer';
 import { BlockRenderer } from '../NotionRenderer';
 import type { NotionBlock } from '../NotionRenderer';
 
-interface Props { block: NotionBlock; level: 1 | 2 | 3; }
+interface Props {
+  block: NotionBlock;
+  level: 1 | 2 | 3;
+}
 
 export function Heading({ block, level }: Props) {
   const className = `notion-heading notion-h${level}`;
@@ -23,7 +26,21 @@ export function Heading({ block, level }: Props) {
     );
   }
 
-  if (level === 1) return <h1 className={className} data-color={colorAttr}>{content}</h1>;
-  if (level === 2) return <h2 className={className} data-color={colorAttr}>{content}</h2>;
-  return <h3 className={className} data-color={colorAttr}>{content}</h3>;
+  if (level === 1)
+    return (
+      <h1 className={className} data-color={colorAttr}>
+        {content}
+      </h1>
+    );
+  if (level === 2)
+    return (
+      <h2 className={className} data-color={colorAttr}>
+        {content}
+      </h2>
+    );
+  return (
+    <h3 className={className} data-color={colorAttr}>
+      {content}
+    </h3>
+  );
 }

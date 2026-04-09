@@ -1,5 +1,14 @@
 import { Client } from '@notionhq/client';
-import type { EventItem, NotionBlock, RichText } from '@/types/notion';
+import type {
+  EventItem,
+  NotionBlock,
+  RichText,
+  Announcement,
+  Partner,
+  PartnerDetail,
+  GalleryPhoto,
+  PageContent,
+} from '@/types/notion';
 
 // ==========================================
 // Notion Client 初始化
@@ -11,9 +20,12 @@ const notion = new Client({
 
 const EVENTS_DB_ID = process.env.NOTION_EVENTS_DB_ID || '';
 const ANNOUNCEMENTS_DB_ID = process.env.NOTION_ANNOUNCEMENTS_DB_ID || '';
+const PARTNERS_DB_ID = process.env.NOTION_PARTNERS_DB_ID || '';
+const BRAND_STORY_PAGE_ID =
+  process.env.NOTION_BRAND_STORY_PAGE_ID || '3274cb8807f28092b955c9eb108e2f20';
 
 // ==========================================
-// 1. 取得活動列表
+// 1. 取得活動列表（原有）
 // ==========================================
 
 export async function getEvents(options?: {
@@ -47,7 +59,7 @@ export async function getEvents(options?: {
 }
 
 // ==========================================
-// 2. 用 slug 取得單一活動詳情
+// 2. 用 slug 取得單一活動詳情（原有）
 // ==========================================
 
 export async function getEventBySlug(slug: string): Promise<{
@@ -56,7 +68,6 @@ export async function getEventBySlug(slug: string): Promise<{
   blocks?: NotionBlock[];
   error?: string;
 }> {
-  // 先用 slug 查到該活動頁面
   const response = await notion.databases.query({
     database_id: EVENTS_DB_ID,
     filter: {
@@ -74,22 +85,17 @@ export async function getEventBySlug(slug: string): Promise<{
 
   const page = response.results[0] as any;
   const event = parseEventPage(page);
-
-  // 取得頁面內容 blocks
   const blocks = await getPageBlocks(page.id);
 
   return { success: true, event, blocks };
 }
 
 // ==========================================
-// 3. 取得頁面所有 Blocks（遞迴 + 分頁）
+// 3. 取得頁面所有 Blocks（遞迴 + 分頁）（原有）
 // ==========================================
 
-async function getPageBlocks(
-  blockId: string,
-  depth: number = 0
-): Promise<NotionBlock[]> {
-  if (depth > 3) return []; // 防止無限遞迴
+async function getPageBlocks(blockId: string, depth: number = 0): Promise<NotionBlock[]> {
+  if (depth > 3) return [];
 
   const blocks: NotionBlock[] = [];
   let cursor: string | undefined;
@@ -104,7 +110,6 @@ async function getPageBlocks(
     for (const block of response.results as any[]) {
       const parsed = parseBlock(block);
 
-      // 遞迴取子區塊
       if (block.has_children && depth < 3) {
         parsed.children = await getPageBlocks(block.id, depth + 1);
       }
@@ -119,10 +124,14 @@ async function getPageBlocks(
 }
 
 // ==========================================
-// 4. 取得最新消息列表
+// 4. 取得最新消息列表（原有，加上型別標註）
 // ==========================================
 
-export async function getAnnouncements(limit: number = 5) {
+export async function getAnnouncements(options?: {
+  limit?: number;
+}): Promise<{ success: boolean; announcements: Announcement[] }> {
+  const { limit = 5 } = options || {};
+
   const response = await notion.databases.query({
     database_id: ANNOUNCEMENTS_DB_ID,
     filter: { property: '發佈', checkbox: { equals: true } },
@@ -130,7 +139,7 @@ export async function getAnnouncements(limit: number = 5) {
     page_size: limit,
   });
 
-  const announcements = response.results.map((page: any) => {
+  const announcements: Announcement[] = response.results.map((page: any) => {
     const props = page.properties;
     return {
       id: page.id,
@@ -145,7 +154,7 @@ export async function getAnnouncements(limit: number = 5) {
 }
 
 // ==========================================
-// 5. 取得所有已發布活動的 slug（SSG 用）
+// 5. 取得所有已發布活動的 slug（SSG 用）（原有）
 // ==========================================
 
 export async function getAllEventSlugs(): Promise<string[]> {
@@ -160,7 +169,7 @@ export async function getAllEventSlugs(): Promise<string[]> {
 }
 
 // ==========================================
-// 6. 從 blocks 中提取所有圖片 URL（輪播用）
+// 6. 從 blocks 中提取所有圖片 URL（原有）
 // ==========================================
 
 export function extractImagesFromBlocks(blocks: NotionBlock[]): string[] {
@@ -185,7 +194,208 @@ export function extractImagesFromBlocks(blocks: NotionBlock[]): string[] {
 }
 
 // ==========================================
-// 內部工具函式
+// 7. 提交評分（寫回 Notion）（原有）
+// ==========================================
+
+export async function submitRating(
+  slug: string,
+  score: number,
+): Promise<{
+  success: boolean;
+  average?: number;
+  count?: number;
+  error?: string;
+}> {
+  const response = await notion.databases.query({
+    database_id: EVENTS_DB_ID,
+    filter: {
+      property: 'slug',
+      rich_text: { equals: slug },
+    },
+    page_size: 1,
+  });
+
+  if (!response.results.length) {
+    return { success: false, error: '找不到活動' };
+  }
+
+  const page = response.results[0] as any;
+  const props = page.properties;
+  const currentTotal = props['評分總分']?.number || 0;
+  const currentCount = props['評分人數']?.number || 0;
+
+  const newTotal = currentTotal + score;
+  const newCount = currentCount + 1;
+
+  await notion.pages.update({
+    page_id: page.id,
+    properties: {
+      評分總分: { number: newTotal },
+      評分人數: { number: newCount },
+    },
+  });
+
+  return {
+    success: true,
+    average: Math.round((newTotal / newCount) * 10) / 10,
+    count: newCount,
+  };
+}
+
+// ==========================================
+// 🔴 8. 取得品牌故事頁面內容（新增）
+// ==========================================
+
+export async function getBrandStoryBlocks(): Promise<PageContent | null> {
+  try {
+    const blocks = await getPageBlocks(BRAND_STORY_PAGE_ID);
+    return { success: true, blocks };
+  } catch (err) {
+    console.error('[brand-story] fetch failed:', err);
+    return null;
+  }
+}
+
+// ==========================================
+// 🔴 9. 取得精彩花絮照片列表（新增）
+// ==========================================
+
+export async function getGalleryPhotos(): Promise<{
+  success: boolean;
+  photos: GalleryPhoto[];
+}> {
+  try {
+    const response = await notion.databases.query({
+      database_id: EVENTS_DB_ID,
+      filter: {
+        property: '發佈',
+        checkbox: { equals: true },
+      },
+      sorts: [{ property: '活動日期', direction: 'descending' }],
+    });
+
+    const photos: GalleryPhoto[] = [];
+
+    for (const page of response.results as any[]) {
+      const props = page.properties;
+      const title = getTitle(props['活動名稱']);
+      const coverFiles = props['活動封面圖']?.files || [];
+      const coverUrl = coverFiles[0]?.file?.url || coverFiles[0]?.external?.url || '';
+      const eventType = props['活動類型']?.select?.name || '';
+      const dateStart = props['活動日期']?.date?.start || '';
+
+      if (coverUrl) {
+        photos.push({
+          id: page.id,
+          title,
+          coverUrl,
+          eventType,
+          date: dateStart,
+        });
+      }
+    }
+
+    return { success: true, photos };
+  } catch (err) {
+    console.error('[gallery] fetch failed:', err);
+    return { success: false, photos: [] };
+  }
+}
+
+// ==========================================
+// 🔴 10. 取得工商服務合作夥伴列表（新增）
+// ==========================================
+
+export async function getPartners(): Promise<{
+  success: boolean;
+  partners: Partner[];
+}> {
+  try {
+    const response = await notion.databases.query({
+      database_id: PARTNERS_DB_ID,
+      filter: {
+        property: '合約狀態',
+        status: { equals: '合作中' },
+      },
+      sorts: [{ property: '前台曝光等級', direction: 'ascending' }],
+    });
+
+    const partners: Partner[] = response.results.map((page: any) => {
+      const props = page.properties;
+      return {
+        id: page.id,
+        name: getTitle(props['商家名稱']),
+        category: (props['類別']?.multi_select || []).map((s: any) => s.name),
+        description: getRichTextPlain(props['服務項目特色']) || '',
+        website: props['商家網站']?.url || '',
+        status: props['合約狀態']?.status?.name || '',
+        exposureLevel: props['前台曝光等級']?.select?.name || '基本',
+      };
+    });
+
+    return { success: true, partners };
+  } catch (err) {
+    console.error('[sponsors] fetch failed:', err);
+    return { success: false, partners: [] };
+  }
+}
+
+// ==========================================
+// 🔴 11. 用 ID 取得單一商家詳情 + 頁面 Blocks（新增）
+// ==========================================
+
+export async function getPartnerById(id: string): Promise<PartnerDetail | null> {
+  try {
+    const page = (await notion.pages.retrieve({ page_id: id })) as any;
+    const props = page.properties;
+
+    // 確認是合作中的商家
+    const status = props['合約狀態']?.status?.name;
+    if (status !== '合作中') return null;
+
+    // 取得頁面 Block 內容
+    const blocks = await getPageBlocks(id);
+
+    return {
+      id: page.id,
+      name: getTitle(props['商家名稱']),
+      category: (props['類別']?.multi_select || []).map((s: any) => s.name),
+      description: getRichTextPlain(props['服務項目']) || '',
+      features: getRichTextPlain(props['服務項目特色']) || '',
+      website: props['商家網站']?.url || '',
+      phone: props['電話']?.phone_number || '',
+      email: props['電子郵件']?.email || '',
+      status,
+      exposureLevel: props['前台曝光等級']?.select?.name || '基本',
+      blocks,
+    };
+  } catch (err) {
+    console.error('[sponsor detail] fetch failed:', err);
+    return null;
+  }
+}
+
+// ==========================================
+// 🔴 12. 取得所有合作中商家的 ID（SSG 用）（新增）
+// ==========================================
+
+export async function getPartnerSlugs(): Promise<string[]> {
+  try {
+    const response = await notion.databases.query({
+      database_id: PARTNERS_DB_ID,
+      filter: {
+        property: '合約狀態',
+        status: { equals: '合作中' },
+      },
+    });
+    return response.results.map((page: any) => page.id);
+  } catch {
+    return [];
+  }
+}
+
+// ==========================================
+// 內部工具函式（原有）
 // ==========================================
 
 function parseEventPage(page: any): EventItem {
@@ -229,12 +439,12 @@ function getFiles(prop: any): string[] {
   if (!prop?.files?.length) return [];
   return prop.files
     .map((f: any) =>
-      f.type === 'file' ? f.file.url : f.type === 'external' ? f.external.url : ''
+      f.type === 'file' ? f.file.url : f.type === 'external' ? f.external.url : '',
     )
     .filter(Boolean);
 }
 
-// ---- Block 解析 ----
+// ---- Block 解析（原有） ----
 
 function parseRichText(rt: any): RichText {
   const result: RichText = { text: rt.plain_text || '' };
@@ -293,10 +503,7 @@ function parseBlock(block: any): NotionBlock {
 
     case 'image':
     case 'video':
-      result.url =
-        data.type === 'external'
-          ? data.external?.url
-          : data.file?.url || '';
+      result.url = data.type === 'external' ? data.external?.url : data.file?.url || '';
       result.caption = parseRichTextArray(data.caption);
       break;
 
@@ -344,55 +551,4 @@ function groupListItems(blocks: NotionBlock[]): NotionBlock[] {
 
   if (currentList) result.push(currentList);
   return result;
-}
-
-// ==========================================
-// 7. 提交評分（寫回 Notion）
-// ==========================================
-
-export async function submitRating(
-  slug: string,
-  score: number
-): Promise<{
-  success: boolean;
-  average?: number;
-  count?: number;
-  error?: string;
-}> {
-  // 用 slug 找到該活動頁面
-  const response = await notion.databases.query({
-    database_id: EVENTS_DB_ID,
-    filter: {
-      property: 'slug',
-      rich_text: { equals: slug },
-    },
-    page_size: 1,
-  });
-
-  if (!response.results.length) {
-    return { success: false, error: '找不到活動' };
-  }
-
-  const page = response.results[0] as any;
-  const props = page.properties;
-  const currentTotal = props['評分總分']?.number || 0;
-  const currentCount = props['評分人數']?.number || 0;
-
-  const newTotal = currentTotal + score;
-  const newCount = currentCount + 1;
-
-  // 寫回 Notion
-  await notion.pages.update({
-    page_id: page.id,
-    properties: {
-      '評分總分': { number: newTotal },
-      '評分人數': { number: newCount },
-    },
-  });
-
-  return {
-    success: true,
-    average: Math.round((newTotal / newCount) * 10) / 10,
-    count: newCount,
-  };
 }

@@ -1,0 +1,150 @@
+/* ========================================
+   工商服務子頁面 — sponsor-detail.css
+   路徑：app/sponsors/[id]/sponsor-detail.css
+   ======================================== */
+
+/* ===== Hero ===== */
+.sponsor-detail-hero {
+  background: linear-gradient(
+    135deg,
+    var(--red) 0%,
+    var(--red-dark) 60%,
+    var(--gold) 100%
+  );
+  padding: 80px 0 60px;
+  text-align: center;
+  color: var(--white);
+}
+
+.sponsor-detail-title {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  margin: 0.5rem 0;
+  color: var(--white);
+}
+
+.sponsor-detail-sub {
+  font-size: 1.15rem;
+  opacity: 0.9;
+  letter-spacing: 1px;
+  margin-top: 0.5rem;
+}
+
+.sponsor-detail-tags {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.sponsor-detail-tags .sponsor-card-tag {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  padding: 3px 12px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.sponsor-badge-hero {
+  background: var(--gold);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 4px;
+}
+
+/* ===== Body ===== */
+.sponsor-detail-body {
+  padding: 48px 0 60px;
+}
+
+.sponsor-detail-body .event-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ===== Notion 頁面內容區 ===== */
+.sponsor-notion-content {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--gold);
+}
+
+/* 隱藏套版中的 checkbox 提醒（前台不需要看到）*/
+.sponsor-notion-content .notion-to-do {
+  display: none;
+}
+
+/* ===== Footer（返回 + CTA）===== */
+.sponsor-detail-footer {
+  padding: 40px 0 80px;
+  border-top: 1px solid #e0d8d0;
+}
+
+.sponsor-detail-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-back {
+  display: inline-block;
+  padding: 10px 24px;
+  border: 2px solid var(--red);
+  border-radius: 8px;
+  color: var(--red);
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+}
+
+.btn-back:hover {
+  background: var(--red);
+  color: var(--white);
+}
+
+/* ===== RWD ===== */
+@media (max-width: 768px) {
+  .sponsor-detail-hero {
+    padding: 60px 0 40px;
+  }
+
+  .sponsor-detail-title {
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+
+  .sponsor-detail-sub {
+    font-size: 1rem;
+  }
+
+  .sponsor-detail-body .event-content {
+    padding: 0 1rem;
+  }
+
+  .sponsor-detail-footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .sponsor-detail-title {
+    font-size: 1.6rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}

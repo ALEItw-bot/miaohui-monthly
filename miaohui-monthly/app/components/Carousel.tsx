@@ -12,7 +12,9 @@ export default function Carousel() {
 
   useEffect(function () {
     fetch('/carousel/images.json')
-      .then(function (res) { return res.json(); })
+      .then(function (res) {
+        return res.json();
+      })
       .then(function (data) {
         if (Array.isArray(data) && data.length > 0) {
           setImages(data);
@@ -32,53 +34,71 @@ export default function Carousel() {
     clearAuto();
     autoPlayRef.current = setInterval(function () {
       setAnimate(true);
-      setCurrent(function (prev) { return prev + 1; });
+      setCurrent(function (prev) {
+        return prev + 1;
+      });
       setDragX(0);
     }, 5000);
   };
 
-  useEffect(function () {
-    if (total <= 1) return;
-    autoPlayRef.current = setInterval(function () {
-      setAnimate(true);
-      setCurrent(function (prev) { return prev + 1; });
-      setDragX(0);
-    }, 5000);
-    return function () { clearAuto(); };
-  }, [total]);
+  useEffect(
+    function () {
+      if (total <= 1) return;
+      autoPlayRef.current = setInterval(function () {
+        setAnimate(true);
+        setCurrent(function (prev) {
+          return prev + 1;
+        });
+        setDragX(0);
+      }, 5000);
+      return function () {
+        clearAuto();
+      };
+    },
+    [total],
+  );
 
   // ★ 修正：分頁閒置後 setInterval 失控導致輪播消失
-  useEffect(function () {
-    var handleVisibility = function () {
-      if (document.hidden) {
-        clearAuto();
-      } else {
-        setCurrent(function (prev) {
-          if (prev <= 0) return 1;
-          if (prev > total) return 1;
-          return prev;
-        });
-        setAnimate(false);
-        setDragX(0);
-        startAuto();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-    return function () {
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, [total]);
+  useEffect(
+    function () {
+      const handleVisibility = function () {
+        if (document.hidden) {
+          clearAuto();
+        } else {
+          setCurrent(function (prev) {
+            if (prev <= 0) return 1;
+            if (prev > total) return 1;
+            return prev;
+          });
+          setAnimate(false);
+          setDragX(0);
+          startAuto();
+        }
+      };
+      document.addEventListener('visibilitychange', handleVisibility);
+      return function () {
+        document.removeEventListener('visibilitychange', handleVisibility);
+      };
+    },
+    [total],
+  );
 
   if (total === 0) {
-    const loadingBg = Object.assign({}, {
-      background: 'linear-gradient(135deg, #C80000, #8B0000)'
-    });
-    const loadingText = Object.assign({}, {
-      color: '#fff',
-      fontSize: '24px',
-      textAlign: 'center' as const,
-      paddingTop: '40vh'
-    });
+    const loadingBg = Object.assign(
+      {},
+      {
+        background: 'linear-gradient(135deg, #C80000, #8B0000)',
+      },
+    );
+    const loadingText = Object.assign(
+      {},
+      {
+        color: '#fff',
+        fontSize: '24px',
+        textAlign: 'center' as const,
+        paddingTop: '40vh',
+      },
+    );
     return (
       <div className="carousel">
         <div className="carousel-slide" style={loadingBg}>
@@ -97,8 +117,12 @@ export default function Carousel() {
     setDragX(0);
   };
 
-  const next = function () { goTo(current + 1); };
-  const prev = function () { goTo(current - 1); };
+  const next = function () {
+    goTo(current + 1);
+  };
+  const prev = function () {
+    goTo(current - 1);
+  };
 
   const handleTransitionEnd = function () {
     if (current === 0) {
@@ -122,8 +146,12 @@ export default function Carousel() {
 
   const clampDrag = function (diff: number) {
     const maxDrag = window.innerWidth;
-    if (diff > maxDrag) { return maxDrag; }
-    if (diff < -maxDrag) { return -maxDrag; }
+    if (diff > maxDrag) {
+      return maxDrag;
+    }
+    if (diff < -maxDrag) {
+      return -maxDrag;
+    }
     return diff;
   };
 
@@ -140,9 +168,13 @@ export default function Carousel() {
     if (!isDragging) return;
     setIsDragging(false);
     snapIfNeeded();
-    if (dragX > 80) { prev(); }
-    else if (dragX < -80) { next(); }
-    else { setDragX(0); }
+    if (dragX > 80) {
+      prev();
+    } else if (dragX < -80) {
+      next();
+    } else {
+      setDragX(0);
+    }
     startAuto();
   };
 
@@ -159,30 +191,43 @@ export default function Carousel() {
     if (!isDragging) return;
     setIsDragging(false);
     snapIfNeeded();
-    if (dragX > 80) { prev(); }
-    else if (dragX < -80) { next(); }
-    else { setDragX(0); }
+    if (dragX > 80) {
+      prev();
+    } else if (dragX < -80) {
+      next();
+    } else {
+      setDragX(0);
+    }
     startAuto();
   };
 
   let realIndex = current - 1;
-  if (current === 0) { realIndex = total - 1; }
-  else if (current === total + 1) { realIndex = 0; }
+  if (current === 0) {
+    realIndex = total - 1;
+  } else if (current === total + 1) {
+    realIndex = 0;
+  }
 
   const offsetPercent = current * (100 / slideCount);
   const transformValue = 'translateX(calc(-' + offsetPercent + '% + ' + dragX + 'px))';
-  const transitionValue = (!animate || isDragging) ? 'none' : 'transform 0.5s ease';
+  const transitionValue = !animate || isDragging ? 'none' : 'transform 0.5s ease';
 
-  const trackStyle = Object.assign({}, {
-    display: 'flex',
-    width: slideCount * 100 + '%',
-    transform: transformValue,
-    transition: transitionValue
-  });
+  const trackStyle = Object.assign(
+    {},
+    {
+      display: 'flex',
+      width: slideCount * 100 + '%',
+      transform: transformValue,
+      transition: transitionValue,
+    },
+  );
 
-  const cursorStyle = Object.assign({}, {
-    cursor: isDragging ? 'grabbing' : 'grab'
-  });
+  const cursorStyle = Object.assign(
+    {},
+    {
+      cursor: isDragging ? 'grabbing' : 'grab',
+    },
+  );
 
   return (
     <div
@@ -202,13 +247,16 @@ export default function Carousel() {
         onTransitionEnd={handleTransitionEnd}
       >
         {slides.map(function (src, i) {
-          const slideStyle = Object.assign({}, {
-            width: (100 / slideCount) + '%',
-            flexShrink: 0,
-            backgroundImage: 'url(' + src + ')',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          });
+          const slideStyle = Object.assign(
+            {},
+            {
+              width: 100 / slideCount + '%',
+              flexShrink: 0,
+              backgroundImage: 'url(' + src + ')',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            },
+          );
           return <div key={i} className="carousel-slide" style={slideStyle} />;
         })}
       </div>
@@ -219,7 +267,9 @@ export default function Carousel() {
             <span
               key={i}
               className={dotClass}
-              onClick={function () { goTo(i + 1); }}
+              onClick={function () {
+                goTo(i + 1);
+              }}
             />
           );
         })}

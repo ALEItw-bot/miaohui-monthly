@@ -4,7 +4,12 @@
 
 /* ===== Events Hero ===== */
 .events-hero {
-  background: linear-gradient(135deg, var(--red, #C80000) 0%, var(--red-dark, #9E0000) 60%, var(--blue, #0000A5) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--red, #c80000) 0%,
+    var(--red-dark, #9e0000) 60%,
+    var(--blue, #0000a5) 100%
+  );
   padding: 80px 0 60px;
   text-align: center;
 }
@@ -25,7 +30,7 @@
 
 /* ===== Events Grid ===== */
 .events-list-section {
-  background: var(--warm-white, #FFF8F0);
+  background: var(--warm-white, #fff8f0);
   padding: 48px 0 80px;
 }
 .events-container {
@@ -54,7 +59,9 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
   border: 1px solid rgba(0, 0, 0, 0.04);
 }
 .event-card:hover {
@@ -80,7 +87,7 @@
   justify-content: center;
   height: 100%;
   font-size: 3rem;
-  background: linear-gradient(135deg, var(--theme, var(--red)), rgba(0,0,0,0.3));
+  background: linear-gradient(135deg, var(--theme, var(--red)), rgba(0, 0, 0, 0.3));
 }
 .event-card-badge {
   position: absolute;
@@ -163,7 +170,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--red, #C80000) 0%, var(--blue, #0000A5) 100%);
+  background: linear-gradient(135deg, var(--red, #c80000) 0%, var(--blue, #0000a5) 100%);
 }
 .event-detail-hero-emoji {
   font-size: 6rem;
@@ -174,13 +181,13 @@
   left: 0;
   right: 0;
   height: 40%;
-  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
   pointer-events: none;
 }
 
 /* ===== Event Title Section ===== */
 .event-title-section {
-  background: var(--warm-white, #FFF8F0);
+  background: var(--warm-white, #fff8f0);
   text-align: center;
   padding: 3rem 1.5rem 1.5rem;
 }
@@ -190,7 +197,7 @@
 }
 .event-subtitle {
   font-size: 0.95rem;
-  color: var(--theme-primary, var(--red, #C80000));
+  color: var(--theme-primary, var(--red, #c80000));
   letter-spacing: 3px;
   margin: 0 0 8px;
   font-weight: 600;
@@ -217,7 +224,7 @@
 
 /* ===== Event Info Card ===== */
 .event-info-section {
-  background: var(--warm-white, #FFF8F0);
+  background: var(--warm-white, #fff8f0);
   padding: 0 1.5rem 2rem;
 }
 .event-info-card {
@@ -226,7 +233,7 @@
   background: #fff;
   border-radius: 16px;
   padding: 1.5rem 2rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 .event-info-grid {
   display: grid;
@@ -259,7 +266,7 @@
 
 /* ===== Event Detail Body ===== */
 .event-detail-body {
-  background: var(--warm-white, #FFF8F0);
+  background: var(--warm-white, #fff8f0);
   padding: 48px 0;
 }
 .event-detail-card {
@@ -279,34 +286,54 @@
 .event-detail-footer {
   text-align: center;
   padding: 32px 0 60px;
-  background: var(--warm-white, #FFF8F0);
+  background: var(--warm-white, #fff8f0);
 }
 .event-back-link {
   display: inline-block;
-  color: var(--red, #C80000);
+  color: var(--red, #c80000);
   font-weight: 600;
   font-size: 1rem;
   text-decoration: none;
   padding: 10px 24px;
-  border: 2px solid var(--red, #C80000);
+  border: 2px solid var(--red, #c80000);
   border-radius: 8px;
   transition: all 0.2s;
 }
 .event-back-link:hover {
-  background: var(--red, #C80000);
+  background: var(--red, #c80000);
   color: #fff;
 }
 
 /* ===== Events RWD ===== */
 @media (max-width: 768px) {
-  .events-hero { padding: 60px 0 40px; }
-  .events-hero-title { font-size: 2rem; letter-spacing: 4px; }
-  .events-grid { grid-template-columns: 1fr; gap: 20px; }
-  .event-card-cover { height: 180px; }
+  .events-hero {
+    padding: 60px 0 40px;
+  }
+  .events-hero-title {
+    font-size: 2rem;
+    letter-spacing: 4px;
+  }
+  .events-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .event-card-cover {
+    height: 180px;
+  }
 
-  .event-detail-hero { height: 50vh; }
-  .event-title { font-size: 1.8rem; }
-  .event-info-grid { grid-template-columns: 1fr; }
-  .event-info-card { padding: 1.2rem; }
-  .event-detail-card { padding: 1.5rem 1.2rem; }
+  .event-detail-hero {
+    height: 50vh;
+  }
+  .event-title {
+    font-size: 1.8rem;
+  }
+  .event-info-grid {
+    grid-template-columns: 1fr;
+  }
+  .event-info-card {
+    padding: 1.2rem;
+  }
+  .event-detail-card {
+    padding: 1.5rem 1.2rem;
+  }
 }

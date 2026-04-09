@@ -9,36 +9,51 @@ interface TaiwanMapProps {
 // ===== 地圖圖片中各區域的像素顏色（RGB 近似值）=====
 // 對應圖片：public/taiwan-map-regions.png
 const PIXEL_REGION_MAP = [
-  { region: '北部', r: 90,  g: 200, b: 255 }, // 天藍色
-  { region: '中部', r: 240, g: 240, b: 0   }, // 黃色
+  { region: '北部', r: 90, g: 200, b: 255 }, // 天藍色
+  { region: '中部', r: 240, g: 240, b: 0 }, // 黃色
   { region: '南部', r: 240, g: 155, b: 145 }, // 粉橘色
-  { region: '東部', r: 65,  g: 160, b: 65  }, // 綠色
-  { region: '外島', r: 255, g: 50,  b: 220 }, // 洋紅色
+  { region: '東部', r: 65, g: 160, b: 65 }, // 綠色
+  { region: '外島', r: 255, g: 50, b: 220 }, // 洋紅色
 ];
 
 // 品牌顏色（圖例 dot 用）
 const BRAND_COLORS: Record<string, string> = {
-  '北部': '#C80000',
-  '中部': '#D4A017',
-  '南部': '#0000A5',
-  '東部': '#0F7B6C',
-  '外島': '#6940A5',
+  北部: '#C80000',
+  中部: '#D4A017',
+  南部: '#0000A5',
+  東部: '#0F7B6C',
+  外島: '#6940A5',
 };
 
 // ===== Inline style 常數（避免 JSX 雙花括號）=====
 const hiddenStyle: React.CSSProperties = { display: 'none' };
 const bgStyle = (color: string): React.CSSProperties => ({ backgroundColor: color });
 const overlayStyle: React.CSSProperties = {
-  position: 'absolute', top: 0, left: 0,
-  width: '100%', height: '100%',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
   pointerEvents: 'none',
 };
 
-function colorDistance(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number): number {
+function colorDistance(
+  r1: number,
+  g1: number,
+  b1: number,
+  r2: number,
+  g2: number,
+  b2: number,
+): number {
   return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
 }
 
-function detectRegionFromPixel(r: number, g: number, b: number, a: number): string | null {
+function detectRegionFromPixel(
+  r: number,
+  g: number,
+  b: number,
+  a: number,
+): string | null {
   if (a < 50) return null; // 透明 = 地圖外
   let best: string | null = null;
   let bestDist = Infinity;
@@ -105,11 +120,14 @@ export default function TaiwanMap({ activeRegion, onRegionClick }: TaiwanMapProp
       let bestRegion: string | null = null;
       for (const entry of PIXEL_REGION_MAP) {
         const d = colorDistance(r, g, b, entry.r, entry.g, entry.b);
-        if (d < bestDist) { bestDist = d; bestRegion = entry.region; }
+        if (d < bestDist) {
+          bestDist = d;
+          bestRegion = entry.region;
+        }
       }
       // 非選取區域：蓋上半透明黑色
       if (bestDist < 100 && bestRegion !== activeRegion) {
-        overlayData.data[i]     = 0;
+        overlayData.data[i] = 0;
         overlayData.data[i + 1] = 0;
         overlayData.data[i + 2] = 0;
         overlayData.data[i + 3] = 110;
@@ -138,7 +156,7 @@ export default function TaiwanMap({ activeRegion, onRegionClick }: TaiwanMapProp
 
       if (region) onRegionClick(region === activeRegion ? '全部' : region);
     },
-    [activeRegion, imgLoaded, onRegionClick]
+    [activeRegion, imgLoaded, onRegionClick],
   );
 
   return (

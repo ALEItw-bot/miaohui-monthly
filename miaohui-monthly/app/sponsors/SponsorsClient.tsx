@@ -1,22 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import type { Partner } from '@/types/notion';
+import { SPONSOR_CATEGORIES, SOCIAL_LINKS } from '@/lib/constants';
 import './sponsors.css';
-
-interface Partner {
-  id: string;
-  name: string;
-  category: string[];
-  description: string;
-  website: string;
-  status: string;
-  exposureLevel: string;
-}
-
-const CATEGORIES = [
-  '全部', '海報文宣', '平面攝影', '影像紀錄',
-  '祭祀用品', '陣頭演出', '文創商品', '活動企劃', '團體服飾',
-];
 
 export default function SponsorsClient({ partners }: { partners: Partner[] }) {
   const [active, setActive] = useState('全部');
@@ -29,23 +17,24 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
   return (
     <>
       {/* Hero */}
-      <section className="sponsors-hero">
+      <section className="page-hero sponsors-hero">
         <div className="container">
-          <h1 className="sponsors-hero-title">工商服務</h1>
-          <p className="sponsors-hero-desc">廟口好厝邊，鬧熱來相挺！串聯全台廟會周邊專業服務</p>
+          <h1 className="page-hero-title">工商服務</h1>
+          <p className="page-hero-subtitle">
+            廟口好厝邊，鬧熱來相挺！串聯全台廟會周邊專業服務
+          </p>
         </div>
       </section>
 
       {/* Body */}
       <section className="sponsors-body">
         <div className="container">
-
-          {/* Filter Tabs — 跟熱鬧資訊的區域按鈕同樣式 */}
-          <div className="sponsors-filter">
-            {CATEGORIES.map((cat) => (
+          {/* 篩選 */}
+          <div className="filter-pills">
+            {SPONSOR_CATEGORIES.map((cat) => (
               <button
                 key={cat}
-                className={`sponsors-filter-btn ${active === cat ? 'active' : ''}`}
+                className={`filter-pill ${active === cat ? 'active' : ''}`}
                 onClick={() => setActive(cat)}
               >
                 {cat}
@@ -53,25 +42,27 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
             ))}
           </div>
 
-          {/* List Header — 跟熱鬧資訊的標題列同樣式 */}
-          <div className="sponsors-list-header">
-            <h2 className="sponsors-list-title">合作夥伴</h2>
-            <span className="sponsors-list-count">共 {filtered.length} 家</span>
+          {/* 列表標題 */}
+          <div className="list-header">
+            <h2 className="list-header-title">合作夥伴</h2>
+            <span className="list-header-count">共 {filtered.length} 家</span>
           </div>
 
           {/* Partners Grid */}
           {filtered.length === 0 ? (
-            <div className="sponsors-empty">
-              <span className="sponsors-empty-icon">🏮</span>
+            <div className="empty-state">
+              <span className="empty-state-icon">🏮</span>
               <p>此類別目前尚無合作夥伴，歡迎洽談合作！</p>
             </div>
           ) : (
             <div className="sponsors-grid">
               {filtered.map((partner) => (
-                <a
+                <Link
                   key={partner.id}
                   href={`/sponsors/${partner.id}`}
-                  className={`sponsor-card sponsor-card-link-wrapper ${partner.exposureLevel === '精選' ? 'sponsor-featured' : ''}`}
+                  className={`sponsor-card card ${
+                    partner.exposureLevel === '精選' ? 'sponsor-featured' : ''
+                  }`}
                 >
                   {partner.exposureLevel === '精選' && (
                     <span className="sponsor-badge">⭐ 精選夥伴</span>
@@ -79,14 +70,16 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
                   <h3 className="sponsor-card-name">{partner.name}</h3>
                   <div className="sponsor-card-tags">
                     {partner.category.map((cat) => (
-                      <span key={cat} className="sponsor-card-tag">{cat}</span>
+                      <span key={cat} className="tag tag--red">
+                        {cat}
+                      </span>
                     ))}
                   </div>
                   {partner.description && (
                     <p className="sponsor-card-desc">{partner.description}</p>
                   )}
                   <span className="sponsor-card-detail">查看詳情 →</span>
-                </a>
+                </Link>
               ))}
             </div>
           )}
@@ -96,10 +89,14 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
       {/* CTA */}
       <section className="sponsors-cta">
         <div className="container">
-          <h2 className="sponsors-cta-title">想成為廟會月報的合作夥伴？</h2>
-          <p className="sponsors-cta-sub">不管你是個人工作室還是公司行號，只要與廟會文化相關，我們都歡迎！</p>
+          <h2 className="sponsors-cta-title">
+            想成為廟會月報的合作夥伴？
+          </h2>
+          <p className="sponsors-cta-sub">
+            不管你是個人工作室還是公司行號，只要與廟會文化相關，我們都歡迎！
+          </p>
           <a
-            href="https://line.me/R/ti/p/@583jmhcd"
+            href={SOCIAL_LINKS.line}
             className="btn btn-cta-invert"
             target="_blank"
             rel="noopener noreferrer"

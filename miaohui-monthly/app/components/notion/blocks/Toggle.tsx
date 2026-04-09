@@ -3,7 +3,9 @@ import { RichTextRenderer } from '../RichTextRenderer';
 import { BlockRenderer } from '../NotionRenderer';
 import type { NotionBlock } from '../NotionRenderer';
 
-interface Props { block: NotionBlock; }
+interface Props {
+  block: NotionBlock;
+}
 
 export function Toggle({ block }: Props) {
   return (

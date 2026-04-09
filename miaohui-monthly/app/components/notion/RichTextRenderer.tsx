@@ -2,16 +2,26 @@ import React from 'react';
 import type { RichText } from './NotionRenderer';
 
 const NOTION_COLORS: Record<string, string> = {
-  gray: '#9B9A97', brown: '#64473A', orange: '#D9730D',
-  yellow: '#DFAB01', green: '#0F7B6C', blue: '#0B6E99',
-  purple: '#6940A5', pink: '#AD1A72', red: '#E03E3E',
+  gray: '#9B9A97',
+  brown: '#64473A',
+  orange: '#D9730D',
+  yellow: '#DFAB01',
+  green: '#0F7B6C',
+  blue: '#0B6E99',
+  purple: '#6940A5',
+  pink: '#AD1A72',
+  red: '#E03E3E',
 };
 
 const NOTION_BG_COLORS: Record<string, string> = {
-  gray_background: '#F1F1EF', brown_background: '#F4EEEE',
-  orange_background: '#FBECDD', yellow_background: '#FBF3DB',
-  green_background: '#EDF3EC', blue_background: '#E7F3F8',
-  purple_background: '#F6F3F9', pink_background: '#F9F0F5',
+  gray_background: '#F1F1EF',
+  brown_background: '#F4EEEE',
+  orange_background: '#FBECDD',
+  yellow_background: '#FBF3DB',
+  green_background: '#EDF3EC',
+  blue_background: '#E7F3F8',
+  purple_background: '#F6F3F9',
+  pink_background: '#F9F0F5',
   red_background: '#FDEBEC',
 };
 

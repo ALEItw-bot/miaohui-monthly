@@ -2,7 +2,9 @@ import React from 'react';
 import { RichTextRenderer } from '../RichTextRenderer';
 import type { NotionBlock } from '../NotionRenderer';
 
-interface Props { block: NotionBlock; }
+interface Props {
+  block: NotionBlock;
+}
 
 function ListItem({ item }: { item: NotionBlock }) {
   return (

@@ -2,7 +2,9 @@ import React from 'react';
 import { RichTextRenderer } from '../RichTextRenderer';
 import type { NotionBlock } from '../NotionRenderer';
 
-interface Props { block: NotionBlock; }
+interface Props {
+  block: NotionBlock;
+}
 
 export function NotionTable({ block }: Props) {
   if (!block.children || block.children.length === 0) return null;
@@ -18,7 +20,10 @@ export function NotionTable({ block }: Props) {
             if (row.type !== 'table_row' || !row.cells) return null;
             const isHeaderRow = hasColumnHeader && rowIdx === 0;
             return (
-              <tr key={row.id || rowIdx} className={isHeaderRow ? 'notion-table-header' : ''}>
+              <tr
+                key={row.id || rowIdx}
+                className={isHeaderRow ? 'notion-table-header' : ''}
+              >
                 {row.cells.map((cell, cellIdx) => {
                   const isHeaderCell = hasRowHeader && cellIdx === 0;
                   const CellTag = isHeaderRow || isHeaderCell ? 'th' : 'td';

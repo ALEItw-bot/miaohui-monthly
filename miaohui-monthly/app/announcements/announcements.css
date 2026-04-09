@@ -1,0 +1,60 @@
+/* ============================================================
+   最新消息頁 — announcements.css
+   ============================================================ */
+
+/* Hero 背景圖片（覆蓋通用 .page-hero 的純色背景） */
+.announcements-hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('/news/popup-1.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.announcements-body {
+  padding: 0 0 80px;
+}
+
+.announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.announcements-card {
+  display: block;
+  padding: 1.5rem;
+}
+
+.announcements-card-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.announcements-card-date {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 90px;
+}
+
+.announcements-card-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.announcements-card-summary {
+  font-size: var(--text-sm);
+  color: var(--text-light);
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .announcements-card-top {
+    flex-wrap: wrap;
+  }
+}

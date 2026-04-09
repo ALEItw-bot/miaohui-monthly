@@ -11,7 +11,7 @@ export async function GET() {
     console.error('[/api/announcements] Error:', err);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch announcements' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

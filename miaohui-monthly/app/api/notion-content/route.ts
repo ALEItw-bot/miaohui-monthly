@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   try {
     const url = `${GAS_URL}?action=getPageContent&pageId=${pageId}&key=${GAS_KEY}`;
     const res = await fetch(url, {
-      next: { revalidate: 30 },  // Next.js fetch 快取 10 分鐘
+      next: { revalidate: 30 }, // Next.js fetch 快取 10 分鐘
     });
     const data = await res.json();
 

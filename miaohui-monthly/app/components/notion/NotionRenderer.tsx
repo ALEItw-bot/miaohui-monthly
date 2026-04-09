@@ -92,7 +92,9 @@ export function BlockRenderer({ block }: BlockRendererProps) {
       return (
         <div className={`notion-todo ${block.checked ? 'checked' : ''}`}>
           <input type="checkbox" checked={block.checked} readOnly />
-          <span><RichTextRenderer richText={block.rich_text} /></span>
+          <span>
+            <RichTextRenderer richText={block.rich_text} />
+          </span>
         </div>
       );
     case 'bookmark':

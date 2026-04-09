@@ -1,18 +1,17 @@
 'use client';
 
 import { NotionRenderer } from '@/components/NotionRenderer';
-import type { NotionBlock } from '@/types/notion';
+import type { NotionBlock, PageContent } from '@/types/notion';
 
-interface PageContent {
-  success: boolean;
-  blocks: NotionBlock[];
-}
-
-/** 移除開頭的標題 block（已由 story-hero 顯示） */
+/** 移除開頭的標題 block（已由 Hero 顯示） */
 function stripLeadingTitle(blocks: NotionBlock[]): NotionBlock[] {
   if (blocks.length === 0) return blocks;
   const first = blocks[0];
-  if (first.type === 'heading_1' || first.type === 'heading_2' || first.type === 'heading_3') {
+  if (
+    first.type === 'heading_1' ||
+    first.type === 'heading_2' ||
+    first.type === 'heading_3'
+  ) {
     return blocks.slice(1);
   }
   return blocks;
@@ -43,7 +42,7 @@ interface Props {
 
 export default function BrandStoryClient({ page }: Props) {
   if (!page || !page.success) {
-    return <div className="story-loading">載入失敗</div>;
+    return <div className="loading">載入失敗</div>;
   }
 
   const cleaned = stripLeadingTitle(page.blocks || []);
@@ -51,15 +50,17 @@ export default function BrandStoryClient({ page }: Props) {
 
   return (
     <main>
-      {/* ===== Hero 照片 ===== */}
-      <section className="story-hero">
+      {/* Hero */}
+      <section className="page-hero brand-story-hero">
         <div className="container">
-          <h1 className="story-hero-title">品牌故事</h1>
-          <p className="story-hero-subtitle">廟會月報｜信仰的溫度，科技的傳承</p>
+          <h1 className="page-hero-title">品牌故事</h1>
+          <p className="page-hero-subtitle">
+            廟會月報｜信仰的溫度，科技的傳承
+          </p>
         </div>
       </section>
 
-      {/* ===== 內文區域 ===== */}
+      {/* 內文區域 */}
       <div className="story-body">
         {sections.map((sectionBlocks, index) => (
           <section key={index} className="story-section">

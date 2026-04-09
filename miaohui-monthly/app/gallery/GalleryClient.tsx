@@ -1,45 +1,44 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
+import type { GalleryPhoto } from '@/types/notion';
 import './gallery.css';
-
-interface GalleryPhoto {
-  id: string;
-  title: string;
-  coverUrl: string;
-  eventType: string;
-  date: string;
-}
 
 const ALL = '全部';
 
 export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
-  const categories = [ALL, ...Array.from(new Set(photos.map((p) => p.eventType).filter(Boolean)))];
+  const categories = [
+    ALL,
+    ...Array.from(new Set(photos.map((p) => p.eventType).filter(Boolean))),
+  ];
   const [active, setActive] = useState(ALL);
   const [lightbox, setLightbox] = useState<GalleryPhoto | null>(null);
 
-  const filtered = active === ALL ? photos : photos.filter((p) => p.eventType === active);
+  const filtered =
+    active === ALL ? photos : photos.filter((p) => p.eventType === active);
 
   return (
     <>
       {/* Hero */}
-      <section className="gallery-hero">
+      <section className="page-hero gallery-hero">
         <div className="container">
-          <h1 className="gallery-hero-title">精彩花絮</h1>
-          <p className="gallery-hero-desc">現場直擊，用鏡頭感受廟會的鬧熱與感動</p>
+          <h1 className="page-hero-title">精彩花絮</h1>
+          <p className="page-hero-subtitle">
+            現場直擊，用鏡頭感受廟會的鬧熱與感動
+          </p>
         </div>
       </section>
 
       {/* Body */}
       <section className="gallery-body">
         <div className="container">
-
-          {/* Filter Tabs — 跟熱鬧資訊的區域按鈕同樣式 */}
-          <div className="gallery-filter">
+          {/* 篩選 */}
+          <div className="filter-pills">
             {categories.map((cat) => (
               <button
                 key={cat}
-                className={`gallery-filter-btn ${active === cat ? 'active' : ''}`}
+                className={`filter-pill ${active === cat ? 'active' : ''}`}
                 onClick={() => setActive(cat)}
               >
                 {cat}
@@ -47,16 +46,16 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
             ))}
           </div>
 
-          {/* List Header — 跟熱鬧資訊的標題列同樣式 */}
-          <div className="gallery-list-header">
-            <h2 className="gallery-list-title">活動花絮</h2>
-            <span className="gallery-list-count">共 {filtered.length} 筆</span>
+          {/* 列表標題 */}
+          <div className="list-header">
+            <h2 className="list-header-title">活動花絮</h2>
+            <span className="list-header-count">共 {filtered.length} 筆</span>
           </div>
 
-          {/* Photo Grid */}
+          {/* 照片 Grid */}
           {filtered.length === 0 ? (
-            <div className="gallery-empty">
-              <span className="gallery-empty-icon">📷</span>
+            <div className="empty-state">
+              <span className="empty-state-icon">📷</span>
               <p>目前沒有相關花絮，敬請期待！</p>
             </div>
           ) : (
@@ -64,16 +63,22 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
               {filtered.map((photo) => (
                 <div
                   key={photo.id}
-                  className="gallery-card"
+                  className="gallery-card card"
                   onClick={() => setLightbox(photo)}
                 >
                   <div className="gallery-card-img">
-                    <img src={photo.coverUrl} alt={photo.title} loading="lazy" />
+                    <img
+                      src={photo.coverUrl}
+                      alt={photo.title}
+                      loading="lazy"
+                    />
                   </div>
                   <div className="gallery-card-info">
                     <div className="gallery-card-tags">
                       {photo.eventType && (
-                        <span className="gallery-card-tag">{photo.eventType}</span>
+                        <span className="tag tag--red">
+                          {photo.eventType}
+                        </span>
                       )}
                     </div>
                     <h3 className="gallery-card-title">{photo.title}</h3>
@@ -89,8 +94,17 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
       {/* Lightbox */}
       {lightbox && (
         <div className="lightbox-overlay" onClick={() => setLightbox(null)}>
-          <button className="lightbox-close" onClick={() => setLightbox(null)}>✕</button>
-          <img src={lightbox.coverUrl} alt={lightbox.title} className="lightbox-img" />
+          <button
+            className="lightbox-close"
+            onClick={() => setLightbox(null)}
+          >
+            ✕
+          </button>
+          <img
+            src={lightbox.coverUrl}
+            alt={lightbox.title}
+            className="lightbox-img"
+          />
           <p className="lightbox-caption">{lightbox.title}</p>
         </div>
       )}

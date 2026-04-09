@@ -136,8 +136,12 @@ export default function PhotoCarousel({
       {/* 左右箭頭 */}
       {total > 1 && (
         <>
-          <button style={arrowLeft} onClick={prev} aria-label="上一張">‹</button>
-          <button style={arrowRight} onClick={next} aria-label="下一張">›</button>
+          <button style={arrowLeft} onClick={prev} aria-label="上一張">
+            ‹
+          </button>
+          <button style={arrowRight} onClick={next} aria-label="下一張">
+            ›
+          </button>
         </>
       )}
 

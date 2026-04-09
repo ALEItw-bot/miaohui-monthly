@@ -1,6 +1,8 @@
 /* ===== Sponsors Hero ===== */
 .sponsors-hero {
-  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/carousel/popup-1.jpg');
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    url('/carousel/popup-1.jpg');
   background-size: cover;
   background-position: center;
   padding: 80px 0 60px;
@@ -8,17 +10,18 @@
 }
 .sponsors-hero-title {
   font-family: var(--font-title);
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 900;
   color: var(--white);
-  letter-spacing: 6px;
   margin: 0;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 .sponsors-hero-desc {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.85);
   margin-top: 0.75rem;
-  letter-spacing: 2px;
+  opacity: 0.9;
 }
 
 /* ===== Sponsors Body ===== */
@@ -84,7 +87,9 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -129,8 +134,13 @@
   border-radius: 4px;
   white-space: nowrap;
 }
-.sponsor-card-tag.tag-blue { background: var(--blue); }
-.sponsor-card-tag.tag-gold { background: var(--gold); color: var(--text); }
+.sponsor-card-tag.tag-blue {
+  background: var(--blue);
+}
+.sponsor-card-tag.tag-gold {
+  background: var(--gold);
+  color: var(--text);
+}
 .sponsor-card-desc {
   font-size: 0.95rem;
   color: var(--text);
@@ -178,14 +188,51 @@
   line-height: 1.8;
 }
 
+/* ===== Sponsor Card as Link ===== */
+.sponsor-card-link-wrapper {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.sponsor-card-link-wrapper:hover {
+  text-decoration: none;
+}
+.sponsor-card-detail {
+  display: block;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: 0.88rem;
+  color: var(--red);
+  font-weight: 700;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.sponsor-card:hover .sponsor-card-detail {
+  opacity: 1;
+}
+
 /* ===== Sponsors RWD ===== */
 @media (max-width: 768px) {
-  .sponsors-hero { padding: 60px 0 40px; }
-  .sponsors-hero-title { font-size: 2rem; letter-spacing: 4px; }
-  .sponsors-list-title { font-size: 1.5rem; }
-  .sponsors-grid { grid-template-columns: 1fr; }
-  .sponsors-cta-title { font-size: 1.2rem; }
+  .sponsors-hero {
+    padding: 60px 0 40px;
+  }
+  .sponsors-hero-title {
+    font-size: 2rem;
+    letter-spacing: 4px;
+  }
+  .sponsors-list-title {
+    font-size: 1.5rem;
+  }
+  .sponsors-grid {
+    grid-template-columns: 1fr;
+  }
+  .sponsors-cta-title {
+    font-size: 1.2rem;
+  }
 }
 @media (max-width: 480px) {
-  .sponsors-filter-btn { padding: 5px 12px; font-size: 0.82rem; }
+  .sponsors-filter-btn {
+    padding: 5px 12px;
+    font-size: 0.82rem;
+  }
 }

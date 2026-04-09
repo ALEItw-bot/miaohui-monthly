@@ -50,16 +50,30 @@ export default function StarRating({ eventSlug }: StarRatingProps) {
 
   const labels = ['', '還好', '有點期待', '期待', '很期待', '超級期待！'];
 
-  const rowStyle = { display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '12px' };
+  const rowStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '8px',
+    marginBottom: '12px',
+  };
   const btnBase = {
-    background: 'none', border: 'none', fontSize: '2.5rem',
-    cursor: 'pointer', padding: '0', lineHeight: '1',
+    background: 'none',
+    border: 'none',
+    fontSize: '2.5rem',
+    cursor: 'pointer',
+    padding: '0',
+    lineHeight: '1',
     transition: 'transform 0.15s',
   };
   const disabledBtn = { ...btnBase, cursor: 'default' };
   const labelStyle = { fontSize: '1rem', color: '#666', minHeight: '1.5em' };
   const thanksStyle = { marginTop: '8px', fontSize: '0.85rem', color: '#999' };
-  const statsStyle = { marginTop: '12px', fontSize: '0.85rem', color: '#C80000', fontWeight: 600 };
+  const statsStyle = {
+    marginTop: '12px',
+    fontSize: '0.85rem',
+    color: '#C80000',
+    fontWeight: 600,
+  };
 
   return (
     <>
@@ -81,10 +95,10 @@ export default function StarRating({ eventSlug }: StarRatingProps) {
         {loading
           ? '⏳ 提交中...'
           : submitted
-          ? `你的評分：${rating} 顆星 — ${labels[rating]}`
-          : hover > 0
-          ? labels[hover]
-          : '點擊星星來評分'}
+            ? `你的評分：${rating} 顆星 — ${labels[rating]}`
+            : hover > 0
+              ? labels[hover]
+              : '點擊星星來評分'}
       </div>
       {submitted && <div style={thanksStyle}>感謝你的參與！🙏</div>}
       {submitted && average !== null && totalCount !== null && (

@@ -52,14 +52,10 @@ export function isValidSlug(slug: string): boolean {
 export function safeErrorResponse(error: unknown, status: number = 500) {
   // 生產環境不暴露錯誤細節
   const isDev = process.env.NODE_ENV === 'development';
-  const message = isDev && error instanceof Error
-    ? error.message
-    : 'Internal Server Error';
+  const message =
+    isDev && error instanceof Error ? error.message : 'Internal Server Error';
 
   console.error('[API Error]', error); // Server log 可以看到
 
-  return NextResponse.json(
-    { success: false, error: message },
-    { status }
-  );
+  return NextResponse.json({ success: false, error: message }, { status });
 }

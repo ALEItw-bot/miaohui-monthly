@@ -8,8 +8,8 @@ export default function PopupModal() {
 
   useEffect(() => {
     fetch('/popup/images.json')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         // ✅ 改這裡：data 本身就是陣列，不是 data.images
         if (Array.isArray(data) && data.length > 0) {
           setPopupImages(data);

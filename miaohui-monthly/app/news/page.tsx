@@ -29,10 +29,14 @@ function getEventStatus(startDate: string, endDate: string): string {
 
 function statusClass(status: string): string {
   switch (status) {
-    case '進行中': return 'tag-active';
-    case '已結束': return 'tag-ended';
-    case '即將開始': return 'tag-soon';
-    default: return '';
+    case '進行中':
+      return 'tag-active';
+    case '已結束':
+      return 'tag-ended';
+    case '即將開始':
+      return 'tag-soon';
+    default:
+      return '';
   }
 }
 
@@ -61,12 +65,14 @@ export default function NewsPage() {
             id: flat(e.id),
             title: flat(e.title),
             date: {
-              start: typeof e.date === 'object' && e.date !== null
-                ? flat((e.date as Record<string, unknown>).start)
-                : flat(e.date),
-              end: typeof e.date === 'object' && e.date !== null
-                ? flat((e.date as Record<string, unknown>).end)
-                : '',
+              start:
+                typeof e.date === 'object' && e.date !== null
+                  ? flat((e.date as Record<string, unknown>).start)
+                  : flat(e.date),
+              end:
+                typeof e.date === 'object' && e.date !== null
+                  ? flat((e.date as Record<string, unknown>).end)
+                  : '',
             },
             eventType: flat(e.eventType),
             summary: flat(e.summary),
@@ -98,7 +104,8 @@ export default function NewsPage() {
             <div className="event-card-grid">
               {events.map((event) => {
                 const status = getEventStatus(event.date.start, event.date.end);
-                const link = event.eventType === '繞境' ? '/events/dajia' : '/events/baishatun';
+                const link =
+                  event.eventType === '繞境' ? '/events/dajia' : '/events/baishatun';
                 return (
                   <a key={event.id} href={link} className="event-card">
                     <div className="event-card-header">
@@ -109,8 +116,12 @@ export default function NewsPage() {
                     </div>
                     <h3 className="event-card-title">{event.title}</h3>
                     <div className="event-card-info">
-                      <span>{event.date.start} ~ {event.date.end}</span>
-                      <span>{event.region} {event.district}</span>
+                      <span>
+                        {event.date.start} ~ {event.date.end}
+                      </span>
+                      <span>
+                        {event.region} {event.district}
+                      </span>
                     </div>
                     <p className="event-card-summary">{event.summary}</p>
                   </a>
