@@ -66,7 +66,7 @@ export default async function HomePage() {
                       className="news-item"
                     >
                       <span className="news-date">
-                        {formatDate(event.date?.start)}
+                        {formatDate(event.date?.start ?? '')}
                       </span>
                       <span className="tag tag--red">活動資訊</span>
                       <span className="news-title">{event.title}</span>
