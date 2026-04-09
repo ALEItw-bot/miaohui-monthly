@@ -1,38 +1,46 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 
 export default function PopupModal() {
-  const [visible, setVisible] = useState(false);
-  const [imageSrc, setImageSrc] = useState('');
-  const [popupImages, setPopupImages] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    fetch('/popup/images.json')
-      .then((res) => res.json())
-      .then((data) => {
-        // ✅ 改這裡：data 本身就是陣列，不是 data.images
-        if (Array.isArray(data) && data.length > 0) {
-          setPopupImages(data);
-          const randomIndex = Math.floor(Math.random() * data.length);
-          setImageSrc(data[randomIndex]);
-          setVisible(true);
-        }
-      })
-      .catch(() => {});
+    // 檢查是否已關閉過（sessionStorage，每次開新分頁會再顯示）
+    const dismissed = sessionStorage.getItem('popup-dismissed');
+    if (!dismissed) {
+      setIsOpen(true);
+    }
   }, []);
 
-  if (!visible || popupImages.length === 0) return null;
+  const handleClose = () => {
+    setIsOpen(false);
+    sessionStorage.setItem('popup-dismissed', 'true');
+  };
+
+  if (!isOpen) return null;
 
   return (
-    <div className="popup-overlay" onClick={() => setVisible(false)}>
-      <div className="popup-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="popup-close" onClick={() => setVisible(false)}>
+    <div className="popup-overlay" onClick={handleClose}>
+      <div
+        className="popup-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="popup-close" onClick={handleClose}>
           ✕
         </button>
         <div className="popup-image-area">
-          {imageSrc && (
-            <img src={imageSrc} alt="廟會月報最新資訊" className="popup-img" />
-          )}
+          <picture>
+            <source
+              media="(max-width: 768px)"
+              srcSet="/popup/popup-1-M.jpg"
+            />
+            <img
+              className="popup-img"
+              src="/popup/popup-1.jpg"
+              alt="活動公告"
+            />
+          </picture>
         </div>
       </div>
     </div>

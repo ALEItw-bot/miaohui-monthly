@@ -2,6 +2,13 @@
 chcp 65001 >nul
 cd /d "%~dp0"
 
+echo.
+echo ========================================
+echo  🖼️ 自動更新 images.json...
+echo ========================================
+powershell -ExecutionPolicy Bypass -File ".\generate-image-list.ps1"
+echo.
+
 echo 🔍 檢查是否有變動...
 git add .
 
