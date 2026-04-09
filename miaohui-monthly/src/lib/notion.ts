@@ -21,6 +21,7 @@ const notion = new Client({
 const EVENTS_DB_ID = process.env.NOTION_EVENTS_DB_ID || '';
 const ANNOUNCEMENTS_DB_ID = process.env.NOTION_ANNOUNCEMENTS_DB_ID || '';
 const PARTNERS_DB_ID = process.env.NOTION_PARTNERS_DB_ID || '';
+const INBOX_DB_ID = process.env.NOTION_INBOX_DB_ID || '';
 const BRAND_STORY_PAGE_ID = process.env.NOTION_BRAND_STORY_PAGE_ID || '3274cb8807f28092b955c9eb108e2f20';
 
 // ==========================================
@@ -261,7 +262,7 @@ export async function getBrandStoryBlocks(): Promise<PageContent | null> {
 }
 
 // ==========================================
-// 🔴 9. 取得精彩花絮照片列表（新增）
+// 🔴 9. 取得精彩花絮投稿列表（直接讀 Inbox DB，篩選已發布 + 有照片的投稿）
 // ==========================================
 
 export async function getGalleryPhotos(): Promise<{
@@ -270,13 +271,15 @@ export async function getGalleryPhotos(): Promise<{
 }> {
   try {
     const response = await notion.databases.query({
-      database_id: EVENTS_DB_ID,
+      database_id: INBOX_DB_ID,
       filter: {
-        property: '發佈',
-        checkbox: { equals: true },
+        and: [
+          { property: '狀態', status: { equals: '已發布' } },
+          { property: '照片補充', url: { is_not_empty: true } },
+        ],
       },
       sorts: [
-        { property: '日期', direction: 'descending' },
+        { property: '拍攝日期', direction: 'descending' },
       ],
     });
 
@@ -284,20 +287,18 @@ export async function getGalleryPhotos(): Promise<{
 
     for (const page of response.results as any[]) {
       const props = page.properties;
-      const title = getTitle(props['活動名稱']);
-      const coverFiles = props['活動封面圖']?.files || [];
-      const coverUrl =
-        coverFiles[0]?.file?.url ||
-        coverFiles[0]?.external?.url ||
-        '';
-      const eventType = props['活動類型']?.select?.name || '';
-      const dateStart = props['日期']?.date?.start || '';
+      const title = getRichTextPlain(props['照片主題']) || getTitle(props['活動名稱']);
+      const contributor = getRichTextPlain(props['LINE 暱稱']) || '匿名廟友';
+      const coverUrl = props['照片補充']?.url || '';
+      const eventType = props['投稿類型']?.select?.name || '';
+      const dateStart = props['拍攝日期']?.date?.start || '';
 
       if (coverUrl) {
         photos.push({
           id: page.id,
           title,
           coverUrl,
+          contributor,
           eventType,
           date: dateStart,
         });

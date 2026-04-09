@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
 import type { GalleryPhoto } from '@/types/notion';
+import { SOCIAL_LINKS } from '@/lib/constants';
 import './gallery.css';
 
 const ALL = '全部';
@@ -25,7 +26,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
         <div className="container">
           <h1 className="page-hero-title">精彩花絮</h1>
           <p className="page-hero-subtitle">
-            現場直擊，用鏡頭感受廟會的鬧熱與感動
+            廟友投稿的第一手現場照片，用鏡頭記錄信仰的溫度
           </p>
         </div>
       </section>
@@ -48,7 +49,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
 
           {/* 列表標題 */}
           <div className="list-header">
-            <h2 className="list-header-title">活動花絮</h2>
+            <h2 className="list-header-title">投稿花絮</h2>
             <span className="list-header-count">共 {filtered.length} 筆</span>
           </div>
 
@@ -82,12 +83,38 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
                       )}
                     </div>
                     <h3 className="gallery-card-title">{photo.title}</h3>
-                    <span className="gallery-card-date">{photo.date}</span>
+                    <div className="gallery-card-meta">
+                      <span className="gallery-card-contributor">
+                        📸 {photo.contributor}
+                      </span>
+                      <span className="gallery-card-date">{photo.date}</span>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* 投稿 CTA */}
+      <section className="gallery-cta">
+        <div className="container text-center">
+          <h2 className="gallery-cta-title">
+            📸 你也有精彩的廟會照片嗎？
+          </h2>
+          <p className="gallery-cta-sub">
+            歡迎投稿你的廟會現場照片，經審核後將展示在精彩花絮！<br />
+            透過 LINE 官方帳號傳送照片 + 主題名稱 + 您的名字即可。
+          </p>
+          <a
+            href={SOCIAL_LINKS.line}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-line gallery-cta-btn"
+          >
+            📩 我也想投稿
+          </a>
         </div>
       </section>
 
@@ -105,7 +132,12 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
             alt={lightbox.title}
             className="lightbox-img"
           />
-          <p className="lightbox-caption">{lightbox.title}</p>
+          <div className="lightbox-info">
+            <p className="lightbox-caption">{lightbox.title}</p>
+            <p className="lightbox-contributor">
+              投稿者：{lightbox.contributor}　‣　{lightbox.date}
+            </p>
+          </div>
         </div>
       )}
     </>
