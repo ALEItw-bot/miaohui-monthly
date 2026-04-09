@@ -22,35 +22,52 @@ export default function PopupModal() {
     const dismissed = sessionStorage.getItem('popup-dismissed');
     if (dismissed) return;
 
-    // 讀取 images.json，隨機選一張
+    // 顯示 popup 的共用函式
+    const showPopup = (desktop: string, mobile: string) => {
+      setDesktopImg(desktop);
+      setMobileImg(mobile);
+      setIsOpen(true);
+      const img = new Image();
+      img.onload = () => setHasMobileImg(true);
+      img.onerror = () => setHasMobileImg(false);
+      img.src = mobile;
+    };
+
+    // 預設圖片（JSON 讀取失敗或格式不對時的保底）
+    const fallback = () => showPopup('/popup/popup-1.jpg', '/popup/popup-1-m.jpg');
+
     fetch('/popup/images.json')
-      .then((res) => res.json())
-      .then((data: string[] | { images?: string[] }) => {
-        // 相容兩種 JSON 格式：["a.jpg"] 或 { images: ["a.jpg"] }
-        const list = Array.isArray(data) ? data : (data.images ?? []);
-        // 過濾手機版檔名（含 -m. 的），只保留桌機版
-        const images = list.filter((f) => !/-m\./i.test(f));
-        if (images.length === 0) return;
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to load images.json');
+        return res.json();
+      })
+      .then((data: unknown) => {
+        // 相容多種 JSON 格式
+        let raw: unknown[] = [];
+        if (Array.isArray(data)) {
+          raw = data;
+        } else if (data && typeof data === 'object' && 'images' in data) {
+          const obj = data as { images?: unknown };
+          if (Array.isArray(obj.images)) raw = obj.images;
+        }
+
+        // 只保留字串、過濾 -m 手機版、只留圖片副檔名
+        const images = raw
+          .filter((item): item is string => typeof item === 'string')
+          .filter((f) => /\.(jpg|jpeg|png|webp|gif)$/i.test(f))
+          .filter((f) => !/-m\./i.test(f));
+
+        if (images.length === 0) {
+          fallback(); // 解析後沒有可用圖片，用預設
+          return;
+        }
+
         const picked = images[Math.floor(Math.random() * images.length)];
         const desktop = picked.startsWith('/') ? picked : `/popup/${picked}`;
         const mobile = getMobileSrc(desktop);
-
-        setDesktopImg(desktop);
-        setMobileImg(mobile);
-        setIsOpen(true);
-
-        // 檢查手機版是否存在
-        const img = new Image();
-        img.onload = () => setHasMobileImg(true);
-        img.onerror = () => setHasMobileImg(false);
-        img.src = mobile;
+        showPopup(desktop, mobile);
       })
-      .catch(() => {
-        // JSON 讀取失敗時用預設圖片
-        setDesktopImg('/popup/popup-1.jpg');
-        setMobileImg('/popup/popup-1-m.jpg');
-        setIsOpen(true);
-      });
+      .catch(fallback);
   }, []);
 
   const handleClose = () => {
