@@ -78,10 +78,11 @@ export interface PartnerDetail extends Partner {
 
 export interface GalleryPhoto {
   id: string;
-  title: string;
-  coverUrl: string;
-  eventType: string;
-  date: string;
+  title: string;        // 照片主題名稱
+  coverUrl: string;     // 照片 URL
+  contributor: string;  // 投稿者名字
+  eventType: string;    // 分類（如：遶境、陣頭、廟宇）
+  date: string;         // 拍攝日期
 }
 
 // ==========================================
