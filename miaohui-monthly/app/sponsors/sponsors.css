@@ -202,6 +202,123 @@
   opacity: 1;
 }
 
+/* ===== Sponsors Collab Section ===== */
+.sponsors-collab {
+  background: var(--bg-light, #faf8f5);
+  padding: 64px 0 80px;
+}
+.sponsors-collab-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--red);
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+.sponsors-collab-intro {
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--text-light);
+  margin-bottom: 2.5rem;
+}
+
+/* Collab Cards */
+.collab-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.collab-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.collab-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+.collab-card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.25rem;
+}
+.collab-card-title {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--text);
+  margin: 0;
+}
+.collab-card-desc {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin: 0;
+}
+.collab-card-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.8;
+}
+.collab-card-list li::marker {
+  color: var(--red);
+}
+
+/* Exposure Table */
+.collab-exposure {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+.collab-exposure-title {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 0 0 1rem;
+}
+.exposure-table-wrap {
+  overflow-x: auto;
+}
+.exposure-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.exposure-table th {
+  background: var(--red);
+  color: var(--white);
+  font-weight: 700;
+  padding: 10px 16px;
+  text-align: left;
+}
+.exposure-table th:first-child {
+  border-radius: 8px 0 0 0;
+}
+.exposure-table th:last-child {
+  border-radius: 0 8px 0 0;
+}
+.exposure-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--text);
+  line-height: 1.6;
+}
+.exposure-table tr:last-child td {
+  border-bottom: none;
+}
+.exposure-table tr:hover td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
 /* ===== Sponsors RWD ===== */
 @media (max-width: 768px) {
   .sponsors-hero { padding: 60px 0 40px; }
@@ -209,6 +326,17 @@
   .sponsors-list-title { font-size: 1.5rem; }
   .sponsors-grid { grid-template-columns: 1fr; }
   .sponsors-cta-title { font-size: 1.2rem; }
+  .sponsors-collab { padding: 48px 0 60px; }
+  .sponsors-collab-title { font-size: 1.5rem; }
+  .collab-cards { grid-template-columns: 1fr; gap: 1rem; }
+  .collab-card { padding: 1.5rem 1.25rem; }
+  .collab-card-icon { font-size: 2rem; }
+  .collab-card-title { font-size: 1.15rem; }
+  .collab-exposure { padding: 1.5rem; }
+  .collab-exposure-title { font-size: 1.15rem; }
+  .exposure-table { font-size: 0.88rem; }
+  .exposure-table th,
+  .exposure-table td { padding: 8px 12px; }
 }
 @media (max-width: 480px) {
   .sponsors-filter-btn { padding: 5px 12px; font-size: 0.82rem; }
