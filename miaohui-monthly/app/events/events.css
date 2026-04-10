@@ -31,11 +31,44 @@
 
 .events-map-wrapper {
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .events-map-side .filter-pills {
   padding: 0;
   justify-content: center;
+}
+
+/* 台灣地圖元件 */
+.taiwan-map-container {
+  text-align: center;
+}
+
+.taiwan-map-img-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.taiwan-map-img-wrapper:hover {
+  filter: brightness(1.05);
+}
+
+.taiwan-map-img-wrapper.has-selection {
+  transform: scale(1.04);
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.30));
+}
+
+.taiwan-map-img {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* 右側列表 */
