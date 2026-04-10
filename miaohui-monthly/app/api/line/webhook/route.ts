@@ -15,17 +15,30 @@ export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('x-line-signature') || '';
 
+  console.log('[webhook] body length:', body.length);
+  console.log('[webhook] has signature:', !!signature);
+
   // 簽章驗證
   if (!verifySignature(body, signature)) {
+    console.log('[webhook] SIGNATURE FAILED');
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
   }
 
+  console.log('[webhook] signature OK');
   const data = JSON.parse(body);
   const events = data.events || [];
+  console.log('[webhook] events count:', events.length);
 
   for (const event of events) {
+    console.log('[webhook] event type:', event.type);
     if (event.type === 'message' && event.message.type === 'text') {
-      await handleTextMessage(event);
+      console.log('[webhook] message text:', event.message.text);
+      try {
+        await handleTextMessage(event);
+        console.log('[webhook] handleTextMessage done');
+      } catch (err) {
+        console.error('[webhook] handleTextMessage ERROR:', err);
+      }
     }
 
     if (event.type === 'follow') {
@@ -44,8 +57,8 @@ async function handleTextMessage(event: any) {
   const text = event.message.text.trim();
   const replyToken = event.replyToken;
 
-  // ---- 📍 周邊推薦 ----
-  if (text === '周邊推薦') {
+  // ---- 📍 商家推薦 ----
+  if (text === '商家推薦') {
     // 取得近期活動列表，讓用戶選
     const { events: activeEvents } = await getEvents({ limit: 5 });
 
@@ -95,7 +108,7 @@ async function handleTextMessage(event: any) {
             type: 'button',
             action: {
               type: 'message',
-              label: '📍 看周邊推薦',
+              label: '📍 看商家推薦',
               text: `周邊:${evt.id}:全部`,
             },
             style: 'primary',
@@ -125,7 +138,7 @@ async function handleTextMessage(event: any) {
       if (spots.length === 0) {
         return replyMessage(replyToken, {
           type: 'text',
-          text: '這個活動目前還沒有周邊推薦，敬請期待！🙏',
+          text: '這個活動目前還沒有商家推薦，敬請期待！🙏',
         });
       }
 
@@ -205,7 +218,7 @@ async function handleFollow(event: any) {
       '提供全台廟會活動、遶境路線、周邊美食推薦。\n\n' +
       '👇 點選下方選單開始使用：\n' +
       '🔥 熱鬧資訊 — 查看近期活動\n' +
-      '📍 周邊推薦 — 遶境沿途好吃好玩\n' +
+      '📍 商家推薦 — 遶境沿途好吃好玩\n' +
       '🎫 好康優惠 — 獨家優惠券\n' +
       '📥 我要投稿 — 分享你的廟會體驗',
   });
