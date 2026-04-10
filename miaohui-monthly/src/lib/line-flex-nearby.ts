@@ -116,7 +116,7 @@ function buildSpotBubble(spot: NearbySpot) {
 export function buildNearbyCarousel(spots: NearbySpot[]) {
   return {
     type: 'flex',
-    altText: `📍 周邊推薦（${spots.length} 間店家）`,
+    altText: `📍 商家推薦（${spots.length} 間店家）`,
     contents: {
       type: 'carousel',
       contents: spots.slice(0, 10).map(buildSpotBubble),
