@@ -5,12 +5,7 @@
 
 /* ===== Hero ===== */
 .sponsor-detail-hero {
-  background: linear-gradient(
-    135deg,
-    var(--red) 0%,
-    var(--red-dark) 60%,
-    var(--gold) 100%
-  );
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 60%, var(--gold) 100%);
   padding: 80px 0 60px;
   text-align: center;
   color: var(--white);
@@ -64,10 +59,75 @@
   padding: 48px 0 60px;
 }
 
+.sponsor-detail-content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2.5rem 2.5rem 3rem;
+  background: var(--white, #fff);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
 .sponsor-detail-body .event-content {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+/* ===== 商家資訊標題 ===== */
+.sponsor-detail-h2 {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--red);
+  margin: 0 0 1rem;
+}
+
+/* ===== Info Grid ===== */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.info-card {
+  background: var(--bg-light, #faf8f5);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.info-card-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-light, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-card-value {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.info-card-value a {
+  color: var(--red);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.info-card-value a:hover {
+  text-decoration: underline;
 }
 
 /* ===== Notion 頁面內容區 ===== */
@@ -129,6 +189,12 @@
     font-size: 1rem;
   }
 
+  .sponsor-detail-content {
+    margin: 0 1rem;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+  }
+
   .sponsor-detail-body .event-content {
     padding: 0 1rem;
   }
@@ -142,6 +208,11 @@
 @media (max-width: 480px) {
   .sponsor-detail-title {
     font-size: 1.6rem;
+  }
+
+  .sponsor-detail-content {
+    margin: 0 0.75rem;
+    padding: 1.5rem 1.25rem;
   }
 
   .info-grid {
