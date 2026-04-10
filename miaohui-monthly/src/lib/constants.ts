@@ -18,7 +18,7 @@ export const SITE_CONFIG = {
   name: '廟會月報',
   tagline: '全台鬧熱，報你知！',
   description:
-    '台灣最完整的廟會活動資訊平台。大甲媽祖遶境、白沙屯媽祖進香、全台廟會活動時間、路線、注意事項一次看！',
+    '打造台灣最完整的廟會活動資訊平台。全台廟會活動時間、路線，好康逗相報！',
   url: 'https://miaohui-monthly.vercel.app',
   ogImage: '/og-image.png',
   copyright: '© 2026 廟會月報｜MiaoHui Monthly. All rights reserved.',

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEventBySlug } from '@/lib/notion';
-import { isValidSlug, safeErrorResponse } from '@/lib/api-guard';
+import { isValidSlug, checkRateLimit, safeErrorResponse } from '@/lib/api-guard';
 
 export const revalidate = 60;
 
@@ -9,6 +9,14 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
+
+  // 速率限制
+  if (!(await checkRateLimit(request))) {
+    return NextResponse.json(
+      { success: false, error: 'Too many requests' },
+      { status: 429 },
+    );
+  }
 
   // slug 驗證
   if (!isValidSlug(slug)) {
