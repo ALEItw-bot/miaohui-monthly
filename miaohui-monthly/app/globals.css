@@ -144,24 +144,24 @@ img {
   opacity: 0.9;
 }
 
-/* 各頁面 Hero 背景圖片（使用各資料夾現有圖片） */
+/* 各頁面 Hero 背景圖片（統一放 /hero/ 資料夾） */
 .brand-story-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('/brand-hero.png');
+    url('/hero/brand-story.jpg');
   background-size: cover;
   background-position: center;
 }
 
 .gallery-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('/gallery/popup-1.jpg');
+    url('/hero/gallery.jpg');
   background-size: cover;
   background-position: center;
 }
 
 .sponsors-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('/sponsor/popup-1.jpg');
+    url('/hero/sponsors.jpg');
   background-size: cover;
   background-position: center;
 }

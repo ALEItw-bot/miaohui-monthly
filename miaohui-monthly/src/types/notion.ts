@@ -95,6 +95,23 @@ export interface PageContent {
 }
 
 // ==========================================
+// 🔴 周邊推薦（新增）
+// ==========================================
+
+export interface NearbySpot {
+  id: string;
+  name: string;        // 店家名稱
+  category: string;    // 類型（🍜 美食小吃、⛩️ 順路廟宇 等）
+  summary: string;     // 店家簡介
+  coupon: string;      // 優惠內容（空字串 = 無優惠）
+  distance: string;    // 距離活動路線（步行 5 分鐘內 等）
+  googleMaps: string;  // Google Maps 連結
+  phone: string;       // 電話
+  tags: string[];      // 標籤（🔥 在地人推薦 等）
+  coverImage: string;  // 店家照片 URL（第一張）
+}
+
+// ==========================================
 // Notion Block 型別（渲染用）— 原有
 // ==========================================
 

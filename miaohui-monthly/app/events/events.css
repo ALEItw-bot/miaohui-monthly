@@ -2,10 +2,10 @@
    活動列表頁 — events.css
    ============================================================ */
 
-/* Hero 背景圖片 */
+/* Hero 背景圖片（統一放 /hero/ 資料夾） */
 .events-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
-    url('/carousel/popup-1.jpg');
+    url('/hero/events.jpg');
   background-size: cover;
   background-position: center;
 }

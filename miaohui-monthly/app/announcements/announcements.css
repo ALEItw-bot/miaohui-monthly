@@ -2,10 +2,10 @@
    最新消息頁 — announcements.css
    ============================================================ */
 
-/* Hero 背景圖片（覆蓋通用 .page-hero 的純色背景） */
+/* Hero 背景圖片（統一放 /hero/ 資料夾） */
 .announcements-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('/news/popup-1.jpg');
+    url('/hero/announcements.jpg');
   background-size: cover;
   background-position: center;
 }

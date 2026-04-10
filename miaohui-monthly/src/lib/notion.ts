@@ -8,6 +8,7 @@ import type {
   PartnerDetail,
   GalleryPhoto,
   PageContent,
+  NearbySpot,
 } from '@/types/notion';
 
 // ==========================================
@@ -23,6 +24,7 @@ const ANNOUNCEMENTS_DB_ID = process.env.NOTION_ANNOUNCEMENTS_DB_ID || '';
 const PARTNERS_DB_ID = process.env.NOTION_PARTNERS_DB_ID || '';
 const INBOX_DB_ID = process.env.NOTION_INBOX_DB_ID || '';
 const BRAND_STORY_PAGE_ID = process.env.NOTION_BRAND_STORY_PAGE_ID || '';
+const NEARBY_DB_ID = process.env.NOTION_NEARBY_DB_ID || '';
 if (!BRAND_STORY_PAGE_ID) {
   console.warn('[notion] BRAND_STORY_PAGE_ID is not set — 品牌故事頁面將無法載入');
 }
@@ -429,6 +431,122 @@ export async function getPartnerSlugs(): Promise<string[]> {
     return response.results.map((page: any) => page.id);
   } catch {
     return [];
+  }
+}
+
+// ==========================================
+// 🔴 13. 取得周邊推薦店家（新增）
+// ==========================================
+
+export async function getNearbySpots(options?: {
+  eventId?: string;
+  category?: string;
+  limit?: number;
+}): Promise<{ success: boolean; spots: NearbySpot[] }> {
+  const { eventId, category, limit = 10 } = options || {};
+
+  const filters: any[] = [
+    { property: '發佈', checkbox: { equals: true } },
+  ];
+
+  if (eventId) {
+    filters.push({
+      property: '🏮 關聯活動',
+      relation: { contains: eventId },
+    });
+  }
+
+  if (category) {
+    filters.push({
+      property: '類型',
+      select: { equals: category },
+    });
+  }
+
+  try {
+    const response = await notion.databases.query({
+      database_id: NEARBY_DB_ID,
+      filter: { and: filters },
+      page_size: limit,
+    });
+
+    const spots: NearbySpot[] = response.results.map((page: any) => {
+      const props = page.properties;
+      return {
+        id: page.id,
+        name: getTitle(props['店家名稱']),
+        category: props['類型']?.select?.name || '',
+        summary: getRichTextPlain(props['店家簡介']),
+        coupon: getRichTextPlain(props['優惠內容']),
+        distance: props['距離活動路線']?.select?.name || '',
+        googleMaps: props['Google Maps']?.url || '',
+        phone: props['電話']?.phone_number || '',
+        tags: (props['標籤']?.multi_select || []).map(
+          (s: any) => s.name,
+        ),
+        coverImage: getFiles(props['店家照片'])?.[0] || '',
+      };
+    });
+
+    return { success: true, spots };
+  } catch (err) {
+    console.error('[nearby] fetch failed:', err);
+    return { success: false, spots: [] };
+  }
+}
+
+// ==========================================
+// 🔴 14. 取得當前有效優惠券列表（新增）
+// ==========================================
+
+export async function getCoupons(options?: {
+  eventId?: string;
+  limit?: number;
+}): Promise<{ success: boolean; spots: NearbySpot[] }> {
+  const { eventId, limit = 10 } = options || {};
+
+  const filters: any[] = [
+    { property: '發佈', checkbox: { equals: true } },
+    { property: '優惠內容', rich_text: { is_not_empty: true } },
+    { property: '合作狀態', status: { equals: '合作中' } },
+  ];
+
+  if (eventId) {
+    filters.push({
+      property: '🏮 關聯活動',
+      relation: { contains: eventId },
+    });
+  }
+
+  try {
+    const response = await notion.databases.query({
+      database_id: NEARBY_DB_ID,
+      filter: { and: filters },
+      page_size: limit,
+    });
+
+    const spots: NearbySpot[] = response.results.map((page: any) => {
+      const props = page.properties;
+      return {
+        id: page.id,
+        name: getTitle(props['店家名稱']),
+        category: props['類型']?.select?.name || '',
+        summary: getRichTextPlain(props['店家簡介']),
+        coupon: getRichTextPlain(props['優惠內容']),
+        distance: props['距離活動路線']?.select?.name || '',
+        googleMaps: props['Google Maps']?.url || '',
+        phone: props['電話']?.phone_number || '',
+        tags: (props['標籤']?.multi_select || []).map(
+          (s: any) => s.name,
+        ),
+        coverImage: getFiles(props['店家照片'])?.[0] || '',
+      };
+    });
+
+    return { success: true, spots };
+  } catch (err) {
+    console.error('[coupons] fetch failed:', err);
+    return { success: false, spots: [] };
   }
 }
 

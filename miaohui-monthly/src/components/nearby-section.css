@@ -1,0 +1,257 @@
+/* ==========================================
+   📍 周邊推薦區塊 — nearby-section.css
+   ========================================== */
+
+.nearby-section {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+}
+
+/* ---- Header ---- */
+
+.nearby-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.nearby-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem;
+}
+
+.nearby-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted, #888);
+  margin: 0;
+}
+
+/* ---- 分類篩選 Tabs ---- */
+
+.nearby-tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.nearby-tab {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary, #666);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nearby-tab:hover {
+  border-color: var(--red, #c80000);
+  color: var(--red, #c80000);
+}
+
+.nearby-tab-active {
+  background: var(--red, #c80000);
+  border-color: var(--red, #c80000);
+  color: #fff;
+}
+
+/* ---- 載入 / 空狀態 ---- */
+
+.nearby-loading,
+.nearby-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted, #888);
+  font-size: 1rem;
+}
+
+.nearby-loading span {
+  display: inline-block;
+  animation: nearby-bounce 1s infinite;
+}
+
+@keyframes nearby-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ---- 店家卡片 Grid ---- */
+
+.nearby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.nearby-card {
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.nearby-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ---- 卡片圖片 ---- */
+
+.nearby-card-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.nearby-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nearby-card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background: linear-gradient(135deg, #fff5f0, #ffe8d6);
+}
+
+/* ---- 卡片內容 ---- */
+
+.nearby-card-body {
+  padding: 1rem;
+  flex: 1;
+}
+
+.nearby-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.nearby-card-category {
+  font-size: 0.8rem;
+  color: var(--text-muted, #888);
+}
+
+.nearby-card-distance {
+  font-size: 0.75rem;
+  color: #fff;
+  background: var(--green, #2d8a4e);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+.nearby-card-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.nearby-card-summary {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #666);
+  line-height: 1.5;
+  margin: 0 0 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nearby-card-coupon {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #c80000;
+  background: #fff0f0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+/* ---- 標籤 ---- */
+
+.nearby-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.nearby-tag {
+  font-size: 0.7rem;
+  color: var(--text-muted, #888);
+  background: #f5f5f5;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* ---- 按鈕 ---- */
+
+.nearby-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+
+.nearby-btn {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.nearby-btn:hover {
+  opacity: 0.85;
+}
+
+.nearby-btn-primary {
+  background: #ff6b35;
+  color: #fff;
+}
+
+.nearby-btn-secondary {
+  background: #f0f0f0;
+  color: var(--text-primary, #1a1a1a);
+}
+
+/* ---- RWD ---- */
+
+@media (max-width: 768px) {
+  .nearby-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nearby-title {
+    font-size: 1.4rem;
+  }
+
+  .nearby-tabs {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+  }
+
+  .nearby-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
