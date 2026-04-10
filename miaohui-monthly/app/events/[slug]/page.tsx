@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import StarRating from '@/components/StarRating';
 import PhotoCarousel from '@/components/PhotoCarousel';
 import { THEME_COLOR_MAP } from '@/lib/constants';
+import NearbySection from '@/components/NearbySection';
 import './event-detail.css';
 
 export const revalidate = 60;
@@ -193,6 +194,9 @@ export default async function EventPage({
           </div>
         </div>
       </div>
+
+      {/* 周邊推薦 */}
+      <NearbySection eventId={event.id} />
     </main>
   );
 }
