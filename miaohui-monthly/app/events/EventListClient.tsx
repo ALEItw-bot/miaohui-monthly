@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import type { EventItem } from '@/types/notion';
 import { REGIONS } from '@/lib/constants';
-import TaiwanMap from '@/app/components/TaiwanMap';
+import TaiwanMap from '../components/TaiwanMap';
 import './events.css';
 
 const PAGE_SIZE = 20;
