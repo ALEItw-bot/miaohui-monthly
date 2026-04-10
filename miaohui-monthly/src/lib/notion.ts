@@ -22,7 +22,10 @@ const EVENTS_DB_ID = process.env.NOTION_EVENTS_DB_ID || '';
 const ANNOUNCEMENTS_DB_ID = process.env.NOTION_ANNOUNCEMENTS_DB_ID || '';
 const PARTNERS_DB_ID = process.env.NOTION_PARTNERS_DB_ID || '';
 const INBOX_DB_ID = process.env.NOTION_INBOX_DB_ID || '';
-const BRAND_STORY_PAGE_ID = process.env.NOTION_BRAND_STORY_PAGE_ID || '3274cb8807f28092b955c9eb108e2f20';
+const BRAND_STORY_PAGE_ID = process.env.NOTION_BRAND_STORY_PAGE_ID || '';
+if (!BRAND_STORY_PAGE_ID) {
+  console.warn('[notion] BRAND_STORY_PAGE_ID is not set — 品牌故事頁面將無法載入');
+}
 
 // ==========================================
 // 1. 取得活動列表（原有）
@@ -363,6 +366,11 @@ export async function getPartners(): Promise<{
 export async function getPartnerById(
   id: string,
 ): Promise<PartnerDetail | null> {
+  // UUID 格式驗證，防止 IDOR 攻擊
+  if (!/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(id)) {
+    return null;
+  }
+
   try {
     const page = await notion.pages.retrieve({ page_id: id }) as any;
     const props = page.properties;
