@@ -16,18 +16,8 @@ const PIXEL_REGION_MAP = [
   { region: '外島', r: 255, g: 50, b: 220 }, // 洋紅色
 ];
 
-// 品牌顏色（圖例 dot 用）
-const BRAND_COLORS: Record<string, string> = {
-  北部: '#C80000',
-  中部: '#D4A017',
-  南部: '#0000A5',
-  東部: '#0F7B6C',
-  外島: '#6940A5',
-};
-
 // ===== Inline style 常數（避免 JSX 雙花括號）=====
 const hiddenStyle: React.CSSProperties = { display: 'none' };
-const bgStyle = (color: string): React.CSSProperties => ({ backgroundColor: color });
 const overlayStyle: React.CSSProperties = {
   position: 'absolute',
   top: 0,
