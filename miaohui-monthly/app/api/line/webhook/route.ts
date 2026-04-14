@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifySignature, replyMessage } from '@/lib/line';
-import { getNearbySpots, getCoupons, getEvents, getActiveSponsors } from '@/lib/notion';
+import { getNearbySpots, getCoupons, getEvents } from '@/lib/notion';
 import {
   buildNearbyCarousel,
   buildCategoryQuickReply,
@@ -676,4 +676,12 @@ export function haversine(
       Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/**
+ * 暫用空函式：等 notion.ts 加入後移除此函式，
+ * 改用 import { getActiveSponsors } from '@/lib/notion'
+ */
+async function getActiveSponsors(): Promise<{ sponsors: any[] }> {
+  return { sponsors: [] };
 }
