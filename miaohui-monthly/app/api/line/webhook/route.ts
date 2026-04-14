@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifySignature, replyMessage } from '@/lib/line';
-import { getNearbySpots, getCoupons, getEvents } from '@/lib/notion';
+import { getNearbySpots, getCoupons, getEvents, getActiveSponsors } from '@/lib/notion';
 import {
   buildNearbyCarousel,
   buildCategoryQuickReply,
@@ -64,10 +64,14 @@ async function handleTextMessage(event: any) {
   const text = event.message.text.trim();
   const replyToken = event.replyToken;
 
-  // ---- 🔥 熱鬧資訊 ----
+  // ---- 🔥 熱鬧資訊（含封面圖 + 詳細按鈕 + 工商卡片）----
   if (text === '熱鬧資訊') {
     const { events: activeEvents } = await getEvents({ limit: 5 });
-    return replyMessage(replyToken, buildEventCarousel(activeEvents, '📅 近期熱門活動'));
+    // 取得合作中的工商夥伴（穿插在活動卡片中曝光）
+    let sponsors: any[] = [];
+    try { sponsors = (await getActiveSponsors())?.sponsors || []; }
+    catch { /* sponsors 查詢失敗不影響主流程 */ }
+    return replyMessage(replyToken, buildEventCarousel(activeEvents, '📅 近期熱門活動', sponsors));
   }
 
   // ---- 🔍 大甲 / 鎮瀾宮（排在「大甲美食」之前，用 !includes 美食排除）----
@@ -353,8 +357,8 @@ async function handleFollow(event: any) {
 // 工具函式
 // ==========================================
 
-/** 活動列表 → Flex Carousel（含無活動友善提示）*/
-function buildEventCarousel(events: any[], headerText: string) {
+/** 活動列表 → Flex Carousel（含封面圖 + 詳細按鈕 + 工商卡片穿插）*/
+function buildEventCarousel(events: any[], headerText: string, sponsors: any[] = []) {
   if (!events || events.length === 0) {
     return {
       type: 'text',
@@ -362,53 +366,146 @@ function buildEventCarousel(events: any[], headerText: string) {
     };
   }
 
-  const bubbles = events.slice(0, 10).map((evt: any) => ({
-    type: 'bubble',
-    size: 'kilo',
-    body: {
-      type: 'box',
-      layout: 'vertical',
-      contents: [
-        {
-          type: 'text',
-          text: evt.title || '未命名活動',
-          weight: 'bold',
-          size: 'md',
-          wrap: true,
-        },
-        {
-          type: 'text',
-          text: '📅 ' + (evt.date?.start || '日期待定'),
-          size: 'sm',
-          color: '#888888',
-          margin: 'md',
-        },
-        {
-          type: 'text',
-          text: '📍 ' + (evt.city || '') + ' ' + (evt.district || ''),
-          size: 'sm',
-          color: '#888888',
-          margin: 'sm',
-        },
-        {
-          type: 'text',
-          text: '🏷️ ' + (evt.region || ''),
-          size: 'xs',
-          color: '#C41E3A',
-          margin: 'sm',
-        },
-      ],
-    },
-  }));
+  const bubbles: any[] = events.slice(0, 10).map((evt: any) => {
+    const bubble: any = {
+      type: 'bubble',
+      size: 'mega',
+      body: {
+        type: 'box',
+        layout: 'vertical',
+        contents: [
+          {
+            type: 'text',
+            text: evt.title || '未命名活動',
+            weight: 'bold',
+            size: 'lg',
+            wrap: true,
+          },
+          {
+            type: 'text',
+            text: '📅 ' + (evt.date?.start || '日期待定'),
+            size: 'sm',
+            color: '#888888',
+            margin: 'md',
+          },
+          {
+            type: 'text',
+            text: '📍 ' + (evt.city || '') + ' ' + (evt.district || ''),
+            size: 'sm',
+            color: '#888888',
+            margin: 'sm',
+          },
+          {
+            type: 'text',
+            text: '🏷️ ' + (evt.region || ''),
+            size: 'xs',
+            color: '#C41E3A',
+            margin: 'sm',
+          },
+        ],
+      },
+    };
 
+    // 封面圖（如果活動有上傳封面）
+    if (evt.coverImage && evt.coverImage.length > 0) {
+      bubble.hero = {
+        type: 'image',
+        url: evt.coverImage[0],
+        size: 'full',
+        aspectRatio: '20:13',
+        aspectMode: 'cover',
+      };
+    }
+
+    // 查看詳細資訊按鈕（導向官網活動頁）
+    if (evt.slug) {
+      bubble.footer = {
+        type: 'box',
+        layout: 'vertical',
+        contents: [{
+          type: 'button',
+          action: {
+            type: 'uri',
+            label: '🏛️ 查看詳細資訊',
+            uri: `https://miaohui.tw/events/${evt.slug}`,
+          },
+          style: 'primary',
+          color: '#C80000',
+          height: 'sm',
+        }],
+      };
+    }
+
+    return bubble;
+  });
+
+  // 穿插工商合作卡片（最多 2 張，避免第一張就是廣告）
+  if (sponsors.length > 0) {
+    const sponsorBubbles = sponsors.slice(0, 2).map(buildSponsorBubble);
+    sponsorBubbles.forEach((sb: any) => {
+      const pos = Math.floor(Math.random() * bubbles.length) + 1;
+      bubbles.splice(Math.min(pos, bubbles.length), 0, sb);
+    });
+  }
+
+  // LINE carousel 最多 12 個 bubble
   return [
     { type: 'text', text: headerText },
     {
       type: 'flex',
       altText: headerText,
-      contents: { type: 'carousel', contents: bubbles },
+      contents: { type: 'carousel', contents: bubbles.slice(0, 12) },
     },
   ];
+}
+
+/** 工商合作夥伴 → Flex Bubble（精選/進階/基本等級標示）*/
+function buildSponsorBubble(sponsor: any) {
+  let levelBadge = '🤝 合作夥伴';
+  let badgeColor = '#666666';
+  if (sponsor.level === '精選') { levelBadge = '⭐ 精選合作'; badgeColor = '#C41E3A'; }
+  else if (sponsor.level === '進階') { levelBadge = '🔷 進階合作'; badgeColor = '#1A3C6E'; }
+
+  const bodyContents: any[] = [
+    { type: 'text', text: levelBadge, size: 'xxs', color: badgeColor, weight: 'bold' },
+    { type: 'text', text: sponsor.name, weight: 'bold', size: 'md', wrap: true, margin: 'sm' },
+  ];
+
+  if (sponsor.feature) {
+    bodyContents.push({ type: 'text', text: sponsor.feature, size: 'xs', color: '#888888', wrap: true, margin: 'sm' });
+  }
+  if (sponsor.categories?.length > 0) {
+    bodyContents.push({ type: 'text', text: '🏷️ ' + sponsor.categories.join('、'), size: 'xxs', color: '#AAAAAA', margin: 'sm' });
+  }
+
+  const bubble: any = {
+    type: 'bubble',
+    size: 'kilo',
+    body: {
+      type: 'box',
+      layout: 'vertical',
+      backgroundColor: '#FFF8F0',
+      paddingAll: '16px',
+      contents: bodyContents,
+    },
+  };
+
+  if (sponsor.website) {
+    bubble.footer = {
+      type: 'box',
+      layout: 'vertical',
+      backgroundColor: '#FFF8F0',
+      paddingAll: '10px',
+      contents: [{
+        type: 'button',
+        action: { type: 'uri', label: '🔗 查看詳情', uri: sponsor.website },
+        style: 'secondary',
+        height: 'sm',
+      }],
+    };
+  }
+
+  return bubble;
 }
 
 /** 投稿選單 — 雙卡片 Carousel（活動情報 / 廟會分享）*/
