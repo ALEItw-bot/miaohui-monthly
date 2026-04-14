@@ -1222,8 +1222,40 @@ img {
   .header-nav-link { font-size: var(--text-sm); }
   .carousel-title { font-size: var(--text-2xl); }
   .carousel-subtitle { font-size: var(--text-sm); }
-  .news-item { flex-wrap: wrap; gap: 0.5rem; }
-  .news-title { white-space: normal; }
+
+  /* 最新消息：手機版排版優化（避免日期/標籤把標題擠到很怪） */
+  .news-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "date tag"
+      "title title";
+    align-items: center;
+    gap: 6px 10px;
+    padding: 0.75rem 0;
+  }
+
+  .news-date {
+    grid-area: date;
+    min-width: 0; /* 覆蓋桌機的 90px */
+    font-size: var(--text-xs);
+  }
+
+  .news-item .tag {
+    grid-area: tag;
+    justify-self: start;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+  }
+
+  .news-title {
+    grid-area: title;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.5;
+  }
+
   .fab-line { width: 52px; height: 52px; bottom: 16px; right: 16px; }
   .fab-line svg { width: 24px; height: 24px; }
 }
