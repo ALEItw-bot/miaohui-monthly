@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { verifySignature, replyMessage } from '@/lib/line';
-import { getNearbySpots, getCoupons, getEvents, getActiveSponsors } from '@/lib/notion';
+import { getNearbySpots, getCoupons, getEvents, getActiveSponsors, getEventsNearby } from '@/lib/notion';
 import {
   buildNearbyCarousel,
+  buildNearbyEventCarousel,
   buildCategoryQuickReply,
   buildCouponCarousel,
 } from '@/lib/line-flex-nearby';
@@ -317,21 +318,30 @@ async function handleTextMessage(event: any) {
 
 async function handleLocationMessage(event: any) {
   const replyToken = event.replyToken;
+  const { latitude, longitude } = event.message;
 
-  // 暫時先引導，Phase 2 啟用 Haversine 10km 搜尋
-  return replyMessage(replyToken, {
-    type: 'text',
-    text:
-      '📍 收到你的位置！\n\n' +
-      '附近活動搜尋功能即將上線 🔜\n' +
-      '目前請先點「熱鬧資訊」查看近期活動！',
-    quickReply: {
-      items: [
-        { type: 'action', action: { type: 'message', label: '🔥 熱鬧資訊', text: '熱鬧資訊' } },
-        { type: 'action', action: { type: 'message', label: '📍 商家推薦', text: '商家推薦' } },
-      ],
-    },
-  });
+  try {
+    const { events: nearbyEvents } = await getEventsNearby({
+      userLat: latitude,
+      userLon: longitude,
+      radiusKm: 10,
+      limit: 10,
+    });
+
+    return replyMessage(replyToken, buildNearbyEventCarousel(nearbyEvents));
+  } catch (err) {
+    console.error('[webhook] location search ERROR:', err);
+    return replyMessage(replyToken, {
+      type: 'text',
+      text: '📍 搜尋附近活動時發生錯誤，請稍後再試！',
+      quickReply: {
+        items: [
+          { type: 'action', action: { type: 'message', label: '🔥 熱鬧資訊', text: '熱鬧資訊' } },
+          { type: 'action', action: { type: 'location', label: '📍 重新定位' } },
+        ],
+      },
+    });
+  }
 }
 
 // ==========================================
@@ -449,14 +459,11 @@ function buildEventCarousel(events: any[], headerText: string, sponsors: any[] =
   }
 
   // LINE carousel 最多 12 個 bubble
-  return [
-    { type: 'text', text: headerText },
-    {
-      type: 'flex',
-      altText: headerText,
-      contents: { type: 'carousel', contents: bubbles.slice(0, 12) },
-    },
-  ];
+  return {
+    type: 'flex',
+    altText: headerText,
+    contents: { type: 'carousel', contents: bubbles.slice(0, 12) },
+  };
 }
 
 /** 工商合作夥伴 → Flex Bubble（精選/進階/基本等級標示）*/

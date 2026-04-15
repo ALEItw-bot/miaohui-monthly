@@ -113,6 +113,143 @@ function buildSpotBubble(spot: NearbySpot) {
 // 店家列表 → Flex Carousel
 // ==========================================
 
+// ==========================================
+// 附近活動 → Flex Carousel（LINE 位置搜尋 10km）
+// ==========================================
+
+export function buildNearbyEventCarousel(
+  events: Array<{
+    title: string;
+    slug: string;
+    date: { start: string; end: string | null } | null;
+    city: string;
+    district: string;
+    eventType: string;
+    distanceKm: number;
+    coverImage: string[];
+    summary: string;
+  }>,
+) {
+  if (!events || events.length === 0) {
+    return {
+      type: 'text',
+      text: '📍 方圓 10 公里內目前沒有廟會活動\n\n試試點「熱鬧資訊」看全台近期活動！',
+      quickReply: {
+        items: [
+          { type: 'action', action: { type: 'message', label: '🔥 熱鬧資訊', text: '熱鬧資訊' } },
+          { type: 'action', action: { type: 'location', label: '📍 重新定位' } },
+        ],
+      },
+    };
+  }
+
+  const bubbles = events.slice(0, 10).map((evt) => {
+    const bubble: any = {
+      type: 'bubble',
+      size: 'mega',
+      body: {
+        type: 'box',
+        layout: 'vertical',
+        spacing: 'md',
+        contents: [
+          {
+            type: 'box',
+            layout: 'horizontal',
+            contents: [
+              {
+                type: 'text',
+                text: `📍 ${evt.distanceKm} km`,
+                size: 'xs',
+                color: '#FFFFFF',
+                weight: 'bold',
+                flex: 0,
+              },
+            ],
+            backgroundColor: '#0000A5',
+            cornerRadius: 'xl',
+            paddingAll: '6px',
+            paddingStart: '12px',
+            paddingEnd: '12px',
+            width: '100px',
+          },
+          {
+            type: 'text',
+            text: evt.title || '未命名活動',
+            weight: 'bold',
+            size: 'lg',
+            wrap: true,
+          },
+          {
+            type: 'text',
+            text: `📅 ${evt.date?.start || '日期待定'}`,
+            size: 'sm',
+            color: '#888888',
+          },
+          {
+            type: 'text',
+            text: `📍 ${evt.city || ''} ${evt.district || ''}`,
+            size: 'sm',
+            color: '#888888',
+          },
+          {
+            type: 'text',
+            text: `🏷️ ${evt.eventType || ''}`,
+            size: 'xs',
+            color: '#C80000',
+          },
+        ],
+      },
+    };
+
+    // 封面圖
+    if (evt.coverImage && evt.coverImage.length > 0) {
+      bubble.hero = {
+        type: 'image',
+        url: evt.coverImage[0],
+        size: 'full',
+        aspectRatio: '20:13',
+        aspectMode: 'cover',
+      };
+    }
+
+    // 查看詳情按鈕
+    if (evt.slug) {
+      bubble.footer = {
+        type: 'box',
+        layout: 'vertical',
+        contents: [
+          {
+            type: 'button',
+            action: {
+              type: 'uri',
+              label: '🏛️ 查看詳細資訊',
+              uri: `https://miaohui.tw/events/${evt.slug}`,
+            },
+            style: 'primary',
+            color: '#C80000',
+            height: 'sm',
+          },
+        ],
+      };
+    }
+
+    return bubble;
+  });
+
+  return {
+    type: 'flex',
+    altText: `📍 附近 ${events.length} 場廟會活動`,
+    contents: {
+      type: 'carousel',
+      contents: bubbles,
+    },
+  };
+}
+
+// ==========================================
+// 店家列表 → Flex Carousel
+// ==========================================
+
 export function buildNearbyCarousel(spots: NearbySpot[]) {
   return {
     type: 'flex',
