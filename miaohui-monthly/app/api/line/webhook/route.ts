@@ -449,20 +449,65 @@ async function handleLocationMessage(event: any) {
   const replyToken = event.replyToken;
   const { latitude, longitude } = event.message;
 
-  try {
-    const { events: nearbyEvents } = await getEventsNearby({
-      userLat: latitude,
-      userLon: longitude,
-      radiusKm: 10,
-      limit: 10,
-    });
+  console.log('[webhook] location received:', latitude, longitude);
 
-    return replyMessage(replyToken, buildNearbyEventCarousel(nearbyEvents));
-  } catch (err) {
-    console.error('[webhook] location search ERROR:', err);
+  try {
+    // 用已驗證的 getEvents 取得所有已發佈活動
+    const { events: allEvents } = await getEvents({ limit: 100 });
+    console.log('[webhook] total events:', allEvents.length);
+
+    // 篩選有座標的活動，計算距離
+    const nearby = allEvents
+      .filter((e: any) => e.latitude != null && e.longitude != null)
+      .map((e: any) => ({
+        ...e,
+        dist: haversine(latitude, longitude, e.latitude, e.longitude),
+      }))
+      .filter((e: any) => e.dist <= 10)
+      .sort((a: any, b: any) => a.dist - b.dist);
+
+    console.log('[webhook] events with coords:', allEvents.filter((e: any) => e.latitude != null).length);
+    console.log('[webhook] nearby within 10km:', nearby.length);
+
+    if (nearby.length === 0) {
+      return replyMessage(replyToken, {
+        type: 'text',
+        text: '📍 方圓 10 公里內目前沒有廟會活動\n\n試試點「熱鬧資訊」看全台近期活動！',
+        quickReply: {
+          items: [
+            { type: 'action', action: { type: 'message', label: '🔥 熱鬧資訊', text: '熱鬧資訊' } },
+            { type: 'action', action: { type: 'location', label: '📍 重新定位' } },
+          ],
+        },
+      });
+    }
+
+    // 用純文字回覆（穩定不會出錯）
+    const list = nearby.slice(0, 5).map((e: any) =>
+      '🏮 ' + e.title + '\n   📍 ' + e.dist.toFixed(1) + ' km｜📅 ' + (e.date?.start || '日期待定')
+    ).join('\n\n');
+
+    const siteLinks = nearby.slice(0, 3)
+      .filter((e: any) => e.slug)
+      .map((e: any) => '🔗 ' + 'https://miaohui.tw/events/' + e.slug)
+      .join('\n');
+
     return replyMessage(replyToken, {
       type: 'text',
-      text: '📍 搜尋附近活動時發生錯誤，請稍後再試！',
+      text: '📍 附近 ' + nearby.length + ' 場廟會活動：\n\n' + list + (siteLinks ? '\n\n' + siteLinks : ''),
+      quickReply: {
+        items: [
+          { type: 'action', action: { type: 'message', label: '🔥 熱鬧資訊', text: '熱鬧資訊' } },
+          { type: 'action', action: { type: 'location', label: '📍 重新定位' } },
+        ],
+      },
+    });
+  } catch (err: any) {
+    console.error('[webhook] location ERROR:', err?.message || err);
+    // Fallback: 即使全部失敗，至少回覆有用的資訊
+    return replyMessage(replyToken, {
+      type: 'text',
+      text: '📍 搜尋附近活動時發生錯誤\n\n請點「熱鬧資訊」查看全台近期活動！',
       quickReply: {
         items: [
           { type: 'action', action: { type: 'message', label: '🔥 熱鬧資訊', text: '熱鬧資訊' } },
