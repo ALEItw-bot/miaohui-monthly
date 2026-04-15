@@ -676,6 +676,7 @@ export async function getActiveSponsors() {
 
 function parseEventPage(page: any): EventItem {
   const props = page.properties;
+  console.log('[parseEventPage] 緯度 raw:', JSON.stringify(props['緯度']));
   return {
     id: page.id,
     title: getTitle(props['活動名稱']),
