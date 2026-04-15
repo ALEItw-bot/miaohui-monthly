@@ -24,6 +24,9 @@ export interface EventItem {
   coverImage: string[];
   createdTime: string;
   lastEdited: string;
+  // 🔴 新增：GPS 座標（LINE 附近活動搜尋用）
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface EventDetailResponse {

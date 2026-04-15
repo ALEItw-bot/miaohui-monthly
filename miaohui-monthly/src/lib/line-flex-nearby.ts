@@ -2,7 +2,7 @@ import type { NearbySpot } from '@/types/notion';
 
 // 預設店家圖片（當沒有上傳照片時使用）
 const DEFAULT_IMAGE =
-  'https://placehold.co/600x400/FF6B35/white?text=廟會月報';
+  'https://placehold.co/600x400/0000A5/white?text=廟會月報';
 
 // ==========================================
 // 單一店家 → Flex Bubble
@@ -82,7 +82,7 @@ function buildSpotBubble(spot: NearbySpot) {
         uri: spot.googleMaps,
       },
       style: 'primary',
-      color: '#FF6B35',
+      color: '#0000A5',
       height: 'sm',
     });
   }
@@ -226,7 +226,7 @@ export function buildCouponCarousel(spots: NearbySpot[]) {
                 uri: spot.googleMaps,
               },
               style: 'primary',
-              color: '#FF6B35',
+              color: '#0000A5',
               height: 'sm',
             }
           : { type: 'filler' },

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifySignature, replyMessage } from '@/lib/line';
-import { getNearbySpots, getCoupons, getEvents } from '@/lib/notion';
+import { getNearbySpots, getCoupons, getEvents, getActiveSponsors } from '@/lib/notion';
 import {
   buildNearbyCarousel,
   buildCategoryQuickReply,
@@ -118,7 +118,7 @@ async function handleTextMessage(event: any) {
         contents: [{
           type: 'button',
           action: { type: 'message', label: '📍 看商家推薦', text: `周邊:${evt.id}:全部` },
-          style: 'primary', color: '#FF6B35',
+          style: 'primary', color: '#0000A5',
         }],
       },
     }));
@@ -678,10 +678,4 @@ export function haversine(
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-/**
- * 暫用空函式：等 notion.ts 加入後移除此函式，
- * 改用 import { getActiveSponsors } from '@/lib/notion'
- */
-async function getActiveSponsors(): Promise<{ sponsors: any[] }> {
-  return { sponsors: [] };
-}
+// getActiveSponsors 已移至 src/lib/notion.ts，由 import 引入

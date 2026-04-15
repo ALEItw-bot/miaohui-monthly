@@ -253,8 +253,86 @@ export async function submitRating(
 }
 
 // ==========================================
-// 🔴 8. 取得品牌故事頁面內容（新增）
+// 🔴 7.5 取得附近活動（LINE 位置搜尋用）（新增）
 // ==========================================
+
+/**
+ * Haversine 公式：計算兩個 GPS 座標之間的距離（公里）
+ */
+function haversineDistance(
+  lat1: number, lon1: number,
+  lat2: number, lon2: number,
+): number {
+  const R = 6371; // 地球半徑（公里）
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/**
+ * 搜尋使用者位置方圓 N 公里內的已發佈活動
+ * @param userLat  使用者緯度
+ * @param userLon  使用者經度
+ * @param radiusKm 搜尋半徑（預設 10km）
+ * @param limit    最多回傳幾筆（預設 10）
+ */
+export async function getEventsNearby(options: {
+  userLat: number;
+  userLon: number;
+  radiusKm?: number;
+  limit?: number;
+}): Promise<{
+  success: boolean;
+  count: number;
+  events: (EventItem & { distanceKm: number })[];
+}> {
+  const { userLat, userLon, radiusKm = 10, limit = 10 } = options;
+
+  // 撈出所有已發佈活動
+  const response = await notion.databases.query({
+    database_id: EVENTS_DB_ID,
+    filter: {
+      and: [
+        { property: '發佈', checkbox: { equals: true } },
+        { property: '緯度', number: { is_not_empty: true } },
+        { property: '經度', number: { is_not_empty: true } },
+      ],
+    },
+    sorts: [{ property: '日期', direction: 'ascending' }],
+  });
+
+  // 計算距離並篩選
+  const eventsWithDistance = response.results
+    .map((page: any) => {
+      const event = parseEventPage(page);
+      if (!event.latitude || !event.longitude) return null;
+      const distanceKm = haversineDistance(
+        userLat, userLon,
+        event.latitude, event.longitude,
+      );
+      return { ...event, distanceKm: Math.round(distanceKm * 10) / 10 };
+    })
+    .filter((e): e is EventItem & { distanceKm: number } =>
+      e !== null && e.distanceKm <= radiusKm,
+    )
+    .sort((a, b) => a.distanceKm - b.distanceKm)
+    .slice(0, limit);
+
+  return {
+    success: true,
+    count: eventsWithDistance.length,
+    events: eventsWithDistance,
+  };
+}
+
+// ==========================================
+// 🔴 8. 取得品牌故事頁面內容（新增）
+// ==========================================================
 
 export async function getBrandStoryBlocks(): Promise<PageContent | null> {
   try {
@@ -580,6 +658,9 @@ function parseEventPage(page: any): EventItem {
     coverImage: getFiles(props['活動封面圖']),
     createdTime: page.created_time,
     lastEdited: page.last_edited_time,
+    // 🔴 新增：GPS 座標
+    latitude: props['緯度']?.number ?? null,
+    longitude: props['經度']?.number ?? null,
   };
 }
 
