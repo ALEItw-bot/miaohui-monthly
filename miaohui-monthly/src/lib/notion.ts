@@ -629,8 +629,50 @@ export async function getCoupons(options?: {
 }
 
 // ==========================================
-// 內部工具函式（原有）
+// 🔴 15. 取得合作中工商夾伴（LINE 活動卡片穿插廣告用）（新增）
 // ==========================================
+
+export async function getActiveSponsors() {
+  const partnersDbId = process.env.NOTION_PARTNERS_DB_ID;
+  if (!partnersDbId) return { sponsors: [] };
+
+  try {
+    const response = await notion.databases.query({
+      database_id: partnersDbId,
+      filter: {
+        property: '合約狀態',
+        status: { equals: '合作中' },
+      },
+      page_size: 10,
+    });
+
+    const sponsors = response.results.map((page: any) => {
+      const props = page.properties;
+      return {
+        name: props['商家名稱']?.title?.[0]?.plain_text || '',
+        feature: props['服務項目特色']?.rich_text?.[0]?.plain_text || '',
+        website: props['商家網站']?.url || '',
+        level: props['前台曝光等級']?.select?.name || '基本',
+        categories: props['類別']?.multi_select?.map((s: any) => s.name) || [],
+      };
+    });
+
+    // 依曝光等級排序：精選 > 進階 > 基本
+    const levelOrder: Record<string, number> = { '精選': 0, '進階': 1, '基本': 2 };
+    sponsors.sort((a: any, b: any) =>
+      (levelOrder[a.level] ?? 99) - (levelOrder[b.level] ?? 99)
+    );
+
+    return { sponsors };
+  } catch (err) {
+    console.error('[notion] getActiveSponsors error:', err);
+    return { sponsors: [] };
+  }
+}
+
+// ==========================================
+// 內部工具函式（原有）
+// ==========================================================
 
 function parseEventPage(page: any): EventItem {
   const props = page.properties;
