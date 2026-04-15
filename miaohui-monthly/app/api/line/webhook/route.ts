@@ -65,14 +65,143 @@ async function handleTextMessage(event: any) {
   const text = event.message.text.trim();
   const replyToken = event.replyToken;
 
-  // ---- 🔥 熱鬧資訊（含封面圖 + 詳細按鈕 + 工商卡片）----
+  // ---- 🔥 熱鬧資訊（雙卡片：官網連結 + 附近搜尋）----
   if (text === '熱鬧資訊') {
-    const { events: activeEvents } = await getEvents({ limit: 5 });
-    // 取得合作中的工商夥伴（穿插在活動卡片中曝光）
-    let sponsors: any[] = [];
-    try { sponsors = (await getActiveSponsors())?.sponsors || []; }
-    catch { /* sponsors 查詢失敗不影響主流程 */ }
-    return replyMessage(replyToken, buildEventCarousel(activeEvents, '📅 近期熱門活動', sponsors));
+    return replyMessage(replyToken, {
+      type: 'flex',
+      altText: '🔥 熱鬧資訊',
+      contents: {
+        type: 'carousel',
+        contents: [
+          // 卡片 1：連結到官網熱鬧資訊
+          {
+            type: 'bubble',
+            size: 'mega',
+            header: {
+              type: 'box',
+              layout: 'vertical',
+              backgroundColor: '#C80000',
+              paddingAll: '20px',
+              contents: [
+                { type: 'text', text: '🏮', size: '3xl', align: 'center' },
+                {
+                  type: 'text',
+                  text: '近期廟會活動',
+                  color: '#FFFFFF',
+                  weight: 'bold',
+                  size: 'xl',
+                  align: 'center',
+                  margin: 'md',
+                },
+                {
+                  type: 'text',
+                  text: '全台鬧熱，報你知！',
+                  color: '#FF9999',
+                  size: 'sm',
+                  align: 'center',
+                  margin: 'sm',
+                },
+              ],
+            },
+            body: {
+              type: 'box',
+              layout: 'vertical',
+              paddingAll: '16px',
+              contents: [
+                {
+                  type: 'text',
+                  text: '查看全台近期廟會活動資訊\n遶境、進香、慶典一次掌握',
+                  size: 'sm',
+                  color: '#666666',
+                  align: 'center',
+                  wrap: true,
+                },
+              ],
+            },
+            footer: {
+              type: 'box',
+              layout: 'vertical',
+              contents: [
+                {
+                  type: 'button',
+                  action: {
+                    type: 'uri',
+                    label: '🏛️ 查看熱鬧資訊',
+                    uri: 'https://miaohui.tw/events',
+                  },
+                  style: 'primary',
+                  color: '#C80000',
+                  height: 'sm',
+                },
+              ],
+            },
+          },
+          // 卡片 2：附近 10 公里廟會搜尋
+          {
+            type: 'bubble',
+            size: 'mega',
+            header: {
+              type: 'box',
+              layout: 'vertical',
+              backgroundColor: '#0000A5',
+              paddingAll: '20px',
+              contents: [
+                { type: 'text', text: '📍', size: '3xl', align: 'center' },
+                {
+                  type: 'text',
+                  text: '附近廟會搜尋',
+                  color: '#FFFFFF',
+                  weight: 'bold',
+                  size: 'xl',
+                  align: 'center',
+                  margin: 'md',
+                },
+                {
+                  type: 'text',
+                  text: '方圓 10 公里內的鬧熱',
+                  color: '#9999FF',
+                  size: 'sm',
+                  align: 'center',
+                  margin: 'sm',
+                },
+              ],
+            },
+            body: {
+              type: 'box',
+              layout: 'vertical',
+              paddingAll: '16px',
+              contents: [
+                {
+                  type: 'text',
+                  text: '分享你的位置\n自動搜尋附近 10 公里的廟會活動',
+                  size: 'sm',
+                  color: '#666666',
+                  align: 'center',
+                  wrap: true,
+                },
+              ],
+            },
+            footer: {
+              type: 'box',
+              layout: 'vertical',
+              contents: [
+                {
+                  type: 'button',
+                  action: {
+                    type: 'uri',
+                    label: '📍 分享我的位置',
+                    uri: 'https://line.me/R/nv/location/',
+                  },
+                  style: 'primary',
+                  color: '#0000A5',
+                  height: 'sm',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
   }
 
   // ---- 🔍 大甲 / 鎮瀾宮（排在「大甲美食」之前，用 !includes 美食排除）----
