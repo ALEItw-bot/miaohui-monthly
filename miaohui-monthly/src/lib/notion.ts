@@ -12,22 +12,21 @@ import type {
 } from '@/types/notion';
 
 // ==========================================
-// Notion Client 初始化
+// Notion Client 初始化（從 notion-config 統一讀取）
 // ==========================================
 
+import { NOTION_CONFIG } from './notion-config';
+
 const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+  auth: NOTION_CONFIG.token,
 });
 
-const EVENTS_DB_ID = process.env.NOTION_EVENTS_DB_ID || '';
-const ANNOUNCEMENTS_DB_ID = process.env.NOTION_ANNOUNCEMENTS_DB_ID || '';
-const PARTNERS_DB_ID = process.env.NOTION_PARTNERS_DB_ID || '';
-const INBOX_DB_ID = process.env.NOTION_INBOX_DB_ID || '';
-const BRAND_STORY_PAGE_ID = process.env.NOTION_BRAND_STORY_PAGE_ID || '';
-const NEARBY_DB_ID = process.env.NOTION_NEARBY_DB_ID || '';
-if (!BRAND_STORY_PAGE_ID) {
-  console.warn('[notion] BRAND_STORY_PAGE_ID is not set — 品牌故事頁面將無法載入');
-}
+const EVENTS_DB_ID = NOTION_CONFIG.databases.events;
+const ANNOUNCEMENTS_DB_ID = NOTION_CONFIG.databases.announcements;
+const PARTNERS_DB_ID = NOTION_CONFIG.databases.partners;
+const INBOX_DB_ID = NOTION_CONFIG.databases.inbox;
+const BRAND_STORY_PAGE_ID = NOTION_CONFIG.pages.brandStory;
+const NEARBY_DB_ID = NOTION_CONFIG.databases.nearby;
 
 // ==========================================
 // 1. 取得活動列表（原有）
@@ -633,7 +632,7 @@ export async function getCoupons(options?: {
 // ==========================================
 
 export async function getActiveSponsors() {
-  const partnersDbId = process.env.NOTION_PARTNERS_DB_ID;
+  const partnersDbId = NOTION_CONFIG.databases.partners;
   if (!partnersDbId) return { sponsors: [] };
 
   try {
