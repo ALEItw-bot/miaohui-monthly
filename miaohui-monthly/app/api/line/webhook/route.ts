@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
-import { verifySignature, replyMessage } from '@/lib/line';
-import { getNearbySpots, getCoupons, getEvents, getActiveSponsors, getEventsNearby } from '@/lib/notion';
+import { verifySignature, replyMessage, downloadLineContent, getLineProfile } from '@/lib/line';
+import {
+  getNearbySpots, getCoupons, getEvents, getActiveSponsors, getEventsNearby,
+  generateSubmissionId, createPhotoInboxEntry, createTextInboxEntry,
+} from '@/lib/notion';
+import { uploadImageToDrive } from '@/lib/google-drive';
 import {
   buildNearbyCarousel,
   buildNearbyEventCarousel,
@@ -39,12 +43,9 @@ export async function POST(request: Request) {
         catch (err) { console.error('[webhook] location ERROR:', err); }
 
       } else if (msgType === 'image') {
-        // 照片投稿：目前先回覆提示，Phase 2 串接 storage
+        // 🆕 Phase 2：照片投稿（LINE → Google Drive → Notion Inbox）
         try {
-          await replyMessage(event.replyToken, {
-            type: 'text',
-            text: '📷 感謝傳照片！\n\n目前照片功能升級中，請先用文字投稿：\n輸入「活動情報」即可開始 📝',
-          });
+          await handleImageMessage(event);
         } catch (err) { console.error('[webhook] image ERROR:', err); }
       }
     }
@@ -328,17 +329,41 @@ async function handleTextMessage(event: any) {
     text.includes('活動名稱:')
   ) {
     const sub = parseSubmission(text);
-    // TODO: 寫入 Notion Inbox（需設定 NOTION_INBOX_DB_ID 環境變數）
-    return replyMessage(replyToken, {
-      type: 'text',
-      text:
-        '✅ 收到投稿！\n\n' +
-        '📌 活動：' + sub.name + '\n' +
-        '📍 地點：' + sub.location + '\n' +
-        '📅 日期：' + sub.date + '\n\n' +
-        '📷 有現場照片嗎？直接傳過來就行囉！\n' +
-        '💡 想分享廟會記錄照片？輸入「廟會分享」',
+    const userId = event.source.userId;
+    const profile = await getLineProfile(userId);
+    const displayName = profile?.displayName || '匿名廟友';
+    const submissionId = generateSubmissionId();
+
+    const result = await createTextInboxEntry({
+      submissionId,
+      displayName,
+      userId,
+      name: sub.name,
+      location: sub.location,
+      date: sub.date,
+      note: '',
+      rawText: text,
     });
+
+    if (result.success) {
+      return replyMessage(replyToken, {
+        type: 'text',
+        text:
+          '✅ 收到！已經幫你存進資料庫了！\n\n' +
+          '🏷️ 投稿編號：' + submissionId + '\n' +
+          '📌 活動：' + sub.name + '\n' +
+          '📍 地點：' + sub.location + '\n' +
+          '📅 日期：' + sub.date + '\n\n' +
+          '📷 有現場照片嗎？直接傳過來就行囉！\n' +
+          '💡 想分享廟會記錄照片？輸入「廟會分享」\n' +
+          '感謝你的情報，報馬仔 ' + displayName + ' 🫡',
+      });
+    } else {
+      return replyMessage(replyToken, {
+        type: 'text',
+        text: '❌ 哎呀存檔失敗了，請再試一次！',
+      });
+    }
   }
 
   // ---- 活動情報（投稿格式提示）----
@@ -841,6 +866,71 @@ function parseSubmission(text: string) {
     date: dateMatch ? dateMatch[1].trim() : '未填寫',
     rawText: text,
   };
+}
+
+// ==========================================
+// 🆕 照片投稿處理（LINE → Google Drive → Notion）
+// Phase 2 新增
+// ==========================================
+
+async function handleImageMessage(event: any) {
+  const replyToken = event.replyToken;
+  const messageId = event.message.id;
+  const userId = event.source.userId;
+
+  // 1. 取得使用者暱稱
+  const profile = await getLineProfile(userId);
+  const displayName = profile?.displayName || '匿名廟友';
+
+  // 2. 產生投稿編號
+  const submissionId = generateSubmissionId();
+
+  try {
+    // 3. 從 LINE 下載圖片
+    console.log('[webhook] downloading image:', messageId);
+    const { buffer, contentType } = await downloadLineContent(messageId);
+    console.log('[webhook] image downloaded, size:', buffer.length, 'type:', contentType);
+
+    // 4. 上傳到 Google Drive
+    const ext = contentType.includes('png') ? 'png' : 'jpg';
+    const fileName = `${submissionId}_${displayName}.${ext}`;
+    const { fileUrl } = await uploadImageToDrive(buffer, fileName, contentType);
+    console.log('[webhook] uploaded to Drive:', fileUrl);
+
+    // 5. 寫入 Notion Inbox
+    const result = await createPhotoInboxEntry({
+      submissionId,
+      displayName,
+      userId,
+      driveUrl: fileUrl,
+    });
+    console.log('[webhook] Notion inbox created:', result.success);
+
+    // 6. 回覆使用者
+    if (result.success) {
+      await replyMessage(replyToken, {
+        type: 'text',
+        text:
+          '📷 照片收到了！\n\n' +
+          '🏷️ 投稿編號：' + submissionId + '\n' +
+          '📁 已存入雲端資料夾\n\n' +
+          '想加說明的話，接著傳一段文字描述就好囉！\n' +
+          '💡 如果你是要回報活動資訊，請輸入「活動情報」\n' +
+          '感謝報馬仔 ' + displayName + ' 🫡',
+      });
+    } else {
+      await replyMessage(replyToken, {
+        type: 'text',
+        text: '❌ 哎呀照片儲存失敗了，請再試一次！',
+      });
+    }
+  } catch (err: any) {
+    console.error('[webhook] handleImageMessage ERROR:', err?.message || err);
+    await replyMessage(replyToken, {
+      type: 'text',
+      text: '❌ 照片處理失敗，請再試一次！\n如有問題請聯繫管理員。',
+    });
+  }
 }
 
 /** Haversine 公式 — 計算兩點間距離（km），Phase 2 附近搜尋用 */

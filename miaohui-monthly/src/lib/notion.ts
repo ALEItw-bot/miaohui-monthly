@@ -689,6 +689,161 @@ export async function getActiveSponsors() {
 }
 
 // ==========================================
+// 🔴 16. 照片投稿寫入 Notion Inbox（Phase 2 新增）
+// ==========================================
+
+/**
+ * 產生投稿編號（格式：INB-YYYYMMDD-HHmmss）
+ */
+export function generateSubmissionId(): string {
+  const now = new Date();
+  // 轉換為台灣時間 (UTC+8)
+  const tw = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  const y = tw.getUTCFullYear();
+  const m = String(tw.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(tw.getUTCDate()).padStart(2, '0');
+  const H = String(tw.getUTCHours()).padStart(2, '0');
+  const M = String(tw.getUTCMinutes()).padStart(2, '0');
+  const S = String(tw.getUTCSeconds()).padStart(2, '0');
+  return `INB-${y}${m}${d}-${H}${M}${S}`;
+}
+
+/**
+ * 照片投稿 → 寫入 Notion Inbox
+ */
+export async function createPhotoInboxEntry(options: {
+  submissionId: string;
+  displayName: string;
+  userId: string;
+  driveUrl: string;
+}): Promise<{ success: boolean; pageId?: string }> {
+  const { submissionId, displayName, userId, driveUrl } = options;
+
+  try {
+    const result = await notion.pages.create({
+      parent: { database_id: INBOX_DB_ID },
+      properties: {
+        '活動名稱': {
+          title: [{ text: { content: `[${displayName}] 的照片投稿` } }],
+        },
+        '投稿編號': {
+          rich_text: [{ text: { content: submissionId } }],
+        },
+        '照片補充': {
+          url: driveUrl,
+        },
+        'LINE ID': {
+          rich_text: [{ text: { content: userId } }],
+        },
+        'LINE 暱稱': {
+          rich_text: [{ text: { content: displayName } }],
+        },
+        '投稿來源': {
+          select: { name: 'LINE' },
+        },
+        '投稿類型': {
+          select: { name: '廟會記錄' },
+        },
+        '狀態': {
+          status: { name: '待處理' },
+        },
+      },
+    });
+
+    return { success: true, pageId: result.id };
+  } catch (err) {
+    console.error('[notion] createPhotoInboxEntry error:', err);
+    return { success: false };
+  }
+}
+
+/**
+ * 文字投稿（活動情報）→ 寫入 Notion Inbox
+ */
+export async function createTextInboxEntry(options: {
+  submissionId: string;
+  displayName: string;
+  userId: string;
+  name: string;
+  location: string;
+  date: string;
+  note: string;
+  rawText: string;
+}): Promise<{ success: boolean; pageId?: string }> {
+  const { submissionId, displayName, userId, name, location, date, note, rawText } = options;
+
+  try {
+    const properties: Record<string, any> = {
+      '活動名稱': {
+        title: [{ text: { content: name } }],
+      },
+      '投稿編號': {
+        rich_text: [{ text: { content: submissionId } }],
+      },
+      '原始文字': {
+        rich_text: [{ text: { content: rawText.slice(0, 2000) } }],
+      },
+      'LINE ID': {
+        rich_text: [{ text: { content: userId } }],
+      },
+      'LINE 暱稱': {
+        rich_text: [{ text: { content: displayName } }],
+      },
+      '投稿來源': {
+        select: { name: 'LINE' },
+      },
+      '投稿類型': {
+        select: { name: '活動情報' },
+      },
+      '狀態': {
+        status: { name: '待處理' },
+      },
+    };
+
+    // 嘗試解析日期
+    const parsedDate = tryParseDate(date);
+    if (parsedDate) {
+      properties['日期'] = { date: { start: parsedDate } };
+    }
+
+    const result = await notion.pages.create({
+      parent: { database_id: INBOX_DB_ID },
+      properties,
+    });
+
+    return { success: true, pageId: result.id };
+  } catch (err) {
+    console.error('[notion] createTextInboxEntry error:', err);
+    return { success: false };
+  }
+}
+
+/**
+ * 嘗試解析日期字串（支援 4/17、2026/4/17、2026-04-17 等格式）
+ */
+function tryParseDate(dateStr: string): string | null {
+  if (!dateStr) return null;
+
+  // 格式：2026-04-17
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+
+  // 格式：2026/4/17
+  const fullMatch = dateStr.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (fullMatch) {
+    return `${fullMatch[1]}-${fullMatch[2].padStart(2, '0')}-${fullMatch[3].padStart(2, '0')}`;
+  }
+
+  // 格式：4/17（預設今年）
+  const shortMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+  if (shortMatch) {
+    const year = new Date().getFullYear();
+    return `${year}-${shortMatch[1].padStart(2, '0')}-${shortMatch[2].padStart(2, '0')}`;
+  }
+
+  return null;
+}
+
+// ==========================================
 // 內部工具函式（原有）
 // ==========================================================
 

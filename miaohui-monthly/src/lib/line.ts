@@ -58,3 +58,54 @@ export async function pushMessage(
     body: JSON.stringify({ to, messages: msgs.slice(0, 5) }),
   });
 }
+
+// ==========================================
+// 下載 LINE 訊息中的圖片內容（Phase 2 新增）
+// ==========================================
+
+export async function downloadLineContent(
+  messageId: string,
+): Promise<{ buffer: Buffer; contentType: string }> {
+  const res = await fetch(
+    `https://api-data.line.me/v2/bot/message/${messageId}/content`,
+    {
+      headers: {
+        Authorization: `Bearer ${CHANNEL_ACCESS_TOKEN}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`LINE content download failed: ${res.status}`);
+  }
+
+  const contentType = res.headers.get('content-type') || 'image/jpeg';
+  const arrayBuffer = await res.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  return { buffer, contentType };
+}
+
+// ==========================================
+// 取得 LINE 使用者 Profile（暱稱、頭像）（Phase 2 新增）
+// ==========================================
+
+export async function getLineProfile(
+  userId: string,
+): Promise<{ displayName: string; pictureUrl?: string } | null> {
+  try {
+    const res = await fetch(
+      `https://api.line.me/v2/bot/profile/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${CHANNEL_ACCESS_TOKEN}`,
+        },
+      },
+    );
+
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
