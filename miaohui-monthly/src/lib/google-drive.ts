@@ -61,7 +61,8 @@ export async function uploadImageToDrive(
   });
 
   const fileId = createResponse.data.id!;
-  const fileUrl = createResponse.data.webViewLink!;
+  // 使用可直接顯示圖片的連結格式，而非檢視頁面連結
+  const fileUrl = `https://drive.google.com/uc?id=${fileId}&export=view`;
 
   // 2. 設定為「任何人有連結可檢視」
   await drive.permissions.create({
