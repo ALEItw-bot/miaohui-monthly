@@ -14,8 +14,6 @@ const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
  */
 function getAuth() {
   const base64 = process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 || '';
-  console.log('[google-drive] base64 length:', base64.length);
-
   const json = JSON.parse(Buffer.from(base64, 'base64').toString('utf-8'));
 
   return new google.auth.JWT({
@@ -53,6 +51,7 @@ export async function uploadImageToDrive(
       body: stream,
     },
     fields: 'id, webViewLink',
+    supportsAllDrives: true,
   });
 
   const fileId = createResponse.data.id!;
@@ -64,6 +63,7 @@ export async function uploadImageToDrive(
       role: 'reader',
       type: 'anyone',
     },
+    supportsAllDrives: true,
   });
 
   return { fileUrl, fileId };
