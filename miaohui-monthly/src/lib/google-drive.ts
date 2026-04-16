@@ -7,18 +7,20 @@
 import { google } from 'googleapis';
 
 const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
-const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '';
-const SERVICE_ACCOUNT_PRIVATE_KEY = (
-  process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || ''
-).replace(/\\n/g, '\n');
 
 /**
- * 取得 Google Drive 認證 client
+ * 從 Base64 環境變數解析 Service Account 憑證
+ * 避免 private_key 的 \n 轉義問題
  */
 function getAuth() {
+  const base64 = process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 || '';
+  console.log('[google-drive] base64 length:', base64.length);
+
+  const json = JSON.parse(Buffer.from(base64, 'base64').toString('utf-8'));
+
   return new google.auth.JWT({
-    email: SERVICE_ACCOUNT_EMAIL,
-    key: SERVICE_ACCOUNT_PRIVATE_KEY,
+    email: json.client_email,
+    key: json.private_key,
     scopes: ['https://www.googleapis.com/auth/drive.file'],
   });
 }
@@ -38,7 +40,6 @@ export async function uploadImageToDrive(
   const auth = getAuth();
   const drive = google.drive({ version: 'v3', auth });
 
-  // 1. 上傳檔案
   const { Readable } = await import('stream');
   const stream = Readable.from(imageBuffer);
 
@@ -57,7 +58,6 @@ export async function uploadImageToDrive(
   const fileId = createResponse.data.id!;
   const fileUrl = createResponse.data.webViewLink!;
 
-  // 2. 設定為「任何人有連結可檢視」
   await drive.permissions.create({
     fileId,
     requestBody: {
