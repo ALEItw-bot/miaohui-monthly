@@ -758,6 +758,49 @@ export async function createPhotoInboxEntry(options: {
 }
 
 /**
+ * 更新照片投稿的活動名稱與拍攝日期
+ */
+export async function updatePhotoInboxEntry(options: {
+  pageId: string;
+  eventName?: string;
+  shootingDate?: string;
+}): Promise<{ success: boolean }> {
+  const { pageId, eventName, shootingDate } = options;
+
+  try {
+    const properties: Record<string, any> = {};
+
+    if (eventName) {
+      properties['活動名稱'] = {
+        title: [{ text: { content: eventName } }],
+      };
+      properties['照片主題'] = {
+        rich_text: [{ text: { content: eventName } }],
+      };
+    }
+
+    if (shootingDate) {
+      const parsedDate = tryParseDate(shootingDate);
+      if (parsedDate) {
+        properties['拍攝日期'] = { date: { start: parsedDate } };
+      }
+    }
+
+    if (Object.keys(properties).length > 0) {
+      await notion.pages.update({
+        page_id: pageId,
+        properties,
+      });
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('[notion] updatePhotoInboxEntry error:', err);
+    return { success: false };
+  }
+}
+
+/**
  * 文字投稿（活動情報）→ 寫入 Notion Inbox
  */
 export async function createTextInboxEntry(options: {

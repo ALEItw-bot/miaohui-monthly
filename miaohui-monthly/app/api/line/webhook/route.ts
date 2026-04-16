@@ -5,12 +5,22 @@ import {
   generateSubmissionId, createPhotoInboxEntry, createTextInboxEntry,
 } from '@/lib/notion';
 import { uploadImageToDrive } from '@/lib/google-drive';
+import { updatePhotoInboxEntry } from '@/lib/notion';
+import { Redis } from '@upstash/redis';
 import {
   buildNearbyCarousel,
   buildNearbyEventCarousel,
   buildCategoryQuickReply,
   buildCouponCarousel,
 } from '@/lib/line-flex-nearby';
+
+// ==========================================
+// Redis（用於照片投稿等待描述狀態）
+// ==========================================
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
 
 // ==========================================
 // POST /api/line/webhook
@@ -65,6 +75,47 @@ export async function POST(request: Request) {
 async function handleTextMessage(event: any) {
   const text = event.message.text.trim();
   const replyToken = event.replyToken;
+
+  // ---- 🆕 檢查是否有待補充描述的照片投稿 ----
+  const userId = event.source.userId;
+  const pendingKey = `photo_pending:${userId}`;
+  const pendingRaw = await redis.get<string>(pendingKey);
+
+  if (pendingRaw && text === '跳過') {
+    await redis.del(pendingKey);
+    return replyMessage(replyToken, {
+      type: 'text',
+      text: '👌 已跳過描述，照片已存入資料庫！',
+    });
+  }
+
+  if (pendingRaw) {
+    try {
+      const pending = typeof pendingRaw === 'string' ? JSON.parse(pendingRaw) : pendingRaw;
+      const parsed = parsePhotoDescription(text);
+
+      await updatePhotoInboxEntry({
+        pageId: pending.pageId,
+        eventName: parsed.eventName,
+        shootingDate: parsed.shootingDate || undefined,
+      });
+
+      await redis.del(pendingKey);
+
+      return replyMessage(replyToken, {
+        type: 'text',
+        text:
+          '✅ 照片資訊已更新！\n\n' +
+          '🏷️ 投稿編號：' + pending.submissionId + '\n' +
+          '📌 活動：' + parsed.eventName + '\n' +
+          '📅 日期：' + (parsed.shootingDate || '未填寫') + '\n\n' +
+          '感謝報馬仔的分享 🫡',
+      });
+    } catch (err) {
+      console.error('[webhook] pending photo update error:', err);
+      await redis.del(pendingKey);
+    }
+  }
 
   // ---- 🔥 熱鬧資訊（雙卡片：官網連結 + 附近搜尋）----
   if (text === '熱鬧資訊') {
@@ -855,6 +906,34 @@ function buildSubmissionMenu() {
   };
 }
 
+/** 解析照片描述文字（支援多種格式） */
+function parsePhotoDescription(text: string): { eventName: string; shootingDate: string | null } {
+  // 格式 1：活動名稱：XXX / 拍攝日期：XXX
+  const nameMatch = text.match(/活動名稱[：:]\s*(.+)/);
+  const dateMatch = text.match(/拍攝日期[：:]\s*(.+)/);
+  if (nameMatch) {
+    return {
+      eventName: nameMatch[1].trim(),
+      shootingDate: dateMatch ? dateMatch[1].trim() : null,
+    };
+  }
+
+  // 格式 2：「大甲媽祖遶境 4/15」
+  const simpleMatch = text.match(/^(.+?)\s+(\d{1,2}\/\d{1,2}|\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2})$/);
+  if (simpleMatch) {
+    return {
+      eventName: simpleMatch[1].trim(),
+      shootingDate: simpleMatch[2].trim(),
+    };
+  }
+
+  // 格式 3：純文字，當作活動名稱
+  return {
+    eventName: text.trim(),
+    shootingDate: null,
+  };
+}
+
 /** 解析投稿文字格式 */
 function parseSubmission(text: string) {
   const nameMatch = text.match(/活動名稱[：:]\s*(.+)/);
@@ -906,17 +985,26 @@ async function handleImageMessage(event: any) {
     });
     console.log('[webhook] Notion inbox created:', result.success);
 
-    // 6. 回覆使用者
+    // 6. 儲存待補充描述狀態 + 回覆使用者
     if (result.success) {
+      // 儲存到 Redis（60秒 TTL）
+      const pendingKey = `photo_pending:${userId}`;
+      await redis.set(pendingKey, JSON.stringify({
+        submissionId,
+        pageId: result.pageId,
+      }), { ex: 60 });
+
       await replyMessage(replyToken, {
         type: 'text',
         text:
-          '📷 照片收到了！\n\n' +
-          '🏷️ 投稿編號：' + submissionId + '\n' +
-          '📁 已存入雲端資料夾\n\n' +
-          '想加說明的話，接著傳一段文字描述就好囉！\n' +
-          '💡 如果你是要回報活動資訊，請輸入「活動情報」\n' +
-          '感謝報馬仔 ' + displayName + ' 🫡',
+          '📸 照片收到了！\n\n' +
+          '🏷️ 投稿編號：' + submissionId + '\n\n' +
+          '請回覆這張照片的資訊：\n' +
+          '📌 活動名稱：（例如：大甲媽祖遶境）\n' +
+          '📅 拍攝日期：（例如：4/15）\n\n' +
+          '💡 可以直接打「大甲媽祖遶境 4/15」\n' +
+          '✈️ 60秒內回覆，或輸入「跳過」\n' +
+          '感謝報馬仔 ' + displayName + ' 📷',
       });
     } else {
       await replyMessage(replyToken, {

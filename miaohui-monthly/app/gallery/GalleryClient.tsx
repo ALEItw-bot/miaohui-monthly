@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import type { GalleryPhoto } from '@/types/notion';
 import { SOCIAL_LINKS } from '@/lib/constants';
 import './gallery.css';
@@ -93,12 +94,6 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [activePhoto, closeLightbox]);
 
-  // 組合地點字串
-  const formatLocation = (photo: GalleryPhoto) => {
-    if (photo.city && photo.district) return `${photo.city} ${photo.district}`;
-    if (photo.city) return photo.city;
-    return '';
-  };
 
   return (
     <>
@@ -135,11 +130,20 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
               } as React.CSSProperties}
               onClick={() => openLightbox(photo)}
             >
-              <img
+              <Image
                 src={photo.coverUrl}
                 alt={photo.title}
-                loading="lazy"
+                width={s.width}
+                height={Math.round(s.width * 0.75)}
+                quality={75}
+                sizes="(max-width: 768px) 50vw, 400px"
                 draggable={false}
+                style=
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'cover',
+                  aspectRatio: '4/3',
+                
               />
             </div>
           );
@@ -191,11 +195,22 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
           </button>
 
           {/* 照片 */}
-          <img
+          <Image
             src={activePhoto.coverUrl}
             alt={activePhoto.title}
+            width={1200}
+            height={900}
+            quality={90}
+            priority
             className="lightbox-img"
             onClick={(e) => e.stopPropagation()}
+            style=
+              width: 'auto',
+              height: 'auto',
+              maxWidth: '85vw',
+              maxHeight: '75vh',
+              objectFit: 'contain',
+            
           />
 
           {/* 投稿者資訊（延遲淡入） */}
@@ -212,11 +227,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
                 <span>　·　📅 {activePhoto.date}</span>
               )}
             </p>
-            {formatLocation(activePhoto) && (
-              <p className="lightbox-location">
-                📍 {formatLocation(activePhoto)}
-              </p>
-            )}
+
           </div>
         </div>
       )}
