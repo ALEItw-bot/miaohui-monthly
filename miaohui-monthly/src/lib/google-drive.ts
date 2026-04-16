@@ -1,26 +1,32 @@
 // src/lib/google-drive.ts
 // ==========================================
-// Google Drive 上傳工具（Service Account 認證）
+// Google Drive 上傳工具（OAuth2 Refresh Token 認證）
 // 用途：LINE 照片投稿 → 暫存到 Google Drive
+// 說明：使用你自己的 Google 帳號授權，檔案算在你的雲端空間
 // ==========================================
 
 import { google } from 'googleapis';
 
 const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN || '';
 
 /**
- * 從 Base64 環境變數解析 Service Account 憑證
- * 避免 private_key 的 \n 轉義問題
+ * 取得 OAuth2 認證 client
+ * 使用 Refresh Token 自動換取 Access Token
  */
 function getAuth() {
-  const base64 = process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 || '';
-  const json = JSON.parse(Buffer.from(base64, 'base64').toString('utf-8'));
+  const oauth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLIENT_SECRET,
+  );
 
-  return new google.auth.JWT({
-    email: json.client_email,
-    key: json.private_key,
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
+  oauth2Client.setCredentials({
+    refresh_token: REFRESH_TOKEN,
   });
+
+  return oauth2Client;
 }
 
 /**
@@ -41,6 +47,7 @@ export async function uploadImageToDrive(
   const { Readable } = await import('stream');
   const stream = Readable.from(imageBuffer);
 
+  // 1. 上傳檔案
   const createResponse = await drive.files.create({
     requestBody: {
       name: fileName,
@@ -51,19 +58,18 @@ export async function uploadImageToDrive(
       body: stream,
     },
     fields: 'id, webViewLink',
-    supportsAllDrives: true,
   });
 
   const fileId = createResponse.data.id!;
   const fileUrl = createResponse.data.webViewLink!;
 
+  // 2. 設定為「任何人有連結可檢視」
   await drive.permissions.create({
     fileId,
     requestBody: {
       role: 'reader',
       type: 'anyone',
     },
-    supportsAllDrives: true,
   });
 
   return { fileUrl, fileId };
