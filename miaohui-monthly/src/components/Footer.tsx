@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { NAV_LINKS, SOCIAL_LINKS, SITE_CONFIG } from '@/lib/constants';
+import SiteStats from './SiteStats';
 
 export default function Footer() {
   return (
@@ -34,6 +35,8 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
+        {/* ✅ 瀏覽統計：白色小字，顯示在 copyright 上方 */}
+        <SiteStats />
         <p>{SITE_CONFIG.copyright}</p>
       </div>
     </footer>

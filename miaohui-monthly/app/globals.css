@@ -109,7 +109,12 @@ img {
 
 /* ===== Page Hero（通用頁面頂部橫幅） ===== */
 .page-hero {
-  padding: 100px 0 60px;
+  padding: 140px 0 100px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: var(--white);
   background-size: cover;
@@ -133,15 +138,17 @@ img {
 
 .page-hero-title {
   font-family: var(--font-title);
-  font-size: var(--text-4xl);
+  font-size: 3rem;
   font-weight: 900;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
 }
 
 .page-hero-subtitle {
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   opacity: 0.9;
+  letter-spacing: 1px;
 }
 
 /* 各頁面 Hero 背景圖片（統一放 /hero/ 資料夾） */
@@ -763,6 +770,14 @@ img {
   opacity: 0.7;
 }
 
+/* ===== Site Stats（Footer 瀏覽統計小字） ===== */
+.site-stats-text {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.02em;
+}
+
 /* ============================================================
    品牌故事頁（Notion 內容渲染）
    ============================================================ */
@@ -1209,7 +1224,7 @@ img {
   .gallery-carousel-wrapper { height: 280px; }
   .sponsor-carousel-wrapper { height: 260px; }
   .sg-container { grid-template-columns: 1fr; }
-  .page-hero { padding: 60px 0 40px; }
+  .page-hero { padding: 80px 0 60px; min-height: 260px; }
   .page-hero-title { font-size: var(--text-3xl); }
   .list-header-title { font-size: var(--text-2xl); }
   .filter-pill { padding: 5px 12px; font-size: var(--text-xs); }
