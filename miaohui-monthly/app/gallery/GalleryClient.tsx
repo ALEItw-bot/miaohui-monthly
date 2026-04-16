@@ -89,7 +89,9 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
         <div className="container">
           <h1 className="page-hero-title">精彩花絮</h1>
           <p className="page-hero-subtitle">
-            來自全台報馬仔的第一手紀錄　·　點擊照片放大觀賞
+            來自全台報馬仔的第一手紀錄
+          <p className="page-hero-subtitle"></p>
+            點擊照片放大觀賞
           </p>
         </div>
       </section>
