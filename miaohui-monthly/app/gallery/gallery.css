@@ -2,40 +2,15 @@
    精彩花絮｜4D 互動照片牆
    ============================================== */
 
-/* ===== 照片牆容器（3D 空間） ===== */
+/* ===== 照片牆容器（3D 空間，品牌紅色底） ===== */
 .photo-wall {
   position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 600px;
+  height: 80vh;
+  min-height: 500px;
   overflow: hidden;
   perspective: 1200px;
-  background: #0a0a0a;
-}
-
-/* ===== 標題疊層 ===== */
-.photo-wall-header {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 200;
-  text-align: center;
-  pointer-events: none;
-}
-.photo-wall-title {
-  font-family: var(--font-title);
-  font-size: 3.5rem;
-  font-weight: 900;
-  color: var(--white);
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-  margin: 0 0 0.5rem;
-}
-.photo-wall-subtitle {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
-  margin: 0;
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
 }
 
 /* ===== 漂浮照片卡片 ===== */
@@ -236,31 +211,90 @@
 }
 
 /* ===== RWD ===== */
+
+/* --- 平板 --- */
 @media (max-width: 1024px) {
   .photo-wall { perspective: 800px; }
-  .photo-wall-title { font-size: 2.5rem; }
 }
+
+/* --- 手機版：改為雙欄流式排列，保留微旋轉趣味感 --- */
 @media (max-width: 768px) {
   .photo-wall {
-    perspective: none; /* 手機版改 2D，省效能 */
+    height: auto;
+    min-height: 50vh;
+    padding: 20px 12px;
+    perspective: none;
+    /* 覆寫絕對定位，改為 Flexbox 流式排版 */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 10px;
   }
+
   .photo-card {
-    transform: rotate(var(--rotate, 0deg)); /* 移除 translateZ */
+    /* 覆寫 JS 給的絕對定位 */
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    /* 雙欄排列，每張佔 ~47% 寬 */
+    width: calc(50% - 8px) !important;
+    max-width: none;
+    /* 簡化變形：只保留微旋轉 */
+    transform: rotate(var(--rotate, 0deg)) !important;
     animation-name: float2d;
+    animation-duration: 8s;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
   }
+
+  .photo-card img {
+    aspect-ratio: 3/4;
+  }
+
+  .photo-card:hover {
+    transform: rotate(var(--rotate, 0deg)) scale(1.03) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
   @keyframes float2d {
     0%, 100% { transform: translateY(0px) rotate(var(--rotate, 0deg)); }
-    50% { transform: translateY(-8px) rotate(var(--rotate, 0deg)); }
+    50% { transform: translateY(-5px) rotate(var(--rotate, 0deg)); }
   }
-  .photo-wall-title { font-size: 2rem; }
-  .photo-wall-subtitle { font-size: 0.95rem; }
-  .lightbox-img { max-width: 95vw; max-height: 70vh; }
-  .lightbox-close { top: 12px; right: 12px; width: 40px; height: 40px; }
-  .gallery-cta { padding: 40px 0; }
-  .gallery-cta-title { font-size: 1.2rem; }
-}
-@media (max-width: 480px) {
-  .photo-wall-title { font-size: 1.6rem; }
+
+  .photo-wall-empty {
+    position: static;
+    transform: none;
+    padding: 40px 0;
+  }
+
+  .lightbox-img { max-width: 95vw; max-height: 65vh; }
+  .lightbox-close { top: 12px; right: 12px; width: 40px; height: 40px; font-size: 1rem; }
+  .lightbox-info { margin-top: 12px; }
   .lightbox-theme { font-size: 1rem; }
   .lightbox-meta { font-size: 0.85rem; }
+  .lightbox-location { font-size: 0.8rem; }
+
+  .gallery-cta { padding: 40px 0; }
+  .gallery-cta-title { font-size: 1.2rem; }
+  .gallery-cta-sub { font-size: 0.95rem; }
+}
+
+/* --- 小螢幕手機 --- */
+@media (max-width: 480px) {
+  .photo-wall {
+    padding: 16px 8px;
+    gap: 8px;
+  }
+
+  .photo-card {
+    width: calc(50% - 6px) !important;
+    border-radius: 4px;
+  }
+
+  .photo-card img {
+    aspect-ratio: 1/1;
+  }
+
+  .gallery-cta-btn { font-size: 1rem; padding: 0.75rem 2rem; }
 }

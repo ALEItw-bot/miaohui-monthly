@@ -84,16 +84,18 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
 
   return (
     <>
-      {/* ========== 照片牆全螢幕區域 ========== */}
-      <div className="photo-wall" ref={wallRef}>
-        {/* 標題疊層 */}
-        <div className="photo-wall-header">
-          <h1 className="photo-wall-title">精彩花絮</h1>
-          <p className="photo-wall-subtitle">
+      {/* ========== 標準 Hero（與其他分頁一致） ========== */}
+      <section className="page-hero gallery-hero">
+        <div className="container">
+          <h1 className="page-hero-title">精彩花絮</h1>
+          <p className="page-hero-subtitle">
             來自全台報馬仔的第一手紀錄　·　點擊照片放大觀賞
           </p>
         </div>
+      </section>
 
+      {/* ========== 互動照片牆（品牌紅色底） ========== */}
+      <div className="photo-wall" ref={wallRef}>
         {/* 漂浮照片 */}
         {photos.map((photo, i) => {
           const s = styles[i];
