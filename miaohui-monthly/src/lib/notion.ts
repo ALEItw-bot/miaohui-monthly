@@ -373,7 +373,10 @@ export async function getGalleryPhotos(): Promise<{
       const contributor = getRichTextPlain(props['LINE 暱稱']) || '匿名廟友';
       const coverUrl = props['照片補充']?.url || '';
       const eventType = props['投稿類型']?.select?.name || '';
-      const dateStart = props['拍攝日期']?.date?.start || '';
+      const dateStart = props['拍攝日期']?.date?.start
+        || props['日期']?.date?.start || '';
+      const city = props['縣市']?.select?.name || '';
+      const district = props['行政區']?.select?.name || '';
 
       if (coverUrl) {
         photos.push({
@@ -383,6 +386,8 @@ export async function getGalleryPhotos(): Promise<{
           contributor,
           eventType,
           date: dateStart,
+          city,
+          district,
         });
       }
     }

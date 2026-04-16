@@ -81,11 +81,13 @@ export interface PartnerDetail extends Partner {
 
 export interface GalleryPhoto {
   id: string;
-  title: string;        // 照片主題名稱
-  coverUrl: string;     // 照片 URL
-  contributor: string;  // 投稿者名字
-  eventType: string;    // 分類（如：遶境、陣頭、廟宇）
-  date: string;         // 拍攝日期
+  title: string;        // 照片主題（fallback 活動名稱）
+  coverUrl: string;     // 照片 URL（從 Inbox DB 讀取）
+  contributor: string;  // 投稿者名字（LINE 暱稱）
+  eventType: string;    // 投稿類型（活動情報 / 廟會記錄）
+  date: string;         // 拍攝日期（fallback 日期）
+  city: string;         // 縣市
+  district: string;     // 行政區
 }
 
 // ==========================================

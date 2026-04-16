@@ -1,111 +1,147 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { GalleryPhoto } from '@/types/notion';
 import { SOCIAL_LINKS } from '@/lib/constants';
 import './gallery.css';
 
-const ALL = '全部';
+// ==========================================
+// 工具：隨機產生照片的漂浮屬性
+// ==========================================
+
+interface FloatingStyle {
+  top: string;
+  left: string;
+  width: number;
+  rotate: number;
+  z: number;
+  delay: number;
+  duration: number;
+}
+
+const SIZES = [180, 220, 260, 300, 360];
+
+function generateFloatingStyle(index: number, total: number): FloatingStyle {
+  const seed = index * 137.508; // 黃金角分布，避免群聚
+  const top = ((seed * 0.618) % 85) + 2;
+  const left = ((seed * 1.618) % 88) + 2;
+  const width = SIZES[index % SIZES.length];
+  const rotate = (Math.sin(seed) * 16) - 8; // -8° ~ +8°
+  const z = Math.floor(Math.sin(seed * 0.5) * 100); // -100 ~ 100
+  const delay = (index * 0.8) % 12;
+  const duration = 16 + (index % 5) * 4; // 16s ~ 32s
+  return { top: `${top}%`, left: `${left}%`, width, rotate, z, delay, duration };
+}
+
+// ==========================================
+// 主元件
+// ==========================================
 
 export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
-  const categories = [
-    ALL,
-    ...Array.from(new Set(photos.map((p) => p.eventType).filter(Boolean))),
-  ];
-  const [active, setActive] = useState(ALL);
-  const [lightbox, setLightbox] = useState<GalleryPhoto | null>(null);
+  const [activePhoto, setActivePhoto] = useState<GalleryPhoto | null>(null);
+  const [infoVisible, setInfoVisible] = useState(false);
+  const [styles, setStyles] = useState<FloatingStyle[]>([]);
+  const wallRef = useRef<HTMLDivElement>(null);
 
-  const filtered =
-    active === ALL ? photos : photos.filter((p) => p.eventType === active);
+  // 初始化漂浮位置（client-side only，避免 SSR hydration mismatch）
+  useEffect(() => {
+    setStyles(photos.map((_, i) => generateFloatingStyle(i, photos.length)));
+  }, [photos]);
+
+  // 開啟 Lightbox
+  const openLightbox = useCallback((photo: GalleryPhoto) => {
+    setActivePhoto(photo);
+    setInfoVisible(false);
+    document.body.style.overflow = 'hidden';
+    // 延遲顯示資訊（等放大動畫完成）
+    setTimeout(() => setInfoVisible(true), 350);
+  }, []);
+
+  // 關閉 Lightbox
+  const closeLightbox = useCallback(() => {
+    setInfoVisible(false);
+    setTimeout(() => {
+      setActivePhoto(null);
+      document.body.style.overflow = '';
+    }, 200);
+  }, []);
+
+  // ESC 鍵關閉
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && activePhoto) closeLightbox();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [activePhoto, closeLightbox]);
+
+  // 組合地點字串
+  const formatLocation = (photo: GalleryPhoto) => {
+    if (photo.city && photo.district) return `${photo.city} ${photo.district}`;
+    if (photo.city) return photo.city;
+    return '';
+  };
 
   return (
     <>
-      {/* Hero */}
-      <section className="page-hero gallery-hero">
-        <div className="container">
-          <h1 className="page-hero-title">精彩花絮</h1>
-          <p className="page-hero-subtitle">
-            廟友投稿的第一手現場照片，用鏡頭記錄信仰的溫度
+      {/* ========== 照片牆全螢幕區域 ========== */}
+      <div className="photo-wall" ref={wallRef}>
+        {/* 標題疊層 */}
+        <div className="photo-wall-header">
+          <h1 className="photo-wall-title">精彩花絮</h1>
+          <p className="photo-wall-subtitle">
+            來自全台報馬仔的第一手紀錄　·　點擊照片放大觀賞
           </p>
         </div>
-      </section>
 
-      {/* Body */}
-      <section className="gallery-body">
-        <div className="container">
-          {/* 篩選 */}
-          <div className="filter-pills">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                className={`filter-pill ${active === cat ? 'active' : ''}`}
-                onClick={() => setActive(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* 列表標題 */}
-          <div className="list-header">
-            <h2 className="list-header-title">投稿花絮</h2>
-            <span className="list-header-count">共 {filtered.length} 筆</span>
-          </div>
-
-          {/* 照片 Grid */}
-          {filtered.length === 0 ? (
-            <div className="empty-state">
-              <span className="empty-state-icon">📷</span>
-              <p>目前沒有相關花絮，敬請期待！</p>
+        {/* 漂浮照片 */}
+        {photos.map((photo, i) => {
+          const s = styles[i];
+          if (!s) return null;
+          return (
+            <div
+              key={photo.id}
+              className="photo-card"
+              style={{
+                top: s.top,
+                left: s.left,
+                width: s.width,
+                '--rotate': `${s.rotate}deg`,
+                '--z': `${s.z}px`,
+                '--delay': `${s.delay}s`,
+                '--duration': `${s.duration}s`,
+                zIndex: 10 + Math.floor(s.z),
+              } as React.CSSProperties}
+              onClick={() => openLightbox(photo)}
+            >
+              <img
+                src={photo.coverUrl}
+                alt={photo.title}
+                loading="lazy"
+                draggable={false}
+              />
             </div>
-          ) : (
-            <div className="gallery-grid">
-              {filtered.map((photo) => (
-                <div
-                  key={photo.id}
-                  className="gallery-card card"
-                  onClick={() => setLightbox(photo)}
-                >
-                  <div className="gallery-card-img">
-                    <img
-                      src={photo.coverUrl}
-                      alt={photo.title}
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="gallery-card-info">
-                    <div className="gallery-card-tags">
-                      {photo.eventType && (
-                        <span className="tag tag--red">
-                          {photo.eventType}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="gallery-card-title">{photo.title}</h3>
-                    <div className="gallery-card-meta">
-                      <span className="gallery-card-contributor">
-                        📸 {photo.contributor}
-                      </span>
-                      <span className="gallery-card-date">{photo.date}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+          );
+        })}
 
-      {/* 投稿 CTA */}
+        {/* 空狀態 */}
+        {photos.length === 0 && (
+          <div className="photo-wall-empty">
+            <span>📷</span>
+            <p>目前還沒有花絮照片，敲碗等待中…</p>
+          </div>
+        )}
+      </div>
+
+      {/* ========== 底部 CTA ========== */}
       <section className="gallery-cta">
         <div className="container text-center">
           <h2 className="gallery-cta-title">
             📸 你也有精彩的廟會照片嗎？
           </h2>
           <p className="gallery-cta-sub">
-            歡迎投稿你的廟會現場照片，經審核後將展示在精彩花絮！<br />
-            透過 LINE 官方帳號傳送照片 + 主題名稱 + 您的名字即可。
+            透過 LINE 官方帳號傳送照片 + 主題名稱 + 您的名字，<br />
+            經審核後將展示在精彩花絮！
           </p>
           <a
             href={SOCIAL_LINKS.line}
@@ -118,25 +154,48 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
         </div>
       </section>
 
-      {/* Lightbox */}
-      {lightbox && (
-        <div className="lightbox-overlay" onClick={() => setLightbox(null)}>
+      {/* ========== Lightbox 彈窗 ========== */}
+      {activePhoto && (
+        <div
+          className="lightbox-overlay"
+          onClick={closeLightbox}
+        >
+          {/* 關閉按鈕 */}
           <button
             className="lightbox-close"
-            onClick={() => setLightbox(null)}
+            onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
+            aria-label="關閉"
           >
             ✕
           </button>
+
+          {/* 照片 */}
           <img
-            src={lightbox.coverUrl}
-            alt={lightbox.title}
+            src={activePhoto.coverUrl}
+            alt={activePhoto.title}
             className="lightbox-img"
+            onClick={(e) => e.stopPropagation()}
           />
-          <div className="lightbox-info">
-            <p className="lightbox-caption">{lightbox.title}</p>
-            <p className="lightbox-contributor">
-              投稿者：{lightbox.contributor}　‣　{lightbox.date}
+
+          {/* 投稿者資訊（延遲淡入） */}
+          <div
+            className={`lightbox-info ${infoVisible ? 'visible' : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="lightbox-theme">
+              🏮 {activePhoto.title}
             </p>
+            <p className="lightbox-meta">
+              👤 {activePhoto.contributor}
+              {activePhoto.date && (
+                <span>　·　📅 {activePhoto.date}</span>
+              )}
+            </p>
+            {formatLocation(activePhoto) && (
+              <p className="lightbox-location">
+                📍 {formatLocation(activePhoto)}
+              </p>
+            )}
           </div>
         </div>
       )}
