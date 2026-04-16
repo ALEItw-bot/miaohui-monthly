@@ -48,6 +48,22 @@ function generateFloatingStyles(count: number, round: number): FloatingStyle[] {
 // 主元件
 // ==========================================
 
+// Inline style 用變數避免 JSX 雙大括號問題
+const cardImgStyle: React.CSSProperties = {
+  width: '100%',
+  height: 'auto',
+  objectFit: 'cover',
+  aspectRatio: '4/3',
+};
+
+const lightboxImgStyle: React.CSSProperties = {
+  width: 'auto',
+  height: 'auto',
+  maxWidth: '85vw',
+  maxHeight: '75vh',
+  objectFit: 'contain',
+};
+
 export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
   const [activePhoto, setActivePhoto] = useState<GalleryPhoto | null>(null);
   const [infoVisible, setInfoVisible] = useState(false);
@@ -138,12 +154,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
                 quality={75}
                 sizes="(max-width: 768px) 50vw, 400px"
                 draggable={false}
-                style=
-                  width: '100%',
-                  height: 'auto',
-                  objectFit: 'cover',
-                  aspectRatio: '4/3',
-                
+                style={cardImgStyle}
               />
             </div>
           );
@@ -204,13 +215,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
             priority
             className="lightbox-img"
             onClick={(e) => e.stopPropagation()}
-            style=
-              width: 'auto',
-              height: 'auto',
-              maxWidth: '85vw',
-              maxHeight: '75vh',
-              objectFit: 'contain',
-            
+            style={lightboxImgStyle}
           />
 
           {/* 投稿者資訊（延遲淡入） */}
