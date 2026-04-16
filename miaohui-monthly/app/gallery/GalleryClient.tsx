@@ -19,18 +19,28 @@ interface FloatingStyle {
   duration: number;
 }
 
-const SIZES = [180, 220, 260, 300, 360];
+// 照片尺寸加大，讓畫面更豐富
+const SIZES = [280, 340, 400, 460, 520];
 
-function generateFloatingStyle(index: number, total: number): FloatingStyle {
-  const seed = index * 137.508; // 黃金角分布，避免群聚
-  const top = ((seed * 0.618) % 85) + 2;
-  const left = ((seed * 1.618) % 88) + 2;
-  const width = SIZES[index % SIZES.length];
-  const rotate = (Math.sin(seed) * 16) - 8; // -8° ~ +8°
-  const z = Math.floor(Math.sin(seed * 0.5) * 100); // -100 ~ 100
-  const delay = (index * 0.8) % 12;
-  const duration = 16 + (index % 5) * 4; // 16s ~ 32s
-  return { top: `${top}%`, left: `${left}%`, width, rotate, z, delay, duration };
+// 隨機數工具
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+// 產生一組隨機漂浮位置（每次呼叫都會不同）
+function generateFloatingStyles(count: number, round: number): FloatingStyle[] {
+  return Array.from({ length: count }, (_, index) => {
+    const seed = (index + 1) * 137.508 + round * 97.31;
+    const top = (seededRandom(seed * 1.1) * 80) + 2;
+    const left = (seededRandom(seed * 2.3) * 82) + 2;
+    const width = SIZES[Math.floor(seededRandom(seed * 3.7) * SIZES.length)];
+    const rotate = (seededRandom(seed * 4.9) * 16) - 8; // -8° ~ +8°
+    const z = Math.floor((seededRandom(seed * 5.1) * 200) - 100); // -100 ~ 100
+    const delay = seededRandom(seed * 6.3) * 8;
+    const duration = 14 + seededRandom(seed * 7.7) * 12; // 14s ~ 26s
+    return { top: `${top}%`, left: `${left}%`, width, rotate, z, delay, duration };
+  });
 }
 
 // ==========================================
@@ -43,9 +53,17 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
   const [styles, setStyles] = useState<FloatingStyle[]>([]);
   const wallRef = useRef<HTMLDivElement>(null);
 
-  // 初始化漂浮位置（client-side only，避免 SSR hydration mismatch）
+  // 初始化 + 每 5 秒隨機重新排列位置（平滑過場）
   useEffect(() => {
-    setStyles(photos.map((_, i) => generateFloatingStyle(i, photos.length)));
+    let round = 0;
+    setStyles(generateFloatingStyles(photos.length, round));
+
+    const timer = setInterval(() => {
+      round++;
+      setStyles(generateFloatingStyles(photos.length, round));
+    }, 5000);
+
+    return () => clearInterval(timer);
   }, [photos]);
 
   // 開啟 Lightbox
@@ -89,8 +107,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
         <div className="container">
           <h1 className="page-hero-title">精彩花絮</h1>
           <p className="page-hero-subtitle">
-            來自全台報馬仔的第一手紀錄
-          <p className="page-hero-subtitle"></p>
+            來自全台報馬仔的第一手紀錄<br />
             點擊照片放大觀賞
           </p>
         </div>

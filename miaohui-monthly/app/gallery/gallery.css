@@ -17,15 +17,22 @@
 .photo-card {
   position: absolute;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  transition: transform 0.4s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  /* 平滑過場：每 5 秒重新排列時，照片滑動到新位置 */
+  transition:
+    top 2s cubic-bezier(0.25, 0.8, 0.25, 1),
+    left 2s cubic-bezier(0.25, 0.8, 0.25, 1),
+    width 2s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.4s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
   transform:
     translateZ(var(--z, 0px))
     rotate(var(--rotate, 0deg));
   animation: float var(--duration, 20s) ease-in-out var(--delay, 0s) infinite;
-  will-change: transform;
+  will-change: transform, top, left;
 }
 .photo-card img {
   width: 100%;
