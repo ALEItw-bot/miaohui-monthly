@@ -352,12 +352,19 @@ export async function getGalleryPhotos(): Promise<{
   photos: GalleryPhoto[];
 }> {
   try {
+    // 篩選已發布，且「素材檔案」或「照片補充」或「素材連結」任一有值
     const response = await notion.databases.query({
       database_id: INBOX_DB_ID,
       filter: {
         and: [
           { property: '狀態', status: { equals: '已發布' } },
-          { property: '照片補充', url: { is_not_empty: true } },
+          {
+            or: [
+              { property: '素材檔案', files: { is_not_empty: true } },
+              { property: '照片補充', url: { is_not_empty: true } },
+              { property: '素材連結', url: { is_not_empty: true } },
+            ],
+          },
         ],
       },
       sorts: [
@@ -371,12 +378,19 @@ export async function getGalleryPhotos(): Promise<{
       const props = page.properties;
       const title = getRichTextPlain(props['照片主題']) || getTitle(props['活動名稱']);
       const contributor = getRichTextPlain(props['LINE 暱稱']) || '匿名廟友';
-      const coverUrl = props['照片補充']?.url || '';
       const eventType = props['投稿類型']?.select?.name || '';
       const dateStart = props['拍攝日期']?.date?.start
         || props['日期']?.date?.start || '';
       const city = props['縣市']?.select?.name || '';
       const district = props['行政區']?.select?.name || '';
+
+      // 圖片優先順序：素材檔案 → 照片補充 → 素材連結
+      const fileUrls = getFiles(props['素材檔案']);
+      const coverUrl =
+        fileUrls[0] ||
+        props['照片補充']?.url ||
+        props['素材連結']?.url ||
+        '';
 
       if (coverUrl) {
         photos.push({
