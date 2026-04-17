@@ -16,6 +16,8 @@ import type {
 // ==========================================
 
 import { NOTION_CONFIG } from './notion-config';
+// 🛡️ Fallback 備援機制（Notion 掛掉時自動切換到 Redis 備份）
+import { withFallback } from './notion-fallback';
 
 const notion = new Client({
   auth: NOTION_CONFIG.token,
@@ -29,7 +31,7 @@ const BRAND_STORY_PAGE_ID = NOTION_CONFIG.pages.brandStory;
 const NEARBY_DB_ID = NOTION_CONFIG.databases.nearby;
 
 // ==========================================
-// 1. 取得活動列表（原有）
+// 1. 取得活動列表（原有 + 🛡️ Fallback）
 // ==========================================
 
 export async function getEvents(options?: {
@@ -37,33 +39,36 @@ export async function getEvents(options?: {
   limit?: number;
 }): Promise<{ success: boolean; count: number; events: EventItem[] }> {
   const { region, limit = 10 } = options || {};
+  const cacheKey = `events:list:${region || 'all'}:${limit}`;
 
-  const filters: any[] = [
-    { property: '發佈', checkbox: { equals: true } },
-    {
-      property: '日期',
-      date: { on_or_after: new Date().toISOString().split('T')[0] },
-    },
-  ];
+  return withFallback(cacheKey, async () => {
+    const filters: any[] = [
+      { property: '發佈', checkbox: { equals: true } },
+      {
+        property: '日期',
+        date: { on_or_after: new Date().toISOString().split('T')[0] },
+      },
+    ];
 
-  if (region) {
-    filters.push({ property: '區域', select: { equals: region } });
-  }
+    if (region) {
+      filters.push({ property: '區域', select: { equals: region } });
+    }
 
-  const response = await notion.databases.query({
-    database_id: EVENTS_DB_ID,
-    filter: { and: filters },
-    sorts: [{ property: '日期', direction: 'ascending' }],
-    page_size: limit,
+    const response = await notion.databases.query({
+      database_id: EVENTS_DB_ID,
+      filter: { and: filters },
+      sorts: [{ property: '日期', direction: 'ascending' }],
+      page_size: limit,
+    });
+
+    const events = response.results.map((page: any) => parseEventPage(page));
+
+    return { success: true, count: events.length, events };
   });
-
-  const events = response.results.map((page: any) => parseEventPage(page));
-
-  return { success: true, count: events.length, events };
 }
 
 // ==========================================
-// 2. 用 slug 取得單一活動詳情（原有）
+// 2. 用 slug 取得單一活動詳情（原有 + 🛡️ Fallback）
 // ==========================================
 
 export async function getEventBySlug(slug: string): Promise<{
@@ -72,26 +77,30 @@ export async function getEventBySlug(slug: string): Promise<{
   blocks?: NotionBlock[];
   error?: string;
 }> {
-  const response = await notion.databases.query({
-    database_id: EVENTS_DB_ID,
-    filter: {
-      and: [
-        { property: 'slug', rich_text: { equals: slug } },
-        { property: '發佈', checkbox: { equals: true } },
-      ],
-    },
-    page_size: 1,
+  const cacheKey = `events:detail:${slug}`;
+
+  return withFallback(cacheKey, async () => {
+    const response = await notion.databases.query({
+      database_id: EVENTS_DB_ID,
+      filter: {
+        and: [
+          { property: 'slug', rich_text: { equals: slug } },
+          { property: '發佈', checkbox: { equals: true } },
+        ],
+      },
+      page_size: 1,
+    });
+
+    if (!response.results.length) {
+      return { success: false, error: `找不到活動：${slug}` };
+    }
+
+    const page = response.results[0] as any;
+    const event = parseEventPage(page);
+    const blocks = await getPageBlocks(page.id);
+
+    return { success: true, event, blocks };
   });
-
-  if (!response.results.length) {
-    return { success: false, error: `找不到活動：${slug}` };
-  }
-
-  const page = response.results[0] as any;
-  const event = parseEventPage(page);
-  const blocks = await getPageBlocks(page.id);
-
-  return { success: true, event, blocks };
 }
 
 // ==========================================
@@ -133,33 +142,36 @@ async function getPageBlocks(
 }
 
 // ==========================================
-// 4. 取得最新消息列表（原有，加上型別標註）
+// 4. 取得最新消息列表（原有 + 🛡️ Fallback）
 // ==========================================
 
 export async function getAnnouncements(options?: {
   limit?: number;
 }): Promise<{ success: boolean; announcements: Announcement[] }> {
   const { limit = 5 } = options || {};
+  const cacheKey = `announcements:list:${limit}`;
 
-  const response = await notion.databases.query({
-    database_id: ANNOUNCEMENTS_DB_ID,
-    filter: { property: '發佈', checkbox: { equals: true } },
-    sorts: [{ property: '公告發布日期', direction: 'descending' }],
-    page_size: limit,
+  return withFallback(cacheKey, async () => {
+    const response = await notion.databases.query({
+      database_id: ANNOUNCEMENTS_DB_ID,
+      filter: { property: '發佈', checkbox: { equals: true } },
+      sorts: [{ property: '公告發布日期', direction: 'descending' }],
+      page_size: limit,
+    });
+
+    const announcements: Announcement[] = response.results.map((page: any) => {
+      const props = page.properties;
+      return {
+        id: page.id,
+        title: getTitle(props['公告標題']),
+        date: props['公告發布日期']?.date?.start || '',
+        category: props['分類']?.select?.name || '',
+        summary: getRichTextPlain(props['摘要']),
+      };
+    });
+
+    return { success: true, announcements };
   });
-
-  const announcements: Announcement[] = response.results.map((page: any) => {
-    const props = page.properties;
-    return {
-      id: page.id,
-      title: getTitle(props['公告標題']),
-      date: props['公告發布日期']?.date?.start || '',
-      category: props['分類']?.select?.name || '',
-      summary: getRichTextPlain(props['摘要']),
-    };
-  });
-
-  return { success: true, announcements };
 }
 
 // ==========================================
@@ -365,6 +377,7 @@ function normalizeGoogleDriveUrl(url: string): string {
     if (m) {
       // 回傳穩定的 thumbnail 格式（Google 官方對外介面、可指定尺寸）
       return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1200`;
+      // OLD_BROKEN_LINE_REMOVED: `https://drive.google.com/thumbnail?id=${m[1&sz=w1200`;
     }
   }
 
