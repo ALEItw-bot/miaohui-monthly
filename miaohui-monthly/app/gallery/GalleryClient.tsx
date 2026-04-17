@@ -155,6 +155,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
                 sizes="(max-width: 768px) 50vw, 400px"
                 priority={i < 6}
                 loading={i < 6 ? 'eager' : 'lazy'}
+                unoptimized
                 draggable={false}
                 style={cardImgStyle}
               />
@@ -215,6 +216,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
             height={900}
             quality={90}
             priority
+            unoptimized
             className="lightbox-img"
             onClick={(e) => e.stopPropagation()}
             style={lightboxImgStyle}
