@@ -1,35 +1,30 @@
 // src/lib/google-drive.ts
 // ==========================================
-// Google Drive 上傳工具（Service Account 認證）
+// Google Drive 上傳工具（OAuth2 Refresh Token 認證）
 // 用途：LINE 照片投稿 → 暫存到 Google Drive
+// 說明：使用你自己的 Google 帳號授權，檔案算在你的雲端空間
 // ==========================================
 
 import { google } from 'googleapis';
 
 const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
-const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '';
-const SERVICE_ACCOUNT_PRIVATE_KEY = (
-  process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || ''
-).replace(/\\n/g, '\n');
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN || '';
 
-/**
- * 取得 Google Drive 認證 client
- */
 function getAuth() {
-  return new google.auth.JWT({
-    email: SERVICE_ACCOUNT_EMAIL,
-    key: SERVICE_ACCOUNT_PRIVATE_KEY,
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
+  const oauth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLIENT_SECRET,
+  );
+
+  oauth2Client.setCredentials({
+    refresh_token: REFRESH_TOKEN,
   });
+
+  return oauth2Client;
 }
 
-/**
- * 上傳圖片到 Google Drive
- * @param imageBuffer - 圖片的 Buffer
- * @param fileName - 檔案名稱（例如 INB-20260416-162800_阿明.jpg）
- * @param mimeType - MIME 類型（預設 image/jpeg）
- * @returns Google Drive 檔案的公開連結
- */
 export async function uploadImageToDrive(
   imageBuffer: Buffer,
   fileName: string,
@@ -38,10 +33,10 @@ export async function uploadImageToDrive(
   const auth = getAuth();
   const drive = google.drive({ version: 'v3', auth });
 
-  // 1. 上傳檔案
   const { Readable } = await import('stream');
   const stream = Readable.from(imageBuffer);
 
+  // 1. 上傳檔案
   const createResponse = await drive.files.create({
     requestBody: {
       name: fileName,
@@ -65,8 +60,8 @@ export async function uploadImageToDrive(
     },
   });
 
-  // 3. ⚠️ 回傳穩定的 thumbnail URL（不要用 webViewLink，那是檢視頁面不是圖片！）
-  //    這個格式 Next.js Image、<img> 都能直接讀取，而且 Google CDN 很快
+  // 3. 使用穩定的 thumbnail URL 格式（Next.js Image / <img> 可直接讀取，不會 500）
+  //    舊的 lh3.googleusercontent.com/d/X 格式 Google 已停用，會回傳 500 error
   const fileUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
 
   return { fileUrl, fileId };
