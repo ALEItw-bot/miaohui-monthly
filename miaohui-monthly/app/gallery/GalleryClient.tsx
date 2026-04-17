@@ -147,7 +147,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
               onClick={() => openLightbox(photo)}
             >
               <Image
-                src={photo.coverUrl}
+                src={`${photo.coverUrl}=w800`}
                 alt={photo.title}
                 width={s.width}
                 height={Math.round(s.width * 0.75)}
@@ -207,7 +207,7 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
 
           {/* 照片 */}
           <Image
-            src={activePhoto.coverUrl}
+            src={`${activePhoto.coverUrl}=w1600`}
             alt={activePhoto.title}
             width={1200}
             height={900}
