@@ -153,6 +153,8 @@ export default function GalleryClient({ photos }: { photos: GalleryPhoto[] }) {
                 height={Math.round(s.width * 0.75)}
                 quality={75}
                 sizes="(max-width: 768px) 50vw, 400px"
+                priority={i < 6}
+                loading={i < 6 ? 'eager' : 'lazy'}
                 draggable={false}
                 style={cardImgStyle}
               />

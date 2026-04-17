@@ -344,6 +344,35 @@ export async function getBrandStoryBlocks(): Promise<PageContent | null> {
 }
 
 // ==========================================
+// 🔴 Google Drive URL 正規化工具（新增）
+// 把各種 Google Drive URL 統一轉成穩定的 thumbnail 格式
+// 用意：① 修掉 webViewLink / lh3.googleusercontent.com 等不穩定格式
+//      ② 舊資料也能自動相容，不用手動改 Notion
+// ==========================================
+
+function normalizeGoogleDriveUrl(url: string): string {
+  if (!url) return '';
+
+  // 嘗試從各種 Google Drive URL 格式抽出 FILE_ID
+  const patterns = [
+    /\/file\/d\/([a-zA-Z0-9_-]+)/,                // drive.google.com/file/d/ID/view
+    /[?&]id=([a-zA-Z0-9_-]+)/,                     // drive.google.com/uc?id=ID 或 thumbnail?id=ID
+    /googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/, // lh3.googleusercontent.com/d/ID
+  ];
+
+  for (const re of patterns) {
+    const m = url.match(re);
+    if (m) {
+      // 回傳穩定的 thumbnail 格式（Google 官方對外介面、可指定尺寸）
+      return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1200`;
+    }
+  }
+
+  // 不是 Google Drive URL，原樣回傳
+  return url;
+}
+
+// ==========================================
 // 🔴 9. 取得精彩花絮投稿列表（直接讀 Inbox DB，篩選已發布 + 有照片的投稿）
 // ==========================================
 
@@ -384,13 +413,18 @@ export async function getGalleryPhotos(): Promise<{
       const city = props['縣市']?.select?.name || '';
       const district = props['行政區']?.select?.name || '';
 
-      // 圖片優先順序：素材檔案 → 照片補充 → 素材連結
+      // 🟢 圖片優先順序（已調整）：
+      //   1. 照片補充 (Google Drive 永久 URL，快 & 不會過期)
+      //   2. 素材連結 (外部 URL)
+      //   3. 素材檔案 (Notion S3 簽名 URL，1 小時後過期 → 破圖)
       const fileUrls = getFiles(props['素材檔案']);
-      const coverUrl =
-        fileUrls[0] ||
+      const rawUrl =
         props['照片補充']?.url ||
         props['素材連結']?.url ||
+        fileUrls[0] ||
         '';
+      // 若是 Google Drive URL，統一轉成穩定的 thumbnail 格式
+      const coverUrl = normalizeGoogleDriveUrl(rawUrl);
 
       if (coverUrl) {
         photos.push({
