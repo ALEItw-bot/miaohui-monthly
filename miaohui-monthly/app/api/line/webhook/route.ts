@@ -60,6 +60,11 @@ export async function POST(request: Request) {
       }
     }
 
+    if (event.type === 'postback') {
+      try { await handlePostback(event); }
+      catch (err) { console.error('[webhook] postback ERROR:', err); }
+    }
+
     if (event.type === 'follow') {
       await handleFollow(event);
     }
@@ -299,7 +304,12 @@ async function handleTextMessage(event: any) {
         type: 'box', layout: 'vertical',
         contents: [{
           type: 'button',
-          action: { type: 'message', label: '📍 看商家推薦', text: `周邊:${evt.id}:全部` },
+          action: {
+            type: 'postback',
+            label: '📍 看商家推薦',
+            data: `action=nearby&eventId=${evt.id}&category=全部`,
+            displayText: `📍 查看「${evt.title}」的商家推薦`,
+          },
           style: 'primary', color: '#0000A5',
         }],
       },
@@ -311,7 +321,7 @@ async function handleTextMessage(event: any) {
     });
   }
 
-  // ---- 周邊:eventId:category ----
+  // ---- 周邊:eventId:category（保留向後相容，新版改用 postback） ----
   if (text.startsWith('周邊:')) {
     const parts = text.split(':');
     const eventId = parts[1];
@@ -514,6 +524,66 @@ async function handleTextMessage(event: any) {
       '📷 輸入「廟會分享」傳現場照片記錄\n\n' +
       '或直接點下面的選單 👇',
   });
+}
+
+// ==========================================
+// 🆕 Postback 事件處理（商家推薦用，避免 UUID 曝光給使用者）
+// ==========================================
+
+async function handlePostback(event: any) {
+  const replyToken = event.replyToken;
+  const data = event.postback.data || '';
+  const params = new URLSearchParams(data);
+  const action = params.get('action');
+
+  console.log('[webhook] postback:', data);
+
+  // ---- 📍 附近店家推薦 ----
+  if (action === 'nearby') {
+    const eventId = params.get('eventId') || '';
+    const category = params.get('category') || '全部';
+
+    if (!eventId) {
+      return replyMessage(replyToken, {
+        type: 'text', text: '❌ 活動資訊缺失，請重新操作。',
+      });
+    }
+
+    if (category === '全部') {
+      const { spots } = await getNearbySpots({ eventId });
+      if (spots.length === 0) {
+        return replyMessage(replyToken, {
+          type: 'text', text: '這個活動目前還沒有商家推薦，敬請期待！🙏',
+        });
+      }
+      return replyMessage(replyToken, [
+        buildNearbyCarousel(spots),
+        buildCategoryQuickReply(eventId),
+      ]);
+    }
+
+    const { spots } = await getNearbySpots({ eventId, category });
+    if (spots.length === 0) {
+      return replyMessage(replyToken, {
+        type: 'text', text: '此分類目前沒有推薦店家，試試其他分類吧！',
+        quickReply: {
+          items: [{
+            type: 'action',
+            action: {
+              type: 'postback',
+              label: '🔍 看全部',
+              data: `action=nearby&eventId=${eventId}&category=全部`,
+              displayText: '🔍 看全部店家',
+            },
+          }],
+        },
+      });
+    }
+    return replyMessage(replyToken, buildNearbyCarousel(spots));
+  }
+
+  // 預設（未知 action）
+  console.log('[webhook] unknown postback action:', action);
 }
 
 // ==========================================

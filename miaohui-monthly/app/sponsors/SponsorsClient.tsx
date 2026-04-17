@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Partner } from '@/types/notion';
-import { SPONSOR_CATEGORIES, SOCIAL_LINKS } from '@/lib/constants';
+import { SPONSOR_CATEGORIES } from '@/lib/constants';
 import './sponsors.css';
+
+const CONTACT_EMAIL = 'alei.studio@gmail.com';
 
 export default function SponsorsClient({ partners }: { partners: Partner[] }) {
   const [active, setActive] = useState('全部');
@@ -21,14 +23,76 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
         <div className="container">
           <h1 className="page-hero-title">工商服務</h1>
           <p className="page-hero-subtitle">
-            廟口好厝邊，鬧熱來相挺！串聯全台廟會周邊專業服務
+            廟口好厝邊，鬧熱來相挺！<br />
+            不論是宮廟想宣傳廟會活動，或是周邊商家想讓更多人看見，歡迎來信洽詢。
           </p>
+          <div className="page-hero-cta">
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="btn btn-cta-invert"
+            >
+              ✉️ 來信洽詢
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Body */}
+      {/* 邀請對象 */}
+      <section className="sponsors-why">
+        <div className="container">
+          <h2 className="section-title">✨ 歡迎這樣的你</h2>
+          <div className="why-grid">
+            <div className="why-card card">
+              <div className="why-card-icon">⛩️</div>
+              <h3>宮廟單位</h3>
+              <p>想讓更多人知道貴宮的繞境、進香、慶典等廟會活動資訊。</p>
+            </div>
+            <div className="why-card card">
+              <div className="why-card-icon">🏪</div>
+              <h3>周邊商家</h3>
+              <p>廟口小吃、供品、陣頭、文創、攝影…任何與廟會文化相關的商家都歡迎。</p>
+            </div>
+            <div className="why-card card">
+              <div className="why-card-icon">🤝</div>
+              <h3>合作夥伴</h3>
+              <p>有內容、活動、宣傳合作提案，也歡迎來信聊聊。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 曝光管道 */}
+      <section className="sponsors-exposure">
+        <div className="container">
+          <h2 className="section-title">📢 曝光管道</h2>
+          <div className="exposure-table-wrap">
+            <table className="exposure-table">
+              <thead>
+                <tr>
+                  <th>管道</th>
+                  <th>內容</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🌐 品牌官網</td>
+                  <td>工商服務頁面露出、合作夥伴專區、活動頁連結導流</td>
+                </tr>
+                <tr>
+                  <td>💬 LINE 官方頻道</td>
+                  <td>圖文貼文、活動推播、消息中品牌露出</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* 目前的合作夥伴 */}
       <section className="sponsors-body">
         <div className="container">
+          <h2 className="section-title">🤝 合作夥伴</h2>
+
           {/* 篩選 */}
           <div className="filter-pills">
             {SPONSOR_CATEGORIES.map((cat) => (
@@ -42,13 +106,11 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
             ))}
           </div>
 
-          {/* 列表標題 */}
           <div className="list-header">
-            <h2 className="list-header-title">合作夥伴</h2>
+            <h3 className="list-header-title">合作夥伴</h3>
             <span className="list-header-count">共 {filtered.length} 家</span>
           </div>
 
-          {/* Partners Grid */}
           {filtered.length === 0 ? (
             <div className="empty-state">
               <span className="empty-state-icon">🏮</span>
@@ -86,109 +148,18 @@ export default function SponsorsClient({ partners }: { partners: Partner[] }) {
         </div>
       </section>
 
-      {/* 合作方式 */}
-      <section className="sponsors-collab">
-        <div className="container">
-          <h2 className="sponsors-collab-title">🤝 合作方式</h2>
-          <p className="sponsors-collab-intro">
-            不管你是個人工作室還是公司行號，只要與廟會文化相關，我們都歡迎！
-          </p>
-
-          <div className="collab-cards">
-            {/* 贊助檔期 */}
-            <div className="collab-card card" id="schedule">
-              <div className="collab-card-icon">📅</div>
-              <h3 className="collab-card-title">贊助檔期</h3>
-              <p className="collab-card-desc">
-                配合全台各地廟會活動檔期，提供品牌曝光與現場露出機會。單次檔期或系列合作皆可客製，讓你的品牌在最鬧熱的時刻被看見！
-              </p>
-              <ul className="collab-card-list">
-                <li>主舞台立牌 &amp; 布條露出</li>
-                <li>活動頁面品牌專區</li>
-                <li>LINE 推播活動提醒品牌露出</li>
-              </ul>
-            </div>
-
-            {/* 聯名贈品 */}
-            <div className="collab-card card" id="collab">
-              <div className="collab-card-icon">🎁</div>
-              <h3 className="collab-card-title">聯名贈品</h3>
-              <p className="collab-card-desc">
-                與廟會月報聯名推出結緣品、周邊小物，把信仰融入日常好物，讓品牌好感度大幅提升！
-              </p>
-              <ul className="collab-card-list">
-                <li>聯名結緣品 &amp; 互動攤位</li>
-                <li>Q版神明公仔、平安符周邊</li>
-                <li>活動花絮短片品牌露出</li>
-              </ul>
-            </div>
-
-            {/* 優惠導購 */}
-            <div className="collab-card card" id="promo">
-              <div className="collab-card-icon">🛒</div>
-              <h3 className="collab-card-title">優惠導購</h3>
-              <p className="collab-card-desc">
-                透過官網與 LINE 官方頻道導流，將廟會活動的高人氣轉換為實際消費力，線上線下整合一次搞定！
-              </p>
-              <ul className="collab-card-list">
-                <li>官網工商服務頁連結導流</li>
-                <li>LINE 圖文貼文優惠推播</li>
-                <li>合作店家專題採訪曝光</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* 曝光資源 */}
-          <div className="collab-exposure">
-            <h3 className="collab-exposure-title">📢 曝光資源一覽</h3>
-            <div className="exposure-table-wrap">
-              <table className="exposure-table">
-                <thead>
-                  <tr>
-                    <th>曝光管道</th>
-                    <th>內容</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>🌐 品牌官網</td>
-                    <td>工商服務頁面曝光、合作夥伴專區露出、活動頁連結導流</td>
-                  </tr>
-                  <tr>
-                    <td>💬 LINE 官方頻道</td>
-                    <td>置頂推播、圖文貼文、活動提醒中品牌露出</td>
-                  </tr>
-                  <tr>
-                    <td>🎪 現場活動</td>
-                    <td>主舞台立牌、路線沿線布條、互動攤位、結緣品聯名</td>
-                  </tr>
-                  <tr>
-                    <td>📹 內容合作</td>
-                    <td>活動花絮短片品牌露出、合作店家專題採訪</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="sponsors-cta">
         <div className="container">
-          <h2 className="sponsors-cta-title">
-            想成為廟會月報的合作夥伴？
-          </h2>
+          <h2 className="sponsors-cta-title">想讓更多人看見你的廟會或店家嗎？</h2>
           <p className="sponsors-cta-sub">
-            不管你是個人工作室還是公司行號，只要與廟會文化相關，我們都歡迎！
+            你是宮廟想宣傳廟會活動，或是周邊商家想要曝光，歡迎來信洽詢喔～
           </p>
           <a
-            href={SOCIAL_LINKS.line}
+            href={`mailto:${CONTACT_EMAIL}`}
             className="btn btn-cta-invert"
-            target="_blank"
-            rel="noopener noreferrer"
           >
-            立即洽談合作
+            ✉️ {CONTACT_EMAIL}
           </a>
         </div>
       </section>

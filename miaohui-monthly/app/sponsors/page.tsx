@@ -6,7 +6,7 @@ export const revalidate = 600;
 
 export const metadata: Metadata = {
   title: '工商服務｜廟會月報',
-  description: '廟口好厝邊，鬧熱來相挺！串聯全台廟會周邊專業服務',
+  description: '廟口好厝邊，鬧熱來相挺！廟會月報誠摯邀請全台宮廟與周邊商家一起讓廟會文化繼續鬧熱。',
 };
 
 export default async function SponsorsPage() {
