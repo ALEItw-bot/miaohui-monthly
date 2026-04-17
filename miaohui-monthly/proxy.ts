@@ -8,7 +8,7 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/api/')) {
     const origin = request.headers.get('origin') || '';
     const response = NextResponse.next();
