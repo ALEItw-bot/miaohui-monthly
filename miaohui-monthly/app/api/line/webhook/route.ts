@@ -542,48 +542,80 @@ async function handlePostback(event: any) {
   if (action === 'nearby') {
     const eventId = params.get('eventId') || '';
     const category = params.get('category') || '全部';
+    console.log('[postback/nearby] eventId:', eventId, 'category:', category);
 
     if (!eventId) {
-      return replyMessage(replyToken, {
+      return safeReply(replyToken, {
         type: 'text', text: '❌ 活動資訊缺失，請重新操作。',
-      });
+      }, 'nearby/no-eventId');
     }
 
-    if (category === '全部') {
-      const { spots } = await getNearbySpots({ eventId });
-      if (spots.length === 0) {
-        return replyMessage(replyToken, {
-          type: 'text', text: '這個活動目前還沒有商家推薦，敬請期待！🙏',
-        });
+    try {
+      if (category === '全部') {
+        const { spots } = await getNearbySpots({ eventId });
+        console.log('[postback/nearby] spots.length:', spots?.length ?? 'undefined');
+        console.log('[postback/nearby] sample spot:', JSON.stringify(spots?.[0] ?? null).slice(0, 500));
+
+        if (!spots || spots.length === 0) {
+          return safeReply(replyToken, {
+            type: 'text', text: '這個活動目前還沒有商家推薦，敬請期待！🙏',
+          }, 'nearby/empty-spots');
+        }
+
+        const carousel = buildNearbyCarousel(spots);
+        const quickReply = buildCategoryQuickReply(eventId);
+        console.log('[postback/nearby] carousel bubbles:', carousel?.contents?.contents?.length);
+        console.log('[postback/nearby] carousel sample:', JSON.stringify(carousel).slice(0, 1000));
+
+        return safeReply(replyToken, [carousel, quickReply], 'nearby/carousel');
       }
-      return replyMessage(replyToken, [
-        buildNearbyCarousel(spots),
-        buildCategoryQuickReply(eventId),
-      ]);
-    }
 
-    const { spots } = await getNearbySpots({ eventId, category });
-    if (spots.length === 0) {
-      return replyMessage(replyToken, {
-        type: 'text', text: '此分類目前沒有推薦店家，試試其他分類吧！',
-        quickReply: {
-          items: [{
-            type: 'action',
-            action: {
-              type: 'postback',
-              label: '🔍 看全部',
-              data: `action=nearby&eventId=${eventId}&category=全部`,
-              displayText: '🔍 看全部店家',
-            },
-          }],
-        },
-      });
+      const { spots } = await getNearbySpots({ eventId, category });
+      console.log('[postback/nearby] filtered spots.length:', spots?.length ?? 'undefined');
+
+      if (!spots || spots.length === 0) {
+        return safeReply(replyToken, {
+          type: 'text', text: '此分類目前沒有推薦店家，試試其他分類吧！',
+          quickReply: {
+            items: [{
+              type: 'action',
+              action: {
+                type: 'postback',
+                label: '🔍 看全部',
+                data: `action=nearby&eventId=${eventId}&category=全部`,
+                displayText: '🔍 看全部店家',
+              },
+            }],
+          },
+        }, 'nearby/empty-category');
+      }
+      return safeReply(replyToken, buildNearbyCarousel(spots), 'nearby/category-carousel');
+    } catch (err: any) {
+      console.error('[postback/nearby] INNER ERROR:', err?.message || err);
+      console.error('[postback/nearby] stack:', err?.stack);
+      return safeReply(replyToken, {
+        type: 'text',
+        text: '❌ 查詢商家推薦時發生錯誤：' + (err?.message || 'unknown'),
+      }, 'nearby/caught-error');
     }
-    return replyMessage(replyToken, buildNearbyCarousel(spots));
   }
 
   // 預設（未知 action）
   console.log('[webhook] unknown postback action:', action);
+}
+
+/** 包裝 replyMessage，印出 LINE API 的 response 狀態，方便除錯 */
+async function safeReply(replyToken: string, message: any, tag: string) {
+  try {
+    const res: any = await replyMessage(replyToken, message);
+    console.log(`[safeReply:${tag}] OK`, typeof res === 'object' ? JSON.stringify(res).slice(0, 300) : res);
+    return res;
+  } catch (err: any) {
+    console.error(`[safeReply:${tag}] FAIL:`, err?.message || err);
+    console.error(`[safeReply:${tag}] response:`, err?.response?.data || err?.responseData);
+    console.error(`[safeReply:${tag}] payload preview:`, JSON.stringify(message).slice(0, 1000));
+    throw err;
+  }
 }
 
 // ==========================================
