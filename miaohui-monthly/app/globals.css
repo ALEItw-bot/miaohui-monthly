@@ -413,12 +413,14 @@ img {
 
 .nav-dropdown-trigger {
   cursor: pointer;
-  padding: 4px 14px;
-  border-radius: var(--radius-md);
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  transition: background 0.2s, color 0.2s;
+  /* button reset — 使 button 看起來跟其他 nav-link 一致 */
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
 }
 
 .nav-dropdown-arrow {
@@ -426,13 +428,7 @@ img {
   transition: transform 0.2s;
 }
 
-.nav-dropdown:hover .nav-dropdown-trigger,
-.nav-dropdown-active .nav-dropdown-trigger {
-  background: var(--gold);
-  color: var(--red);
-}
-
-.nav-dropdown:hover .nav-dropdown-arrow {
+.nav-dropdown-open .nav-dropdown-arrow {
   transform: rotate(180deg);
 }
 
@@ -451,7 +447,7 @@ img {
   z-index: 100;
 }
 
-.nav-dropdown:hover .nav-dropdown-menu {
+.nav-dropdown-open .nav-dropdown-menu {
   display: block;
 }
 
@@ -1141,75 +1137,75 @@ img {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 12px 0;
 }
 
-/* 主選單 — 2 欄格狀（北港朝天宮 風格） */
-.mobile-menu-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.mobile-menu-item {
+/* 主選單 — 直列單欄（原本樣式） */
+.mobile-menu-link {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
   font-family: var(--font-title);
-  font-size: var(--text-xl);
-  font-weight: 900;
+  font-size: var(--text-2xl);
+  font-weight: 700;
   color: var(--white);
   letter-spacing: 4px;
-  padding: 22px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 18px 28px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: none;
+  text-align: left;
+  cursor: pointer;
   transition: background 0.2s;
-  text-align: center;
 }
 
-.mobile-menu-item:nth-child(2n) {
-  border-right: none;
-}
-
-.mobile-menu-item:hover {
+.mobile-menu-link:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* 服務項目 — 跨兩欄、金色高亮（對應北港朝天宮 服務項目 那一格） */
-.mobile-menu-item-highlight {
-  grid-column: 1 / -1;
-  background: var(--gold);
-  color: var(--red);
-  border-right: none;
-  letter-spacing: 6px;
+/* 服務項目 toggle — 顯示箭頭 */
+.mobile-menu-service-toggle {
+  font: inherit;
+  font-family: var(--font-title);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 4px;
 }
 
-/* 子選單區塊 — 卡其底搭配紅字 */
+.mobile-menu-arrow {
+  font-size: 0.75em;
+  transition: transform 0.2s;
+  margin-left: 8px;
+}
+
+.mobile-menu-service-toggle.open .mobile-menu-arrow {
+  transform: rotate(180deg);
+}
+
+/* 子選單 — 縮進、稍深色背景區隔 */
 .mobile-menu-submenu {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: #FFF8DC;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .mobile-menu-subitem {
   display: flex;
   align-items: center;
-  justify-content: center;
   font-family: var(--font-title);
   font-size: var(--text-lg);
-  font-weight: 700;
-  color: var(--red);
-  padding: 18px 12px;
-  letter-spacing: 4px;
-  border-right: 1px solid rgba(212, 160, 23, 0.3);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  padding: 14px 28px 14px 56px;
+  letter-spacing: 3px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: background 0.2s;
 }
 
-.mobile-menu-subitem:nth-child(2n) {
-  border-right: none;
-}
-
 .mobile-menu-subitem:hover {
-  background: rgba(212, 160, 23, 0.18);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* 底部社群連結 */
