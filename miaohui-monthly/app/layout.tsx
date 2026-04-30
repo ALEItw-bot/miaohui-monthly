@@ -21,6 +21,7 @@ const sansTC = Noto_Sans_TC({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_CONFIG.url),
   title: `${SITE_CONFIG.name}｜${SITE_CONFIG.tagline}`,
   description: SITE_CONFIG.description,
   keywords: '廟會月報,大甲媽祖遶境,白沙屯媽祖,繞境,進香,廟會,媽祖,台灣廟會',
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     url: SITE_CONFIG.url,
     siteName: SITE_CONFIG.name,
     title: `${SITE_CONFIG.name}｜${SITE_CONFIG.tagline}`,
-    description: '台灣最完整的廟會活動資訊平台。繞境・進香・廟會，第一手情報都在這！',
+    description: '台灣最完整的廟會活動資訊平台。繞境・進香・廟會,第一手情報都在這!',
     images: [SITE_CONFIG.ogImage],
   },
   twitter: {
@@ -38,7 +39,6 @@ export const metadata: Metadata = {
     title: `${SITE_CONFIG.name}｜${SITE_CONFIG.tagline}`,
     images: [SITE_CONFIG.ogImage],
   },
-  icons: { icon: '/favicon.ico' },
 };
 
 export default function RootLayout({

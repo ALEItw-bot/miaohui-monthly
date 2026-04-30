@@ -404,7 +404,7 @@ img {
   opacity: 0.8;
 }
 
-/* ===== Header dropdown（服務項目）===== */
+/* ===== Header dropdown（服務項目 — 北港朝天宮 風格）===== */
 .nav-dropdown {
   position: relative;
   display: flex;
@@ -412,21 +412,43 @@ img {
 }
 
 .nav-dropdown-trigger {
-  cursor: default;
+  cursor: pointer;
+  padding: 4px 14px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-dropdown-arrow {
+  font-size: 0.75em;
+  transition: transform 0.2s;
+}
+
+.nav-dropdown:hover .nav-dropdown-trigger,
+.nav-dropdown-active .nav-dropdown-trigger {
+  background: var(--gold);
+  color: var(--red);
+}
+
+.nav-dropdown:hover .nav-dropdown-arrow {
+  transform: rotate(180deg);
 }
 
 .nav-dropdown-menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  min-width: 180px;
-  background: rgba(255, 255, 255, 0.98);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 14px;
+  min-width: 200px;
+  background: #FFF8DC; /* 卡其米黃 — 北港朝天宮 風格 */
+  border-top: 3px solid var(--gold);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   box-shadow: var(--shadow-md);
-  padding: 10px;
+  padding: 6px;
   display: none;
+  z-index: 100;
 }
 
 .nav-dropdown:hover .nav-dropdown-menu {
@@ -435,16 +457,17 @@ img {
 
 .nav-dropdown-item {
   display: block;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
   font-weight: 800;
   color: var(--red);
   text-align: center;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  transition: background 0.2s;
 }
 
 .nav-dropdown-item:hover {
-  background: rgba(200, 0, 0, 0.06);
+  background: rgba(212, 160, 23, 0.18);
 }
 
 /* ============================================================
@@ -1058,6 +1081,7 @@ img {
   }
 }
 
+/* ===== 手機版選單（北港朝天宮 風格：2 欄格狀 + 卡其子選單） ===== */
 .mobile-menu-overlay {
   position: fixed;
   inset: 0;
@@ -1065,10 +1089,8 @@ img {
   z-index: 10000;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
   animation: menuFadeIn 0.25s ease;
+  overflow-y: auto;
 }
 
 @keyframes menuFadeIn {
@@ -1076,12 +1098,28 @@ img {
   to { opacity: 1; }
 }
 
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.mobile-menu-logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mobile-menu-logo img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
 .mobile-menu-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.4);
   background: transparent;
@@ -1099,67 +1137,96 @@ img {
   border-color: var(--white);
 }
 
-.mobile-menu-logo {
+.mobile-menu-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 主選單 — 2 欄格狀（北港朝天宮 風格） */
+.mobile-menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-title);
-  font-size: var(--text-3xl);
+  font-size: var(--text-xl);
   font-weight: 900;
   color: var(--white);
   letter-spacing: 4px;
-  margin-bottom: 1rem;
+  padding: 22px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  transition: background 0.2s;
+  text-align: center;
 }
 
-.mobile-menu-nav {
+.mobile-menu-item:nth-child(2n) {
+  border-right: none;
+}
+
+.mobile-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* 服務項目 — 跨兩欄、金色高亮（對應北港朝天宮 服務項目 那一格） */
+.mobile-menu-item-highlight {
+  grid-column: 1 / -1;
+  background: var(--gold);
+  color: var(--red);
+  border-right: none;
+  letter-spacing: 6px;
+}
+
+/* 子選單區塊 — 卡其底搭配紅字 */
+.mobile-menu-submenu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #FFF8DC;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.mobile-menu-subitem {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.mobile-menu-nav a {
+  justify-content: center;
   font-family: var(--font-title);
-  font-size: 1.4rem;
+  font-size: var(--text-lg);
   font-weight: 700;
-  color: var(--white);
-  padding: 0.75rem 2rem;
-  border-radius: var(--radius-md);
-  transition: all 0.2s;
-  letter-spacing: 2px;
+  color: var(--red);
+  padding: 18px 12px;
+  letter-spacing: 4px;
+  border-right: 1px solid rgba(212, 160, 23, 0.3);
+  transition: background 0.2s;
 }
 
-.mobile-menu-group {
-  margin-top: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.mobile-menu-subitem:nth-child(2n) {
+  border-right: none;
 }
 
-.mobile-menu-group-title {
-  font-family: var(--font-title);
-  font-weight: 900;
-  letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 0.25rem;
+.mobile-menu-subitem:hover {
+  background: rgba(212, 160, 23, 0.18);
 }
 
-.mobile-menu-nav a:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
+/* 底部社群連結 */
 .mobile-menu-social {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 1rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: auto;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .mobile-menu-social a {
   font-size: var(--text-base);
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 1px;
   transition: color 0.2s;
 }
 

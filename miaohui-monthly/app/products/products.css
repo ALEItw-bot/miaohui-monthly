@@ -1,34 +1,57 @@
+/* ============================================================
+   周邊商品｜app/products/products.css
+   ✅ 全部使用 globals.css 既有的 design token（--red / --gold / --text-* / --radius-* / --shadow-*）
+   ✅ RWD 斷點對齊全站（768px / 480px）
+   ✅ Hero 加入金紅漸層 fallback，與 sponsors-hero 視覺呼應
+   ============================================================ */
+
+/* ===== Hero — 沿用 .page-hero 通用樣式 + 自訂背景 ===== */
 .products-hero {
-  /* 可依全站既有 hero 背景調整 */
+  /* 若日後放入 /hero/products.jpg，可參考 sponsors-hero 的寫法直接覆蓋 */
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    linear-gradient(135deg, var(--gold) 0%, var(--red) 100%);
 }
 
 .products-body {
   padding: 36px 0 64px;
 }
 
+/* ===== 工具列：左標題 + 右顯示模式切換 ===== */
 .products-toolbar {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 1.25rem;
 }
 
+.products-toolbar-right {
+  display: flex;
+  gap: 8px;
+}
+
+/* 顯示模式切換 — 沿用 .filter-pill 的視覺語彙 */
 .view-toggle {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  background: #fff;
-  padding: 10px 14px;
-  border-radius: 999px;
-  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--red);
+  background: transparent;
+  color: var(--red);
+  font-family: var(--font-body);
   font-weight: 700;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
+.view-toggle:hover,
 .view-toggle.active {
   background: var(--red);
-  color: #fff;
+  color: var(--white);
   border-color: var(--red);
 }
 
+/* ===== 條列模式 ===== */
 .products-list {
   display: grid;
   gap: 12px;
@@ -42,13 +65,15 @@
   padding: 12px;
 }
 
-.product-row-img img {
-  border-radius: 10px;
+.product-row-img img,
+.product-row-img .product-img-placeholder {
+  border-radius: var(--radius-md);
   width: 140px;
   height: 105px;
   object-fit: cover;
 }
 
+/* ===== 圖文模式 ===== */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -57,6 +82,13 @@
 
 .product-card {
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-img {
+  position: relative;
+  background: var(--bg-muted);
 }
 
 .product-card-img img {
@@ -67,58 +99,84 @@
 }
 
 .product-card-body {
-  padding: 14px;
+  padding: 14px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
+/* 商品名稱 — 用襯線體強化廟會品牌感 */
 .product-name {
   margin: 0;
-  font-size: 18px;
+  font-family: var(--font-title);
+  font-size: var(--text-lg);
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: 1px;
 }
 
 .product-spec {
-  margin: 8px 0 0;
-  opacity: 0.8;
-  font-size: 14px;
+  margin: 0;
+  color: var(--text-light);
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
+/* 價格 — 紅色 + 襯線體強調，與品牌 hero / list-header 呼應 */
 .product-price,
 .product-row-price {
+  font-family: var(--font-title);
   font-weight: 900;
-  font-size: 18px;
+  font-size: var(--text-xl);
+  color: var(--red);
   white-space: nowrap;
+  margin-top: 4px;
 }
 
+/* 缺圖 placeholder */
 .product-img-placeholder {
   width: 100%;
   height: 100%;
   min-height: 105px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.05);
-  font-size: 28px;
+  border-radius: var(--radius-md);
+  background: var(--bg-muted);
+  font-size: 2rem;
+  color: var(--text-muted);
 }
 
-@media (max-width: 900px) {
+/* ===== RWD（與全站 768/480 斷點一致） ===== */
+@media (max-width: 768px) {
   .products-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .products-toolbar {
-    align-items: flex-start;
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .products-toolbar-right {
+    justify-content: flex-end;
   }
 
   .product-row {
-    grid-template-columns: 110px 1fr;
+    grid-template-columns: 100px 1fr;
+  }
+
+  .product-row-img img,
+  .product-row-img .product-img-placeholder {
+    width: 100px;
+    height: 75px;
   }
 
   .product-row-price {
     grid-column: 1 / -1;
     text-align: right;
+    margin-top: 0;
   }
 
   .products-grid {
