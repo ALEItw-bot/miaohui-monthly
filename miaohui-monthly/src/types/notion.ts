@@ -100,6 +100,20 @@ export interface PageContent {
 }
 
 // ==========================================
+// 🔴 周邊商品（新增）
+// ==========================================
+
+export interface Product {
+  id: string;
+  name: string;
+  spec: string;
+  price: number | null;
+  imageUrl: string;
+  status: string;
+  category: string;
+}
+
+// ==========================================
 // 🔴 周邊推薦（新增）
 // ==========================================
 

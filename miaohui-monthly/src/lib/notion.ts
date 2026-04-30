@@ -9,6 +9,7 @@ import type {
   GalleryPhoto,
   PageContent,
   NearbySpot,
+  Product,
 } from '@/types/notion';
 
 // ==========================================
@@ -29,6 +30,10 @@ const PARTNERS_DB_ID = NOTION_CONFIG.databases.partners;
 const INBOX_DB_ID = NOTION_CONFIG.databases.inbox;
 const BRAND_STORY_PAGE_ID = NOTION_CONFIG.pages.brandStory;
 const NEARBY_DB_ID = NOTION_CONFIG.databases.nearby;
+
+// 🔴 周邊商品 Products（使用電商商品管理系統的 Products DB）
+// 若未設定，getProducts 會回傳空陣列
+const PRODUCTS_DB_ID = process.env.NOTION_PRODUCTS_DB_ID || '';
 
 // ==========================================
 // 1. 取得活動列表（原有 + 🛡️ Fallback）
@@ -578,7 +583,63 @@ export async function getPartnerSlugs(): Promise<string[]> {
 }
 
 // ==========================================
-// 🔴 13. 取得周邊推薦店家（新增）
+// 🔴 13. 取得周邊商品（新增）
+// ==========================================
+
+export async function getProducts(options?: {
+  limit?: number;
+  category?: string;
+}): Promise<{ success: boolean; products: Product[] }> {
+  const { limit = 100, category } = options || {};
+
+  if (!PRODUCTS_DB_ID) {
+    return { success: true, products: [] };
+  }
+
+  try {
+    const filters: any[] = [];
+
+    // 可選：依類別篩選
+    if (category) {
+      filters.push({ property: '類別', select: { equals: category } });
+    }
+
+    const response = await notion.databases.query({
+      database_id: PRODUCTS_DB_ID,
+      filter: filters.length ? { and: filters } : undefined,
+      sorts: [{ property: '上架日', direction: 'descending' }],
+      page_size: limit,
+    });
+
+    const products: Product[] = response.results.map((page: any) => {
+      const props = page.properties;
+
+      // 圖片欄位（如果 Products DB 沒有對應欄位，先用 page cover）
+      const coverImage =
+        page.cover?.file?.url ||
+        page.cover?.external?.url ||
+        '';
+
+      return {
+        id: page.id,
+        name: getRichTextPlain(props['商品名']) || getTitle(props['商品ID']),
+        spec: getRichTextPlain(props['商品規格']) || '',
+        price: props['定價']?.number ?? null,
+        imageUrl: coverImage,
+        status: props['商品狀態']?.status?.name || '',
+        category: props['類別']?.select?.name || '',
+      };
+    });
+
+    return { success: true, products };
+  } catch (err) {
+    console.error('[products] fetch failed:', err);
+    return { success: false, products: [] };
+  }
+}
+
+// ==========================================
+// 🔴 14. 取得周邊推薦店家（新增）
 // ==========================================
 
 export async function getNearbySpots(options?: {
