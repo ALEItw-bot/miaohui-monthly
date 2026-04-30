@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { NAV_LINKS, SOCIAL_LINKS, SITE_CONFIG } from '@/lib/constants';
+import { MAIN_NAV_LINKS, SERVICE_LINKS, SOCIAL_LINKS, SITE_CONFIG } from '@/lib/constants';
 import SiteStats from './SiteStats';
 
 export default function Footer() {
@@ -15,14 +15,37 @@ export default function Footer() {
             <p className="footer-desc">台灣最完整的廟會活動資訊平台</p>
             <p className="footer-desc">與你攜手感受台灣廟會之美</p>
           </div>
+
           <div className="footer-links">
             <h4 className="footer-title">快速連結</h4>
-            {NAV_LINKS.map((link) => (
-              <Link key={link.href} href={link.href}>
-                {link.label}
-              </Link>
-            ))}
+
+            <nav className="footer-quicklinks" aria-label="快速連結">
+              {MAIN_NAV_LINKS.map((link) => (
+                <Link key={link.href} href={link.href} className="footer-link">
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* 服務項目（滑鼠移入向右展開） */}
+              <div className="footer-dropdown">
+                <span className="footer-link footer-dropdown-trigger">服務項目</span>
+
+                <div className="footer-dropdown-menu" role="menu">
+                  {SERVICE_LINKS.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="footer-dropdown-item"
+                      role="menuitem"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </nav>
           </div>
+
           <div className="footer-social">
             <h4 className="footer-title">關注我們</h4>
             <a href={SOCIAL_LINKS.line} target="_blank" rel="noopener noreferrer">
@@ -34,6 +57,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
       <div className="footer-bottom">
         {/* ✅ 瀏覽統計：白色小字，顯示在 copyright 上方 */}
         <SiteStats />

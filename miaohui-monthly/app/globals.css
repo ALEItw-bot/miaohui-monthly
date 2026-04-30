@@ -416,11 +416,17 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  /* button reset — 使 button 看起來跟其他 nav-link 一致 */
+  /* button reset — 不可用 font: inherit（會覆蓋 .header-nav-link 的 font-size / font-weight） */
   background: none;
   border: none;
   padding: 0;
-  font: inherit;
+  margin: 0;
+  font-family: inherit;
+  color: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .nav-dropdown-arrow {
@@ -827,6 +833,67 @@ img {
   opacity: 0.8;
   padding: 4px 0;
   transition: opacity 0.2s;
+}
+
+/* ===== Footer 快速連結：服務項目 hover 向右展開（同導覽列邏輯） ===== */
+.footer-quicklinks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-link {
+  display: block;
+  font-size: var(--text-sm);
+  opacity: 0.8;
+  padding: 4px 0;
+  transition: opacity 0.2s;
+}
+
+.footer-link:hover {
+  opacity: 1;
+}
+
+.footer-dropdown {
+  position: relative;
+}
+
+.footer-dropdown-trigger {
+  cursor: default;
+}
+
+.footer-dropdown-menu {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 12px);
+  transform: translateY(-50%);
+  min-width: 160px;
+  background: #FFF8DC; /* 卡其米黃 */
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 6px;
+  display: none;
+  z-index: 20;
+}
+
+.footer-dropdown:hover .footer-dropdown-menu {
+  display: block;
+}
+
+.footer-dropdown-item {
+  display: block;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  color: var(--red);
+  text-align: left;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+
+.footer-dropdown-item:hover {
+  background: rgba(212, 160, 23, 0.18);
 }
 
 .footer-links a:hover,
