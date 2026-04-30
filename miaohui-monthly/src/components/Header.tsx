@@ -1,47 +1,24 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import {
-  MAIN_NAV_LINKS,
-  SERVICE_LINKS,
-  SOCIAL_LINKS,
-} from '@/lib/constants';
+import { MAIN_NAV_LINKS, SERVICE_LINKS, SOCIAL_LINKS } from '@/lib/constants';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const pathname = usePathname();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isServiceActive =
     pathname?.startsWith('/products') || pathname?.startsWith('/sponsors');
 
   // 切換路徑時關閉所有選單
   useEffect(() => {
-    setDropdownOpen(false);
     setMobileMenuOpen(false);
     setMobileServiceOpen(false);
   }, [pathname]);
-
-  // 點擊 dropdown 外側關閉（桌機版）
-  useEffect(() => {
-    if (!dropdownOpen) return;
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () =>
-      document.removeEventListener('mousedown', handleClickOutside);
-  }, [dropdownOpen]);
 
   return (
     <>
@@ -66,25 +43,20 @@ export default function Header() {
                 </Link>
               ))}
 
-              {/* 服務項目（點擊下拉） */}
+              {/* 服務項目（滑鼠移入顯示下拉） */}
               <div
-                ref={dropdownRef}
                 className={`nav-dropdown ${
-                  dropdownOpen ? 'nav-dropdown-open' : ''
-                } ${isServiceActive ? 'nav-dropdown-active' : ''}`}
+                  isServiceActive ? 'nav-dropdown-active' : ''
+                }`}
               >
                 <button
                   type="button"
                   className="header-nav-link nav-dropdown-trigger"
-                  onClick={() => setDropdownOpen((v) => !v)}
-                  aria-expanded={dropdownOpen}
                   aria-haspopup="menu"
                 >
                   服務項目
-                  <span className="nav-dropdown-arrow" aria-hidden>
-                    ▾
-                  </span>
                 </button>
+
                 <div className="nav-dropdown-menu" role="menu">
                   {SERVICE_LINKS.map((link) => (
                     <Link
@@ -92,7 +64,6 @@ export default function Header() {
                       href={link.href}
                       className="nav-dropdown-item"
                       role="menuitem"
-                      onClick={() => setDropdownOpen(false)}
                     >
                       {link.label}
                     </Link>

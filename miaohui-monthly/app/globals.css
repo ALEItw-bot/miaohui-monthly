@@ -451,6 +451,16 @@ img {
   display: block;
 }
 
+/* 桌機版：滑鼠移入顯示下拉（朝天宮互動） */
+.nav-dropdown:hover .nav-dropdown-menu {
+  display: block;
+}
+
+/* 桌機版：不顯示箭頭 */
+.nav-dropdown-arrow {
+  display: none;
+}
+
 .nav-dropdown-item {
   display: block;
   padding: 12px 18px;
