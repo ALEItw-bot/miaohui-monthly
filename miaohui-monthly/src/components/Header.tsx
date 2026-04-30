@@ -130,9 +130,6 @@ export default function Header() {
               aria-expanded={mobileServiceOpen}
             >
               <span>服務項目</span>
-              <span className="mobile-menu-arrow" aria-hidden>
-                ▾
-              </span>
             </button>
 
             {mobileServiceOpen && (
