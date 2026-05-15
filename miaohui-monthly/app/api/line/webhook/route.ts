@@ -4,7 +4,7 @@ import {
   getNearbySpots, getCoupons, getEvents, getActiveSponsors, getEventsNearby,
   generateSubmissionId, createPhotoInboxEntry, createTextInboxEntry,
 } from '@/lib/notion';
-import { uploadImageToDrive } from '@/lib/google-drive';
+import { uploadImageToBlob } from '@/lib/blob-storage';
 import { updatePhotoInboxEntry } from '@/lib/notion';
 import { Redis } from '@upstash/redis';
 import {
@@ -1072,11 +1072,11 @@ async function handleImageMessage(event: any) {
     const { buffer, contentType } = await downloadLineContent(messageId);
     console.log('[webhook] image downloaded, size:', buffer.length, 'type:', contentType);
 
-    // 4. 上傳到 Google Drive
+    // 4. 上傳到 Vercel Blob（取代舊的 Google Drive，永不過期 token）
     const ext = contentType.includes('png') ? 'png' : 'jpg';
     const fileName = `${submissionId}_${displayName}.${ext}`;
-    const { fileUrl } = await uploadImageToDrive(buffer, fileName, contentType);
-    console.log('[webhook] uploaded to Drive:', fileUrl);
+    const { fileUrl } = await uploadImageToBlob(buffer, fileName, contentType);
+    console.log('[webhook] uploaded to Blob:', fileUrl);
 
     // 5. 寫入 Notion Inbox
     const result = await createPhotoInboxEntry({
